@@ -2,7 +2,9 @@ package ru.practicum.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.EndpointHitDto;
+import ru.practicum.ViewStatsDto;
 import ru.practicum.model.EndpointHit;
+import ru.practicum.model.ViewStats;
 
 @Component
 public class StatMapper {
@@ -26,5 +28,10 @@ public class StatMapper {
         );
     }
 
-
+    public static ViewStatsDto toViewStatsDto(ViewStats viewStats) {
+        return new ViewStatsDto(
+                viewStats.getApp(),
+                viewStats.getUri(),
+                viewStats.getHits());
+    }
 }
