@@ -11,6 +11,7 @@ import ru.practicum.repository.StatRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,8 +26,30 @@ public class StatServiceImpl implements StatService{
 
     @Override
     public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        return null;
-
+        if (uris == null || uris.isEmpty()) {
+            if (unique) {
+                log.info("Запрошена статистика start: {}, end: {}, uris count: {}, unique ip: {}", start, end, uris.size(), unique);
+                Thread.currentThread().getStackTrace()[1].getMethodName();
+                return statRepo.getStatistics(start, end, unique).stream()
+                        .map(s -> StatMapper.toViewStatsDto(s))
+                        .collect(Collectors.toList());
+            }
+            log.info("Запрошена статистика start: {}, end: {}, uris count: {}, unique ip: {}", start, end, uris.size(), unique);
+            return statRepo.getStatistics(start, end).stream()
+                    .map(s -> StatMapper.toViewStatsDto(s))
+                    .collect(Collectors.toList());
+        } else {
+            if (unique) {
+                log.info("Запрошена статистика start: {}, end: {}, uris count: {}, unique ip: {}", start, end, uris.size(), unique);
+                return statRepo.getStatistics(start, end, uris, unique).stream()
+                        .map(s -> StatMapper.toViewStatsDto(s))
+                        .collect(Collectors.toList());
+            }
+            log.info("Запрошена статистика start: {}, end: {}, uris count: {}, unique ip: {}", start, end, uris.size(), unique);
+            return statRepo.getStatistics(start, end, uris).stream()
+                    .map(s -> StatMapper.toViewStatsDto(s))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override

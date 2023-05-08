@@ -21,7 +21,7 @@ public interface StatRepository extends JpaRepository<EndpointHit, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("uris") List<String> uris,
-            String unique);
+            Boolean unique);
     @Query(value = "SELECT h.app, h.uri, count(h.ip) FROM hits h " +
             "WHERE h.timestamp BETWEEN :start AND :end AND h.uri IN :uris " +
             "GROUP BY COUNT h.app, h.uri " +
@@ -38,7 +38,7 @@ public interface StatRepository extends JpaRepository<EndpointHit, Long> {
     List<ViewStats> getStatistics(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
-            String unique);
+            Boolean unique);
 
     @Query(value = "SELECT h.app, h.uri, count(h.ip) FROM hits h " +
             "WHERE h.timestamp BETWEEN :start AND :end " +
