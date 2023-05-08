@@ -47,5 +47,4 @@ public interface StatRepository extends JpaRepository<EndpointHit, Long> {
     List<ViewStats> getStatistics(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end);
-
 }

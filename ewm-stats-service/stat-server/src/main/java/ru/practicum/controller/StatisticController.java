@@ -1,5 +1,6 @@
 package ru.practicum.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class StatisticController {
 
     private final StatService statService;
@@ -29,6 +31,7 @@ public class StatisticController {
                                        @RequestParam String end,
                                        @RequestParam(required = false) List<String> uris,
                                        @RequestParam(defaultValue = "false") Boolean unique) {
+        log.info("StatisticController#getStats# start: {}, end: {}, uris: {}, unique: {}", start, end, uris, unique);
         return statService.getStatistics(LocalDateTime.parse(start, FORMATTER),
                 LocalDateTime.parse(end, FORMATTER),
                 uris,
@@ -37,7 +40,8 @@ public class StatisticController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public EndpointHitDto create(@Valid @RequestBody EndpointHitDto endpointHitDto) {
+    public EndpointHitDto addEvent(@Valid @RequestBody EndpointHitDto endpointHitDto) {
+        log.info("StatisticController#addEvent# parameters: {}", endpointHitDto);
         return statService.addEvent(endpointHitDto);
     }
 }
