@@ -14,17 +14,17 @@ import java.util.List;
 public interface StatRepository extends JpaRepository<EndpointHit, Long> {
 
     @Query(value = "SELECT h.app, h.uri, count(DISTINCT h.ip) FROM hits h " +
-            "WHERE h.timestamp BETWEEN :start AND :end h.uri AND h.uri IN :uris " +
-            "GROUP BY COUNT h.app, h.uri " +
+            "WHERE h.timestamp BETWEEN ?1 AND ?2 AND h.uri IN ?3 " +
+            "GROUP BY h.app, h.uri " +
             "ORDER BY COUNT(DISTINCT h.ip) DESC", nativeQuery = true)
     List<ViewStats> getStatistics(
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end,
-            @Param("uris") List<String> uris,
+            LocalDateTime start,
+            LocalDateTime end,
+            List<String> uris,
             Boolean unique);
     @Query(value = "SELECT h.app, h.uri, count(h.ip) FROM hits h " +
             "WHERE h.timestamp BETWEEN :start AND :end AND h.uri IN :uris " +
-            "GROUP BY COUNT h.app, h.uri " +
+            "GROUP BY h.app, h.uri " +
             "ORDER BY COUNT(h.ip) DESC", nativeQuery = true)
     List<ViewStats> getStatistics(
             @Param("start") LocalDateTime start,
@@ -32,17 +32,17 @@ public interface StatRepository extends JpaRepository<EndpointHit, Long> {
             @Param("uris") List<String> uris);
 
     @Query(value = "SELECT h.app, h.uri, count(DISTINCT h.ip) FROM hits h " +
-            "WHERE h.timestamp BETWEEN :start AND :end " +
-            "GROUP BY COUNT h.app, h.uri " +
+            "WHERE h.timestamp BETWEEN ?1 AND ?2 " +
+            "GROUP BY h.app, h.uri " +
             "ORDER BY COUNT(DISTINCT h.ip) DESC", nativeQuery = true)
     List<ViewStats> getStatistics(
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end,
+            LocalDateTime start,
+            LocalDateTime end,
             Boolean unique);
 
     @Query(value = "SELECT h.app, h.uri, count(h.ip) FROM hits h " +
             "WHERE h.timestamp BETWEEN :start AND :end " +
-            "GROUP BY COUNT h.app, h.uri " +
+            "GROUP BY h.app, h.uri " +
             "ORDER BY COUNT(h.ip) DESC", nativeQuery = true)
     List<ViewStats> getStatistics(
             @Param("start") LocalDateTime start,
