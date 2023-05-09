@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class StatServiceImpl implements StatService{
+public class StatServiceImpl implements StatService {
 
     private final StatRepository statRepo;
 

@@ -22,6 +22,7 @@ public interface StatRepository extends JpaRepository<EndpointHit, Long> {
             LocalDateTime end,
             List<String> uris,
             Boolean unique);
+
     @Query(value = "SELECT h.app, h.uri, count(h.ip) FROM hits h " +
             "WHERE h.timestamp BETWEEN :start AND :end AND h.uri IN :uris " +
             "GROUP BY h.app, h.uri " +
