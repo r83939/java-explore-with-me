@@ -13,38 +13,42 @@ import java.util.List;
 @Repository
 public interface StatRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query(value = "SELECT h.app, h.uri, count(DISTINCT h.ip) FROM hits h " +
+    @Query("SELECT new ru.practicum.model.ViewStats(h.app, h.uri, count(DISTINCT h.ip)) " +
+            "FROM EndpointHit h " +
             "WHERE h.timestamp BETWEEN ?1 AND ?2 AND h.uri IN ?3 " +
             "GROUP BY h.app, h.uri " +
-            "ORDER BY COUNT(DISTINCT h.ip) DESC", nativeQuery = true)
+            "ORDER BY COUNT(DISTINCT h.ip) DESC")
     List<ViewStats> getStatistics(
             LocalDateTime start,
             LocalDateTime end,
             List<String> uris,
             Boolean unique);
 
-    @Query(value = "SELECT h.app, h.uri, count(h.ip) FROM hits h " +
+    @Query("SELECT new ru.practicum.model.ViewStats(h.app, h.uri, count(h.ip)) " +
+            "FROM EndpointHit h " +
             "WHERE h.timestamp BETWEEN :start AND :end AND h.uri IN :uris " +
             "GROUP BY h.app, h.uri " +
-            "ORDER BY COUNT(h.ip) DESC", nativeQuery = true)
+            "ORDER BY COUNT(h.ip) DESC")
     List<ViewStats> getStatistics(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("uris") List<String> uris);
 
-    @Query(value = "SELECT h.app, h.uri, count(DISTINCT h.ip) FROM hits h " +
+    @Query("SELECT new ru.practicum.model.ViewStats(h.app, h.uri, count(DISTINCT h.ip)) " +
+            "FROM EndpointHit h " +
             "WHERE h.timestamp BETWEEN ?1 AND ?2 " +
             "GROUP BY h.app, h.uri " +
-            "ORDER BY COUNT(DISTINCT h.ip) DESC", nativeQuery = true)
+            "ORDER BY COUNT(DISTINCT h.ip) DESC")
     List<ViewStats> getStatistics(
             LocalDateTime start,
             LocalDateTime end,
             Boolean unique);
 
-    @Query(value = "SELECT h.app, h.uri, count(h.ip) FROM hits h " +
+    @Query("SELECT new ru.practicum.model.ViewStats(h.app, h.uri, count(h.ip)) " +
+            "FROM EndpointHit h " +
             "WHERE h.timestamp BETWEEN :start AND :end " +
             "GROUP BY h.app, h.uri " +
-            "ORDER BY COUNT(h.ip) DESC", nativeQuery = true)
+            "ORDER BY COUNT(h.ip) DESC")
     List<ViewStats> getStatistics(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end);
