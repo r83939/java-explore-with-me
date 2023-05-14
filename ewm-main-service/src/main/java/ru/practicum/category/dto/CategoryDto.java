@@ -1,20 +1,20 @@
-package ru.practicum.event.dto;
+package ru.practicum.category.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateRequest {
+public class CategoryDto {
+    private Long id;
     @NotNull
-    List<Long> requestIds;
-    @NotNull
-    String status;
+    @NotBlank
+    private String name;
 }

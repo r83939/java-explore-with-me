@@ -3,7 +3,7 @@ package ru.practicum.request.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.event.dto.UpdateRequest;
+import ru.practicum.event.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
@@ -105,7 +105,7 @@ public class RequestsService {
 
     @Transactional
     public RequestUpdateDto requestProcessing(Long userId, Long eventId,
-                                              UpdateRequest eventRequestStatusUpdateRequest) throws EntityNotFoundException, ConflictException {
+                                              EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) throws EntityNotFoundException, ConflictException {
         Optional<Event> event = eventRepo.findById(eventId);
 
         if (event.isEmpty()) {

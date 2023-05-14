@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.request.dto.RequestDto;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateResult {
-    List<RequestDto> confirmedRequests;
-    List<RequestDto> rejectedRequests;
+public class EventRequestStatusUpdateRequest {
+    @NotNull
+    List<Long> requestIds;
+    @NotNull
+    String status;
 }
