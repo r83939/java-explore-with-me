@@ -45,7 +45,7 @@ public class UserService {
 
     public UserDto createUser(UserDto userDto) {
         User user = userRepo.save(UserMapper.userMapper.toUser(userDto));
-        log.info("Call UserService#createUser#Create user with id {}", user.getId());
+        log.info("Call UserService#createUser#Create user with id: {}", user.getId());
         return userMapper.toUserDto(user);
     }
 
@@ -55,6 +55,6 @@ public class UserService {
             throw new EntityNotFoundException("User with id: " + userId + " not found");
         }
         userRepo.deleteById(userId);
-        log.info("Call UserService#deleteUser#User with id {} deleted", userId);
+        log.info("Call UserService#deleteUser#User with id: {} deleted", userId);
     }
 }
