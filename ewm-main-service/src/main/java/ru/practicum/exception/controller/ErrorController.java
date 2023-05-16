@@ -78,6 +78,4 @@ public class ErrorController {
         errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
-    
 }

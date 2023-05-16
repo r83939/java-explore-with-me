@@ -12,7 +12,7 @@ import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventUpdateDto;
 import ru.practicum.event.location.LocationDto;
 import ru.practicum.event.location.LocationMapper;
-import ru.practicum.event.dto.EventMapper;
+import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.location.LocationRepository;
 import ru.practicum.event.model.Event;

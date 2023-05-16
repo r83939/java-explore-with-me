@@ -7,7 +7,7 @@ import ru.practicum.request.model.Request;
 import java.util.List;
 
 public interface RequestService {
-    Request create(Long userId, Long EventId);
+    Request create(Long userId, Long eventId);
 
     List<Request> get(Long id);
 

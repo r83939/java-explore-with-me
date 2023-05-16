@@ -17,7 +17,7 @@ import ru.practicum.compilation.model.CompilationMapper;
 import ru.practicum.compilation.model.CompilationNewDto;
 import ru.practicum.compilation.repository.CompilationRepository;
 import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.EventMapper;
+import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.service.EventRepository;
 import ru.practicum.event.service.StatsClient;

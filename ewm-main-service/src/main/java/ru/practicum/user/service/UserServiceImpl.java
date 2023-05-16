@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @Getter
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService{
     public User create(User user) {
         try {
             return userRepository.save(user);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User уже существует");
         }
     }

@@ -51,7 +51,7 @@ public class RequestServiceImpl implements RequestService {
                 );
                 Event event = eventRepository.getReferenceById(eventId);
                 event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-            } else if (isParticipationLimitGot){
+            } else if (isParticipationLimitGot) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Event с запрошенным id не существует");
             } else {
                 request = new Request(
