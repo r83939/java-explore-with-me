@@ -1,23 +1,25 @@
 package ru.practicum.request.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.practicum.request.model.RequestStatus;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.request.model.RequestState;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestDto {
-    private Long id;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime created;
-    private Long event;
-    private Long requester;
-    private RequestStatus status;
+
+    Long id;
+
+    LocalDateTime created;
+
+    Long event;
+
+    Long requester;
+
+    RequestState status;
 }

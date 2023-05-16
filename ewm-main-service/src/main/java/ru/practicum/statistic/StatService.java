@@ -1,7 +1,6 @@
 package ru.practicum.statistic;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,13 +11,14 @@ import java.util.List;
 
 @Slf4j
 @Service
+
 public class StatService {
     private final StatsWebClient statsWebClient;
 
-    @Autowired
     public StatService(StatsWebClient statsWebClient) {
         this.statsWebClient = statsWebClient;
     }
+
 
     public ResponseEntity<Object> getStatistics(
             String rangeStart,

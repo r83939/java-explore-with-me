@@ -1,17 +1,18 @@
 package ru.practicum.request.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestUpdateDto {
-    List<RequestDto> confirmedRequests;
-    List<RequestDto> rejectedRequests;
+
+    List<Long> requestIds;
+
+    RequestUpdateState status;
 }

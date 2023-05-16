@@ -1,14 +1,13 @@
 package ru.practicum.user.repository;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.user.model.User;
 
 import java.util.List;
 
-@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findAllByIdIn(List<Long> ids, Pageable pageable);
+    @Query(value = "SELECT * FROM users WHERE id IN (?1) ORDER BY id DESC LIMIT ?2 OFFSET ?3", nativeQuery = true)
+    List<User> getByIds(List<Long> ownerId, Integer size, Integer from);
 }

@@ -1,58 +1,65 @@
 package ru.practicum.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.practicum.category.model.Category;
-import ru.practicum.request.model.EventState;
-import ru.practicum.user.model.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "events")
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    private String annotation;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @NotEmpty
+    @Size(max = 120)
+    @Size(min = 3)
+    String title;
 
-    @Column(name = "created_on")
-    private LocalDateTime createdOn;
+    @NotEmpty
+    @Size(max = 7000)
+    @Size(min = 20)
+    String description;
 
-    private String description;
-
-    @Column(name = "event_date")
-    private LocalDateTime eventDate;
-
-    @ManyToOne
-    @JoinColumn(name = "initiator_id")
-    private User initiator;
-
-    private Boolean paid;
-
-    @Column(name = "participant_limit")
-    private Integer participantLimit;
-
-    @Column(name = "published_on")
-    private LocalDateTime publishedOn;
-
-    @Column(name = "request_moderation")
-    private Boolean requestModeration;
+    @NotEmpty
+    @Size(max = 2000)
+    @Size(min = 20)
+    String annotation;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "event_state")
-    private EventState eventState;
+    EventState state;
 
-    private String title;
+    Integer categoryId;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
+    LocalDateTime createdOn;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
+    LocalDateTime eventDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
+    LocalDateTime publishedOn;
+
+    Integer confirmedRequests;
+
+    Long locationId;
+
+    Long initiatorId;
+
+    boolean paid;
+
+    Integer participantLimit;
+
+    boolean requestModeration;
 }
