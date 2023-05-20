@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
@@ -23,7 +22,6 @@ import ru.practicum.event.model.StateAction;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.request.repository.RequestRepository;
-import ru.practicum.statistic.HitDto;
 import ru.practicum.statistic.HitMapper;
 import ru.practicum.statistic.StatService;
 import ru.practicum.user.dto.UserShortDto;
@@ -43,8 +41,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private static final String RANGE_START = "2000-01-01 00:01:01";
-
     private static final String RANGE_END = "2099-01-01 23:59:59";
+    private static final String APP_NAME = "ewm-main-service";
+    private static final String URI = "/events/";
 
     private final EventRepository eventRepository;
 
@@ -56,12 +55,10 @@ public class EventServiceImpl implements EventService {
 
     private final RequestRepository requestRepository;
 
-    private final StatsClient statsClient;
-
     private final StatService statService;
 
     @Override
-    public EventFullDto create(Long userId, EventNewDto eventNewDto) {
+    public EventFullDto create(Long userId, EventNewDto eventNewDto) throws ConflictException {
         if (LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")).isAfter(LocalDateTime.now().plusHours(2))) {
             Long locationId = locationRepository.save(eventNewDto.getLocation()).getId();
             LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(eventNewDto.getLocation());
@@ -70,7 +67,7 @@ public class EventServiceImpl implements EventService {
             UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(userId));
             return getEventWithoutViews(event, locationDto, category, userShortDto);
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Событие не удовлетворяет правилам создания");
+            throw new ConflictException("Неправильная дата");
         }
     }
 
@@ -129,7 +126,6 @@ public class EventServiceImpl implements EventService {
         try {
             eventRepository.getByIdIfPublished(id).getTitle();
             Event event = eventRepository.getByIdIfPublished(id);
-            //hitsClient.createHit("ewm-main-service", endpointPath);
             return toEventFullDtoFromEvent(event, false, request);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event с запрошенным id не существует");
@@ -250,8 +246,6 @@ public class EventServiceImpl implements EventService {
             return toEventFullDtoFromEvent(eventRepository.save(event), true, request);
         } else {
             throw new ConflictException("Проверьте статус и время начала события.");
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Событие должно быть в состоянии ожидания " +
-//                    "и дата начала изменяемого события должна быть не ранее чем за час от даты публикации ");
         }
     }
 
@@ -267,9 +261,8 @@ public class EventServiceImpl implements EventService {
     }
 
     private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto, HttpServletRequest request) {
-        statService.addEventStat(HitMapper.toEndpointHit("ewm-main-service", request));
-        String uriEvent = "/events/" + event.getId().toString();
-        //List<EndpointHitDto> hitDtos = (List<EndpointHitDto>) statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false );
+        statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
+        String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false );
         Integer views = 0;
         if (!hitDtos.isEmpty()) {

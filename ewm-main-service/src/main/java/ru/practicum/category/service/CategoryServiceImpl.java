@@ -2,9 +2,7 @@ package ru.practicum.category.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.category.model.Category;
 import ru.practicum.event.repository.EventRepository;
@@ -20,7 +18,6 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-
     private final EventRepository eventRepository;
 
     @Override
@@ -63,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void delete(Integer categoryId) throws EntityNotFoundException {
+    public void delete(Integer categoryId) throws EntityNotFoundException, ConflictException {
         log.info("Call#CategoryServiceImpl#delete# : CategoryId: " + categoryId);
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
@@ -72,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (eventRepository.findAllByCategoryId(categoryId).isEmpty()) {
             categoryRepository.deleteById(categoryId);
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Существуют события связанные с этой категорией: " + categoryId);
+            throw new ConflictException("Нельзя удалить категорию с id: {}" + categoryId);
         }
     }
 }

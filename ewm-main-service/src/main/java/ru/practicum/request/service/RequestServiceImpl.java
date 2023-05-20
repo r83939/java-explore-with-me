@@ -2,9 +2,7 @@ package ru.practicum.request.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
@@ -54,7 +52,6 @@ public class RequestServiceImpl implements RequestService {
                 event.setConfirmedRequests(event.getConfirmedRequests() + 1);
             } else if (isParticipationLimitGot) {
                 throw new ConflictException("Нет события с id: " + eventId);
-                //throw new ResponseStatusException(HttpStatus.CONFLICT, "Event с запрошенным id не существует");
             } else {
                 request = new Request(
                         null,
@@ -68,7 +65,6 @@ public class RequestServiceImpl implements RequestService {
         } else {
             System.out.println("CONFLICT");
             throw new ConflictException("Нет события с id: " + eventId);
-            //throw new ResponseStatusException(HttpStatus.CONFLICT, "Event с запрошенным id не существует");
         }
     }
 
@@ -101,7 +97,6 @@ public class RequestServiceImpl implements RequestService {
                 if (requestUpdateDto.getStatus().equals(RequestUpdateState.CONFIRMED)) {
                     if (isParticipationLimitGot) {
                         throw new ConflictException("Достигнут лимит участников");
-                        //throw new ResponseStatusException(HttpStatus.CONFLICT, "Достигнут лимит участников");
                     } else {
                         request.setStatus(RequestState.CONFIRMED);
                         Event event = eventRepository.getReferenceById(eventId);
@@ -116,11 +111,9 @@ public class RequestServiceImpl implements RequestService {
                     requestResultList.getRejectedRequests().add(RequestMapper.toRequestDtoFromRequest(request));
                 } else {
                     throw new ConflictException("Нельзя отменить уже принятую заявку");
-                    //throw new ResponseStatusException(HttpStatus.CONFLICT, "Нельзя отменить уже принятую заявку");
                 }
             }
         }
-        System.out.println(requestResultList);
         return requestResultList;
     }
 }

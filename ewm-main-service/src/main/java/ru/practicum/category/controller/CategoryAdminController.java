@@ -34,7 +34,7 @@ public class CategoryAdminController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) throws EntityNotFoundException {
+    public void delete(@PathVariable Integer id) throws EntityNotFoundException, ConflictException {
         log.info("Received a request to delete a category with id: {}", id);
         categoryService.delete(id);
     }

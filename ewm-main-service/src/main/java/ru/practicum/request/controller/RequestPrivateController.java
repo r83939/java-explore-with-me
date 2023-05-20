@@ -21,20 +21,20 @@ public class RequestPrivateController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Request create(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) throws ConflictException {
-        log.info("Received a request from User with id {} to participate in Event with id {}", userId, eventId);
+    public Request addRequest(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) throws ConflictException {
+        log.info("Call #RequestPrivateController#addRequest# userId {}, eventId: {}",userId, eventId);
         return requestService.create(userId, eventId);
     }
 
     @GetMapping
-    public List<Request> get(@PathVariable Long userId) {
-        log.info("Received a request to get Requests of User with id {} ", userId);
+    public List<Request> getRequests(@PathVariable Long userId) {
+        log.info("Call #RequestPrivateController#getRequest# userId {}",userId);
         return requestService.get(userId);
     }
 
     @PatchMapping("/{requestId}/cancel")
     public Request cancelRequestByUser(@PathVariable Long userId, @PathVariable Long requestId) {
-        log.info("Received a request to cancel a request with id: {}, user: {}", userId, requestId);
+        log.info("Call #RequestPrivateController#cancelRequestByUser# userId {}, requestId: {}",userId, requestId);
         return requestService.cancelRequestByUser(userId, requestId);
     }
 }

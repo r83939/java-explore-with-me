@@ -15,5 +15,5 @@ public interface CategoryService {
 
     Category update(Integer id, Category category) throws EntityNotFoundException, ConflictException;
 
-    void delete(Integer id) throws EntityNotFoundException;
+    void delete(Integer id) throws EntityNotFoundException, ConflictException;
 }

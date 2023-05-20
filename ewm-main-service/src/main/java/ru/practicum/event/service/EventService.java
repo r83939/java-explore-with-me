@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
-    EventFullDto create(Long id, EventNewDto eventNewDto);
+    EventFullDto create(Long id, EventNewDto eventNewDto) throws ConflictException;
 
     List<EventFullDto> searchEventsPublic(String text, boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                           boolean onlyAvailable, List<Integer> categories, String sort,

@@ -24,14 +24,14 @@ public class EventPrivateRequestController {
     public RequestUpdateResultDto updateRequestsStatus(@PathVariable Long userId,
                                                        @PathVariable Long eventId,
                                                        @RequestBody @Valid RequestUpdateDto requestUpdateDto) throws ConflictException {
-        log.info("Received a request from user with id {} to update event id: {}, requestUpdateDto: {}", userId, eventId, requestUpdateDto);
+        log.info("Call #EventPrivateRequestController#updateRequestsStatus# userId {}, eventId: {}, requestUpdateDto: {}",userId, eventId, requestUpdateDto);
         return requestService.updateRequestsStatus(userId, eventId, requestUpdateDto);
     }
 
     @GetMapping
     public List<Request> getByUserAndEventId(@PathVariable Long userId,
                                              @PathVariable Long eventId) {
-        log.info("Received a request to get Requests of User with id {} in Event id {}", userId, eventId);
+        log.info("Call #EventPrivateRequestController#getByUserAndEventId# userId {}, eventId: {}",userId, eventId);
         return requestService.getByUserAndEventId(userId, eventId);
     }
 }

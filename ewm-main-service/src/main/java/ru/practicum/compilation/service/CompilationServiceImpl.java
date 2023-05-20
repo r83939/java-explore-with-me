@@ -22,7 +22,6 @@ import ru.practicum.event.dto.EventMapper;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
-import ru.practicum.event.service.StatsClient;
 import ru.practicum.statistic.HitMapper;
 import ru.practicum.statistic.StatService;
 import ru.practicum.user.dto.UserShortDto;
@@ -52,7 +51,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
-    private final StatsClient statsClient;
+    //private final StatsClient statsClient;
     private final StatService statService;
 
     @Override

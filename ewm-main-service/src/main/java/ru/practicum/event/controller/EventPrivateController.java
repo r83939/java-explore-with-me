@@ -9,6 +9,7 @@ import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
 import ru.practicum.event.service.EventService;
+import ru.practicum.exception.ConflictException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -25,7 +26,7 @@ public class EventPrivateController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public EventFullDto create(@PathVariable Long userId, @RequestBody @Valid EventNewDto eventNewDto) {
+    public EventFullDto create(@PathVariable Long userId, @RequestBody @Valid EventNewDto eventNewDto) throws ConflictException {
         log.info("Received a request from user with id {} to create a new event: {}", userId, eventNewDto);
         return eventService.create(userId, eventNewDto);
     }
