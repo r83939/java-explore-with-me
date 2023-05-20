@@ -5,24 +5,33 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.dto.EventMapper;
+import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
 import ru.practicum.event.location.LocationDto;
 import ru.practicum.event.location.LocationMapper;
-import ru.practicum.event.mapper.EventMapper;
-import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.location.LocationRepository;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.model.StateAction;
+import ru.practicum.event.repository.EventRepository;
+import ru.practicum.exception.ConflictException;
 import ru.practicum.request.repository.RequestRepository;
+import ru.practicum.statistic.HitDto;
+import ru.practicum.statistic.HitMapper;
+import ru.practicum.statistic.StatService;
+import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.repository.UserRepository;
-import ru.practicum.user.dto.UserShortDto;
 
+
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,6 +42,9 @@ import java.util.Optional;
 @Getter
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
+    private static final String RANGE_START = "2000-01-01 00:01:01";
+
+    private static final String RANGE_END = "2099-01-01 23:59:59";
 
     private final EventRepository eventRepository;
 
@@ -45,6 +57,8 @@ public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
 
     private final StatsClient statsClient;
+
+    private final StatService statService;
 
     @Override
     public EventFullDto create(Long userId, EventNewDto eventNewDto) {
@@ -61,53 +75,27 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> getByUserId(Long id, Integer size, Integer from) {
+    public List<EventFullDto> getByUserId(Long id, Integer size, Integer from, HttpServletRequest request) {
         List<Event> events = eventRepository.getByUserIdWithPagination(id, size, from);
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {
-            eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
+            eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
         }
         return eventFullDtoList;
     }
 
     @Override
-    public EventFullDto getByUserAndEventId(Long userId, Long eventId, Integer size, Integer from) {
+    public EventFullDto getByUserAndEventId(Long userId, Long eventId, Integer size, Integer from, HttpServletRequest request) {
         Event event = eventRepository.getByUserAndEventId(userId, eventId, size, from);
-        return toEventFullDtoFromEvent(event, false);
+        return toEventFullDtoFromEvent(event, false, request);
     }
 
-    private EventFullDto toEventFullDtoFromEvent(Event event, boolean updating) {
-        LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(locationRepository.getReferenceById(event.getLocationId()));
-        Category category = categoryRepository.getReferenceById(event.getCategoryId());
-        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiatorId()));
-        if (updating) {
-            return getEventWithoutViews(event, locationDto, category, userShortDto);
-        } else {
-            return getEventWithViews(event, locationDto, category, userShortDto);
-        }
-    }
 
-    private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto) {
-        String uriEvent = "/events/" + event.getId().toString();
-        List<ViewStatsDto> hitDtos = statsClient.getStats(uriEvent);
-        Long views = 0L;
-        if (!hitDtos.isEmpty()) {
-            views = hitDtos.get(0).getHits();
-        }
-        Integer confirmedRequests = requestRepository.getAllByEventIdAndConfirmedStatus(event.getId());
-        return EventMapper.toEventFullDtoFromEvent(event, category, locationDto, userShortDto, views, confirmedRequests);
-    }
-
-    private EventFullDto getEventWithoutViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto) {
-        Long views = 0L;
-        Integer confirmedRequests = requestRepository.getAllByEventIdAndConfirmedStatus(event.getId());
-        return EventMapper.toEventFullDtoFromEvent(event, category, locationDto, userShortDto, views, confirmedRequests);
-    }
 
     @Override
     public List<EventFullDto> searchEventsPublic(String text, boolean paid, LocalDateTime startTime, LocalDateTime endTime,
                                                  boolean onlyAvailable, List<Integer> categories, String sort,
-                                                 Integer size, Integer from, String endpointPath)  {
+                                                 Integer size, Integer from, String endpointPath, HttpServletRequest request)  {
         List<Event> events;
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         if (onlyAvailable) {
@@ -119,7 +107,7 @@ public class EventServiceImpl implements EventService {
                         text, paid, startTime, endTime, categories, sort, size, from);
             }
             for (Event event : events) {
-                eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
+                eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
             }
         } else {
             if (categories.get(0) == 0) {
@@ -130,26 +118,26 @@ public class EventServiceImpl implements EventService {
                         text, paid, startTime, endTime, categories, sort.toLowerCase(), size, from);
             }
             for (Event event : events) {
-                eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
+                eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
             }
         }
         return eventFullDtoList;
     }
 
     @Override
-    public EventFullDto getByEventId(Long id, String endpointPath) {
+    public EventFullDto getByEventId(Long id, String endpointPath, HttpServletRequest request) {
         try {
             eventRepository.getByIdIfPublished(id).getTitle();
             Event event = eventRepository.getByIdIfPublished(id);
             //hitsClient.createHit("ewm-main-service", endpointPath);
-            return toEventFullDtoFromEvent(event, false);
+            return toEventFullDtoFromEvent(event, false, request);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event с запрошенным id не существует");
         }
     }
 
     @Override
-    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto) {
+    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) {
         Event event = eventRepository.getReferenceById(eventId);
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
@@ -170,7 +158,7 @@ public class EventServiceImpl implements EventService {
                     event.setState(EventState.CANCELED);
                 }
             }
-            return toEventFullDtoFromEvent(eventRepository.save(event), false);
+            return toEventFullDtoFromEvent(eventRepository.save(event), false, request);
         } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Событие должно быть в состоянии ожидания");
         }
@@ -211,7 +199,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventFullDto> searchEventsByAdmin(List<Long> usersId, List<String> states, List<Integer> categories,
                                                   LocalDateTime startTime, LocalDateTime endTime,
-                                                  Integer size, Integer from) {
+                                                  Integer size, Integer from, HttpServletRequest request) {
         List<Event> events;
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         if (usersId.get(0) == 0) {
@@ -232,13 +220,13 @@ public class EventServiceImpl implements EventService {
             }
         }
         for (Event event : events) {
-            eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
+            eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
         }
         return eventFullDtoList;
     }
 
     @Override
-    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto) {
+    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws ConflictException {
         Event event = eventRepository.getReferenceById(eventId);
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
@@ -259,10 +247,41 @@ public class EventServiceImpl implements EventService {
                     event.setState(EventState.CANCELED);
                 }
             }
-            return toEventFullDtoFromEvent(eventRepository.save(event), true);
+            return toEventFullDtoFromEvent(eventRepository.save(event), true, request);
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Событие должно быть в состоянии ожидания " +
-                    "и дата начала изменяемого события должна быть не ранее чем за час от даты публикации ");
+            throw new ConflictException("Проверьте статус и время начала события.");
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Событие должно быть в состоянии ожидания " +
+//                    "и дата начала изменяемого события должна быть не ранее чем за час от даты публикации ");
         }
+    }
+
+    private EventFullDto toEventFullDtoFromEvent(Event event, boolean updating, HttpServletRequest request) {
+        LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(locationRepository.getReferenceById(event.getLocationId()));
+        Category category = categoryRepository.getReferenceById(event.getCategoryId());
+        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiatorId()));
+        if (updating) {
+            return getEventWithoutViews(event, locationDto, category, userShortDto);
+        } else {
+            return getEventWithViews(event, locationDto, category, userShortDto, request);
+        }
+    }
+
+    private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto, HttpServletRequest request) {
+        statService.addEventStat(HitMapper.toEndpointHit("ewm-main-service", request));
+        String uriEvent = "/events/" + event.getId().toString();
+        //List<EndpointHitDto> hitDtos = (List<EndpointHitDto>) statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false );
+        List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false );
+        Integer views = 0;
+        if (!hitDtos.isEmpty()) {
+            views = hitDtos.size();
+        }
+        Integer confirmedRequests = requestRepository.getAllByEventIdAndConfirmedStatus(event.getId());
+        return EventMapper.toEventFullDtoFromEvent(event, category, locationDto, userShortDto, views, confirmedRequests);
+    }
+
+    private EventFullDto getEventWithoutViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto) {
+        Integer views = 0;
+        Integer confirmedRequests = requestRepository.getAllByEventIdAndConfirmedStatus(event.getId());
+        return EventMapper.toEventFullDtoFromEvent(event, category, locationDto, userShortDto, views, confirmedRequests);
     }
 }

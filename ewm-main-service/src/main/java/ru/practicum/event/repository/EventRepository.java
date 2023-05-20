@@ -1,9 +1,8 @@
-package ru.practicum.event.service;
+package ru.practicum.event.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.event.model.Event;
-
 
 import java.time.LocalDateTime;
 import java.util.List;

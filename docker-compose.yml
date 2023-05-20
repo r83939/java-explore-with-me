@@ -37,7 +37,7 @@ services:
       - stats-service
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main-db
-#      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9999
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9999
 
   ewm-db:
     image: postgres:14.6-alpine

@@ -1,19 +1,21 @@
 package ru.practicum.category.service;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.category.model.Category;
-import ru.practicum.event.service.EventRepository;
+import ru.practicum.event.repository.EventRepository;
+import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Service
-@Getter
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
@@ -22,47 +24,55 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventRepository eventRepository;
 
     @Override
-    public Category create(Category category) {
-        try {
-            return categoryRepository.save(category);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Уже есть категория с данным именем");
+    public Category create(Category category) throws ConflictException {
+        log.info("Call#CategoryServiceImpl#create# : category: " + category.getName());
+        if (categoryRepository.existsCategoryByName(category.getName())) {
+            throw new ConflictException("Уже есть категория с именем: " + category.getName());
         }
+        return categoryRepository.save(category);
     }
 
     @Override
-    public List<Category> getAllWithPagination(Integer from, Integer size) {
-
+    public List<Category> getAllCategories(Integer from, Integer size) {
+        log.info("Call#CategoryServiceImpl#etAllWithPagination# : from: {}, size: {}", from, size);
         return categoryRepository.getAllWithPagination(from, size);
     }
 
     @Override
-    public Category get(Integer id) {
-        try {
-            categoryRepository.getReferenceById(id).getName();
-            return categoryRepository.getReferenceById(id);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category с запрошенным id не существует");
+    public Category get(Integer categoryId) throws EntityNotFoundException {
+        log.info("Call#CategoryServiceImpl#get# : category: " + categoryId);
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isEmpty()) {
+            throw new EntityNotFoundException("Нет Category с id: " + categoryId);
         }
+        return category.get();
     }
 
     @Override
-    public Category update(Integer id, Category category) {
-        try {
-            Category curCategory = categoryRepository.getReferenceById(id);
-            curCategory.setName(category.getName());
-            return categoryRepository.save(curCategory);
-        } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Уже есть категория с данным именем");
+    public Category update(Integer categoryId, Category updateCategory) throws EntityNotFoundException, ConflictException {
+        log.info("Call#CategoryServiceImpl#update# : category: " + updateCategory.getName());
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isEmpty()) {
+            throw new EntityNotFoundException("Нет Category с id: " + categoryId);
         }
+        if (categoryRepository.existsCategoryByName(updateCategory.getName()) && !category.get().getName().equals(updateCategory.getName())) {
+            throw new ConflictException("Уже есть категория с именем: " + updateCategory.getName());
+        }
+        category.get().setName(updateCategory.getName());
+        return categoryRepository.save(category.get());
     }
 
     @Override
-    public void delete(Integer id) {
-        if (eventRepository.findAllByCategoryId(id).isEmpty()) {
-            categoryRepository.deleteById(id);
+    public void delete(Integer categoryId) throws EntityNotFoundException {
+        log.info("Call#CategoryServiceImpl#delete# : CategoryId: " + categoryId);
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isEmpty()) {
+            throw new EntityNotFoundException("Нет Category с id: " + categoryId);
+        }
+        if (eventRepository.findAllByCategoryId(categoryId).isEmpty()) {
+            categoryRepository.deleteById(categoryId);
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Category с запрошенным id не существует или есть связанные ивенты");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Существуют события связанные с этой категорией: " + categoryId);
         }
     }
 }

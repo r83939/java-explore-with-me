@@ -3,7 +3,8 @@ package ru.practicum.event.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.ViewStatsDto;
+import ru.practicum.statistic.HitDto;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +18,9 @@ public class StatsClient {
 
     private static final String APP = "ewm-main-service";
 
-    public List<ViewStatsDto> getStats(String uris) {
+    public List<HitDto> getStats(String uris) {
         RestTemplate rest = new RestTemplate();
-        ViewStatsDto[] forNow = rest.getForObject(serverUrl + API_PREFIX + uris + "&app=" + APP, ViewStatsDto[].class);
+        HitDto[] forNow = rest.getForObject(serverUrl + API_PREFIX + uris + "&app=" + APP, HitDto[].class);
         return Arrays.asList(forNow);
     }
 }

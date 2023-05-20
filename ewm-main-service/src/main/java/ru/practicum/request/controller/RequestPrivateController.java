@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.exception.ConflictException;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.service.RequestServiceImpl;
 
@@ -20,7 +21,7 @@ public class RequestPrivateController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Request create(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) {
+    public Request create(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) throws ConflictException {
         log.info("Received a request from User with id {} to participate in Event with id {}", userId, eventId);
         return requestService.create(userId, eventId);
     }

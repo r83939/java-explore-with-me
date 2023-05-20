@@ -1,18 +1,22 @@
 package ru.practicum.user.service;
 
+import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.DuplicateEmailException;
+import ru.practicum.exception.EntityNotFoundException;
+import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.user.model.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    User create(User user);
+    User addUser(User user) throws InvalidParameterException, ConflictException;
 
-    List<User> getByIds(List<Long> ids, Integer size, Integer from);
+    List<User> getUserByIds(List<Long> ids, Integer size, Integer from);
 
-    User get(Long id);
+    User getUser(Long id) throws EntityNotFoundException;
 
-    User update(Long id, User user);
+    User updateUser(Long id, User user) throws EntityNotFoundException, DuplicateEmailException;
 
-    void delete(Long id);
+    void deleteUser(Long id) throws EntityNotFoundException, InvalidParameterException;
 }

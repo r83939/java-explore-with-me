@@ -46,5 +46,5 @@ public class EventFullDto {
 
     boolean requestModeration;
 
-    Long views;
+    Integer views;
 }

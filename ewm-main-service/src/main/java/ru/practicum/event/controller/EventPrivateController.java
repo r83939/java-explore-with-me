@@ -5,11 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.event.dto.EventUpdateDto;
-import ru.practicum.event.service.EventService;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventNewDto;
+import ru.practicum.event.dto.EventUpdateDto;
+import ru.practicum.event.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -32,25 +33,28 @@ public class EventPrivateController {
     @GetMapping
     public List<EventFullDto> getByUserId(@PathVariable Long userId,
                                           @RequestParam(defaultValue = "10") @Positive Integer size,
-                                          @RequestParam(defaultValue = "0") @Positive Integer from) throws  JsonProcessingException {
+                                          @RequestParam(defaultValue = "0") @Positive Integer from,
+                                          HttpServletRequest request) throws JsonProcessingException {
         log.info("Received a request to get Events of User with id {} size {} from {}", userId, size, from);
-        return eventService.getByUserId(userId, size, from);
+        return eventService.getByUserId(userId, size, from, request);
     }
 
     @GetMapping("/{eventId}")
     public EventFullDto getByUserAndEventId(@PathVariable Long userId,
                                             @PathVariable Long eventId,
                                             @RequestParam(defaultValue = "10") @Positive Integer size,
-                                            @RequestParam(defaultValue = "0") @Positive Integer from) throws JsonProcessingException {
+                                            @RequestParam(defaultValue = "0") @Positive Integer from,
+                                            HttpServletRequest request) throws  JsonProcessingException {
         log.info("Received a request to get Event id {} of User with id {} size {} from {}", eventId, userId, size, from);
-        return eventService.getByUserAndEventId(userId, eventId, size, from);
+        return eventService.getByUserAndEventId(userId, eventId, size, from, request);
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto updateByUser(@PathVariable Long userId,
                                      @PathVariable Long eventId,
-                                     @RequestBody EventUpdateDto eventUpdateDto) throws  JsonProcessingException {
+                                     @RequestBody EventUpdateDto eventUpdateDto,
+                                     HttpServletRequest request) throws JsonProcessingException {
         log.info("Received a request from User with id {} to update an Event with id: {} EventUpdateDto: {}", userId, eventId, eventUpdateDto);
-        return eventService.updateByUser(userId, eventId, eventUpdateDto);
+        return eventService.updateByUser(userId, eventId, eventUpdateDto, request);
     }
 }

@@ -28,24 +28,24 @@ public class StatServiceImpl implements StatService {
     public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         if (uris == null || uris.isEmpty()) {
             if (unique) {
-                log.info("Запрошена статистика start: {}, end: {}, uris: {}, unique ip: {}", start, end, uris, unique);
+                log.info("Call#StatServiceImpl#getStatistics#  start: {}, end: {}, uris: {}, unique ip: {}", start, end, uris, unique);
                 Thread.currentThread().getStackTrace()[1].getMethodName();
                 return statRepo.getStatistics(start, end, unique).stream()
                         .map(s -> StatMapper.toViewStatsDto(s))
                         .collect(Collectors.toList());
             }
-            log.info("Запрошена статистика start: {}, end: {}", start, end);
+            log.info("Call#StatServiceImpl#getStatistics# start: {}, end: {}", start, end);
             return statRepo.getStatistics(start, end).stream()
                     .map(s -> StatMapper.toViewStatsDto(s))
                     .collect(Collectors.toList());
         } else {
             if (unique) {
-                log.info("Запрошена статистика start: {}, end: {}, unique ip: {}", start, end, unique);
+                log.info("Call#StatServiceImpl#getStatistics# start: {}, end: {}, uris: {}, unique ip: {}", start, end, uris, unique);
                 return statRepo.getStatistics(start, end, uris, unique).stream()
                         .map(s -> StatMapper.toViewStatsDto(s))
                         .collect(Collectors.toList());
             }
-            log.info("Запрошена статистика start: {}, end: {}, uris: {}", start, end, uris);
+            log.info("Call#StatServiceImpl#getStatistics# start: {}, end: {}, uris: {}", start, end, uris);
             return statRepo.getStatistics(start, end, uris).stream()
                     .map(s -> StatMapper.toViewStatsDto(s))
                     .collect(Collectors.toList());

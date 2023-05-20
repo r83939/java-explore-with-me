@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
+
+
     @Query(value = "SELECT * FROM participation_request WHERE requester_id = ?1 ORDER BY id", nativeQuery = true)
     List<Request> getAllByUserId(Long userId);
 

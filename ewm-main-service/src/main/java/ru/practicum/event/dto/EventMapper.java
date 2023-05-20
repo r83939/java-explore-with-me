@@ -1,10 +1,7 @@
-package ru.practicum.event.mapper;
+package ru.practicum.event.dto;
 
 import lombok.NoArgsConstructor;
 import ru.practicum.category.model.Category;
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventNewDto;
-import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.location.LocationDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
@@ -36,7 +33,7 @@ public final class EventMapper {
     }
 
     public static EventFullDto toEventFullDtoFromEvent(
-            Event event, Category category, LocationDto locationDto, UserShortDto userShortDto, Long views, Integer confirmedRequests) {
+            Event event, Category category, LocationDto locationDto, UserShortDto userShortDto, Integer views, Integer confirmedRequests) {
         return new EventFullDto(
                 event.getId(),
                 event.getTitle(),
@@ -54,11 +51,10 @@ public final class EventMapper {
                 event.getParticipantLimit(),
                 event.isRequestModeration(),
                 views
-);
+        );
     }
-
     public static EventShortDto toEventShortDtoFromEvent(
-            Event event, Category category, UserShortDto userShortDto, long views) {
+            Event event, Category category, UserShortDto userShortDto, Integer views) {
         return new EventShortDto(
                 event.getId(),
                 event.getTitle(),

@@ -19,7 +19,7 @@ import java.util.List;
 public class EventPublicController {
 
     private final EventServiceImpl eventService;
-
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @GetMapping
     public List<EventFullDto> searchEventsPublic(
             @RequestParam(defaultValue = "") String text,
@@ -44,17 +44,20 @@ public class EventPublicController {
             startTime = LocalDateTime.now().minusYears(10);
             endTime = LocalDateTime.now().plusYears(10);
         } else {
-            startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
-            endTime = LocalDateTime.parse(rangeEnd.replaceAll(" ", "T"), formatter);
+            //startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
+            //endTime = LocalDateTime.parse(rangeEnd.replaceAll(" ", "T"), formatter);
+            startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
+            endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         }
         return eventService.searchEventsPublic(text, Boolean.parseBoolean(paid), startTime, endTime,
-                Boolean.getBoolean(onlyAvailable), categories, sort, size, from, endpointPath);
+                Boolean.getBoolean(onlyAvailable), categories, sort, size, from, endpointPath, request);
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getByEventId(@PathVariable Long id, HttpServletRequest request) {
+    public EventFullDto getByEventId(@PathVariable Long id,
+                                     HttpServletRequest request) {
         log.info("Received a request to get Event with id {} ", id);
         String endpointPath = request.getRequestURI();
-        return eventService.getByEventId(id, endpointPath);
+        return eventService.getByEventId(id, endpointPath, request);
     }
 }
