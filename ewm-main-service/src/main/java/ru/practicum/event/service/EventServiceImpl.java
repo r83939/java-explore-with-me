@@ -10,7 +10,7 @@ import ru.practicum.ViewStatsDto;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventMapper;
+import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
 import ru.practicum.event.location.LocationDto;

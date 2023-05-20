@@ -33,10 +33,8 @@ public class EventPublicController {
             @RequestParam(defaultValue = "10") @Positive Integer size,
             @RequestParam(defaultValue = "0") @Positive Integer from,
             HttpServletRequest request) {
-        log.info("Received a request to search Events by text = {} paid = {} ", text, paid);
-        log.info("Received a request to search Events by rangeStart = {} rangeEnd = {} ", rangeStart, rangeEnd);
-        log.info("Received a request to search Events onlyAvailable = {} categories = {} sort = {}", onlyAvailable, categories, sort);
-        log.info("Received a request to search Events by ... size {} from {} ", size, from);
+        log.info("Call#EventPublicController#getEventByEventId# text: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
+                "onlyAvailable: {}, sort: {}", text, paid, rangeStart, rangeEnd, onlyAvailable, sort);
         String endpointPath = request.getRequestURI();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime startTime;
@@ -45,8 +43,6 @@ public class EventPublicController {
             startTime = LocalDateTime.now().minusYears(10);
             endTime = LocalDateTime.now().plusYears(10);
         } else {
-            //startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
-            //endTime = LocalDateTime.parse(rangeEnd.replaceAll(" ", "T"), formatter);
             startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
             endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         }
@@ -55,9 +51,9 @@ public class EventPublicController {
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getByEventId(@PathVariable Long id,
+    public EventFullDto getEventByEventId(@PathVariable Long id,
                                      HttpServletRequest request) {
-        log.info("Received a request to get Event with id {} ", id);
+        log.info("Call#EventPublicController#getEventByEventId# eventId: {}", id);
         String endpointPath = request.getRequestURI();
         return eventService.getByEventId(id, endpointPath, request);
     }

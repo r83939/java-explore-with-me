@@ -1,7 +1,10 @@
-package ru.practicum.event.dto;
+package ru.practicum.event.mapper;
 
 import lombok.NoArgsConstructor;
 import ru.practicum.category.model.Category;
+import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.dto.EventNewDto;
+import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.location.LocationDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;

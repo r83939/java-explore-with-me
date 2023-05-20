@@ -20,42 +20,42 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/users/{userId}/events")
-public class EventPrivateController {
+public class EventUserController {
 
     private final EventService eventService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public EventFullDto create(@PathVariable Long userId, @RequestBody @Valid EventNewDto eventNewDto) throws ConflictException {
-        log.info("Received a request from user with id {} to create a new event: {}", userId, eventNewDto);
+    public EventFullDto addEvent(@PathVariable Long userId, @RequestBody @Valid EventNewDto eventNewDto) throws ConflictException {
+        log.info("Call#EventUserController#addEvent# userId: {}, eventNewDto: {}", userId, eventNewDto);
         return eventService.create(userId, eventNewDto);
     }
 
     @GetMapping
-    public List<EventFullDto> getByUserId(@PathVariable Long userId,
+    public List<EventFullDto> getEventsByUserId(@PathVariable Long userId,
                                           @RequestParam(defaultValue = "10") @Positive Integer size,
                                           @RequestParam(defaultValue = "0") @Positive Integer from,
                                           HttpServletRequest request) throws JsonProcessingException {
-        log.info("Received a request to get Events of User with id {} size {} from {}", userId, size, from);
+        log.info("Call#EventUserController#getEventsByUserId# userId: {}, size: {}, from: {}", userId, size, from);
         return eventService.getByUserId(userId, size, from, request);
     }
 
     @GetMapping("/{eventId}")
-    public EventFullDto getByUserAndEventId(@PathVariable Long userId,
+    public EventFullDto getEventByUserAndEventId(@PathVariable Long userId,
                                             @PathVariable Long eventId,
                                             @RequestParam(defaultValue = "10") @Positive Integer size,
                                             @RequestParam(defaultValue = "0") @Positive Integer from,
                                             HttpServletRequest request) throws  JsonProcessingException {
-        log.info("Received a request to get Event id {} of User with id {} size {} from {}", eventId, userId, size, from);
+        log.info("Call#EventUserController#getEventByUserAndEventId# eventId: {}, userId: {}, size: {}, from: {}", eventId, userId, size, from);
         return eventService.getByUserAndEventId(userId, eventId, size, from, request);
     }
 
     @PatchMapping("/{eventId}")
-    public EventFullDto updateByUser(@PathVariable Long userId,
+    public EventFullDto updateEventByUser(@PathVariable Long userId,
                                      @PathVariable Long eventId,
                                      @RequestBody EventUpdateDto eventUpdateDto,
                                      HttpServletRequest request) throws JsonProcessingException {
-        log.info("Received a request from User with id {} to update an Event with id: {} EventUpdateDto: {}", userId, eventId, eventUpdateDto);
+        log.info("Call#EventUserController#addEvent# userId: {},eventId: {}, eventNewDto: {}", userId,eventId, eventUpdateDto);
         return eventService.updateByUser(userId, eventId, eventUpdateDto, request);
     }
 }

@@ -33,20 +33,17 @@ public class EventAdminController {
             @RequestParam(defaultValue = "10") @Positive Integer size,
             @RequestParam(defaultValue = "0") @Positive Integer from,
             HttpServletRequest request) {
-        log.info("Received a request from Admin to get Events size {} from {} ", size, from);
-        //DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        //LocalDateTime startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
-        //LocalDateTime endTime = LocalDateTime.parse(rangeEnd.replaceAll(" ", "T"), formatter);
+        log.info("Call#EventAdminController#searchEventsByAdmin# size {} from {} ", size, from);
         LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
         LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         return eventService.searchEventsByAdmin(users, states, categories, startTime, endTime, size, from, request);
     }
 
     @PatchMapping("/{eventId}")
-    public EventFullDto updateByAdmin(@PathVariable Long eventId,
+    public EventFullDto updateEventByAdmin(@PathVariable Long eventId,
                                       @RequestBody EventUpdateDto eventUpdateDto,
                                       HttpServletRequest request) throws ConflictException {
-        log.info("Received a request from Admin to update Event with id {} eventUpdateDto:{} ", eventId, eventUpdateDto);
+        log.info("Call#EventAdminController#updateEventByAdmin# eventId: {}, eventUpdateDto: {}", eventId, eventUpdateDto);
         return eventService.updateByAdmin(eventId, eventUpdateDto, request);
     }
 }

@@ -1,7 +1,7 @@
 package ru.practicum.compilation.service;
 
-import ru.practicum.compilation.model.CompilationFullDto;
-import ru.practicum.compilation.model.CompilationNewDto;
+import ru.practicum.compilation.dto.CompilationFullDto;
+import ru.practicum.compilation.dto.CompilationNewDto;
 import ru.practicum.exception.EntityNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;

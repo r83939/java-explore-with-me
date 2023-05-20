@@ -1,6 +1,9 @@
-package ru.practicum.compilation.model;
+package ru.practicum.compilation.mapper;
 
 import lombok.NoArgsConstructor;
+import ru.practicum.compilation.dto.CompilationFullDto;
+import ru.practicum.compilation.dto.CompilationNewDto;
+import ru.practicum.compilation.model.Compilation;
 import ru.practicum.event.dto.EventShortDto;
 
 import java.util.List;
