@@ -263,7 +263,7 @@ public class EventServiceImpl implements EventService {
     private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto, HttpServletRequest request) {
         statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         String uriEvent = URI + event.getId().toString();
-        List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false );
+        List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer views = 0;
         if (!hitDtos.isEmpty()) {
             views = hitDtos.size();

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, User user) throws EntityNotFoundException, DuplicateEmailException {
-        log.info("Call#UserServiceImpl#updateUser# UserId: {}, userName: {}", id, user.getName() );
+        log.info("Call#UserServiceImpl#updateUser# UserId: {}, userName: {}", id, user.getName());
         Optional<User> updateUser = userRepository.findById(user.getId());
         if (updateUser.isEmpty()) {
             throw new EntityNotFoundException("Нет пользователя с id: " + user.getId());

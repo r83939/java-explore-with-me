@@ -20,6 +20,7 @@ public class EventPublicController {
 
     private final EventServiceImpl eventService;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @GetMapping
     public List<EventFullDto> searchEventsPublic(
             @RequestParam(defaultValue = "") String text,

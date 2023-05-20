@@ -21,8 +21,8 @@ import java.util.List;
 public class EventAdminController {
 
     private final EventServiceImpl eventService;
-
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @GetMapping
     public List<EventFullDto> searchEventsByAdmin(
             @RequestParam(defaultValue = "0") List<Long> users,

@@ -53,6 +53,7 @@ public final class EventMapper {
                 views
         );
     }
+
     public static EventShortDto toEventShortDtoFromEvent(
             Event event, Category category, UserShortDto userShortDto, Integer views) {
         return new EventShortDto(

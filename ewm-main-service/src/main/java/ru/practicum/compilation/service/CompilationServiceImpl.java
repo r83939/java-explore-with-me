@@ -3,9 +3,7 @@ package ru.practicum.compilation.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 
 import ru.practicum.ViewStatsDto;
@@ -51,7 +49,6 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
-    //private final StatsClient statsClient;
     private final StatService statService;
 
     @Override
@@ -140,7 +137,7 @@ public class CompilationServiceImpl implements CompilationService {
         UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiatorId()));
         statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         String uriEvent = URI + event.getId().toString();
-        List<ViewStatsDto> hitDtos =  statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false );
+        List<ViewStatsDto> hitDtos =  statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer viewsCount = 0;
         if (!hitDtos.isEmpty()) {
             viewsCount = hitDtos.size();
