@@ -118,6 +118,7 @@ public class EventServiceImpl implements EventService {
                 eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
             }
         }
+        statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         return eventFullDtoList;
     }
 
@@ -126,6 +127,7 @@ public class EventServiceImpl implements EventService {
         try {
             eventRepository.getByIdIfPublished(id).getTitle();
             Event event = eventRepository.getByIdIfPublished(id);
+            statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
             return toEventFullDtoFromEvent(event, false, request);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event с запрошенным id не существует");
@@ -218,6 +220,7 @@ public class EventServiceImpl implements EventService {
         for (Event event : events) {
             eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
         }
+        statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         return eventFullDtoList;
     }
 
@@ -261,7 +264,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto, HttpServletRequest request) {
-        statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
+        //statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer views = 0;
