@@ -22,7 +22,6 @@ import ru.practicum.event.repository.EventRepository;
 import ru.practicum.statistic.StatService;
 import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
-import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
 
@@ -30,7 +29,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
