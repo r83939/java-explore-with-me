@@ -5,6 +5,7 @@ import ru.practicum.category.model.Category;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventShortDto;
+import ru.practicum.event.location.Location;
 import ru.practicum.event.location.LocationDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public final class EventMapper {
 
-    public static Event toEventFromEventNewDto(User user, Long locationId, EventNewDto eventNewDto, Category category) {
+    public static Event toEventFromEventNewDto(User user, Location location, EventNewDto eventNewDto, Category category) {
         return new Event(
                 eventNewDto.getId(),
                 eventNewDto.getTitle(),
@@ -28,7 +29,7 @@ public final class EventMapper {
                 LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")),
                 null,
                 0,
-                locationId,
+                location,
                 user,
                 eventNewDto.isPaid(),
                 eventNewDto.getParticipantLimit(),

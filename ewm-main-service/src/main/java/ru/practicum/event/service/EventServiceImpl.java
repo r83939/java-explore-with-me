@@ -10,6 +10,7 @@ import ru.practicum.ViewStatsDto;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.location.Location;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
@@ -70,10 +71,10 @@ public class EventServiceImpl implements EventService {
             throw new EntityNotFoundException("Нет категории с id: " + eventNewDto.getCategory());
         }
         if (LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")).isAfter(LocalDateTime.now().plusHours(2))) {
-            Long locationId = locationRepository.save(eventNewDto.getLocation()).getId();
+            Location location = locationRepository.save(eventNewDto.getLocation());
             LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(eventNewDto.getLocation());
-            Event event = eventRepository.save(EventMapper.toEventFromEventNewDto(user.get(), locationId, eventNewDto, category.get()));
-            //Category category = categoryRepository.getReferenceById(event.getCategory().getId());
+            Event event = eventRepository.save(EventMapper.toEventFromEventNewDto(user.get(), location, eventNewDto, category.get()));
+
             UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(userId));
             return getEventWithoutViews(event, locationDto, userShortDto);
         } else {
@@ -192,7 +193,7 @@ public class EventServiceImpl implements EventService {
             event.setEventDate(eventDate);
         }
         if (Optional.ofNullable(eventUpdateDto.getLocation()).isPresent()) {
-            event.setLocationId(locationRepository.save(eventUpdateDto.getLocation()).getId());
+            event.setLocation(locationRepository.save(eventUpdateDto.getLocation()));
         }
         if (Optional.ofNullable(eventUpdateDto.getPaid()).isPresent()) {
             event.setPaid(Boolean.parseBoolean(eventUpdateDto.getPaid()));
@@ -264,7 +265,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private EventFullDto toEventFullDtoFromEvent(Event event, boolean updating) {
-        LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(locationRepository.getReferenceById(event.getLocationId()));
+        LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(event.getLocation());
         UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiator().getId()));
         if (updating) {
             return getEventWithoutViews(event, locationDto, userShortDto);

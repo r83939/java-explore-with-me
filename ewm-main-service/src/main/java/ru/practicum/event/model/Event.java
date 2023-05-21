@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.category.model.Category;
+import ru.practicum.event.location.Location;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
@@ -58,7 +59,10 @@ public class Event {
 
     Integer confirmedRequests;
 
-    Long locationId;
+    //Long locationId;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    Location location;
 
     //Long initiatorId;
     @ManyToOne
