@@ -10,7 +10,6 @@ import ru.practicum.exception.*;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 
 @Slf4j
 @RestControllerAdvice
