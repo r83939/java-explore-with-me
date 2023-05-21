@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorMessage {
-    private List<String> errors = new ArrayList<>();
-    private String message;
-    private String reason;
+
     private String status;
+    private String reason;
+    private String message;
     private String timestamp;
 }

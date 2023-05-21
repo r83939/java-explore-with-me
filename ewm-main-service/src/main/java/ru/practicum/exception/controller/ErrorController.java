@@ -22,9 +22,6 @@ public class ErrorController {
         errorMessage.setMessage(e.getMessage());
         errorMessage.setReason("Запрашиваемый объект не найден");
         errorMessage.setStatus("NOT_FOUND");
-        Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .forEach(errorMessage.getErrors()::add);
         errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }
@@ -35,9 +32,6 @@ public class ErrorController {
         errorMessage.setMessage(e.getMessage());
         errorMessage.setReason("Запрос не может быть выполнен из-за конфликтного обращения к ресурсу");
         errorMessage.setStatus("CONFLICT");
-        Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .forEach(errorMessage.getErrors()::add);
         errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
     }
@@ -48,9 +42,6 @@ public class ErrorController {
         errorMessage.setMessage(e.getMessage());
         errorMessage.setReason("Запрос не может быть выполнен из-за конфликтного обращения к ресурсу");
         errorMessage.setStatus("CONFLICT");
-        Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .forEach(errorMessage.getErrors()::add);
         errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
     }
@@ -61,9 +52,6 @@ public class ErrorController {
         errorMessage.setMessage(e.getMessage());
         errorMessage.setReason("Не выполнены условия для совершения операции");
         errorMessage.setStatus("FORBIDDEN");
-        Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .forEach(errorMessage.getErrors()::add);
         errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
     }
@@ -74,9 +62,6 @@ public class ErrorController {
         errorMessage.setMessage(e.getMessage());
         errorMessage.setReason("В запросе обнаружена ошибка");
         errorMessage.setStatus("BAD_REQUEST");
-        Arrays.stream(e.getStackTrace())
-                .map(StackTraceElement::toString)
-                .forEach(errorMessage.getErrors()::add);
         errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
