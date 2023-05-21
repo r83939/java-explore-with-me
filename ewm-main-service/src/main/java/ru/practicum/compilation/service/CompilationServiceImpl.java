@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 
 import ru.practicum.ViewStatsDto;
-import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.compilation.events.CompilationEvent;
 import ru.practicum.compilation.events.CompilationEventRepository;
@@ -20,7 +19,6 @@ import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
-import ru.practicum.statistic.HitMapper;
 import ru.practicum.statistic.StatService;
 import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
