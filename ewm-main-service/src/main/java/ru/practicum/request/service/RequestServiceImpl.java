@@ -32,7 +32,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request create(Long userId, Long eventId) throws ConflictException {
         boolean isExists = !getByUserAndEventId(userId - 1, eventId).isEmpty();
-        boolean isYourEvent = eventRepository.getReferenceById(eventId).getInitiatorId().equals(userId);
+        boolean isYourEvent = eventRepository.getReferenceById(eventId).getInitiator().getId().equals(userId);
         boolean isEventPublished = eventRepository.getReferenceById(eventId).getState().equals(EventState.PUBLISHED);
         boolean isParticipationLimitGot = eventRepository.getReferenceById(eventId).getParticipantLimit()
                 <= eventRepository.getReferenceById(eventId).getConfirmedRequests();

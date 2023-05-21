@@ -21,11 +21,13 @@ import ru.practicum.event.model.EventState;
 import ru.practicum.event.model.StateAction;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.statistic.HitMapper;
 import ru.practicum.statistic.StatService;
 import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
+import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
 
@@ -58,14 +60,22 @@ public class EventServiceImpl implements EventService {
     private final StatService statService;
 
     @Override
-    public EventFullDto create(Long userId, EventNewDto eventNewDto) throws ConflictException {
+    public EventFullDto create(Long userId, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("Нет пользователя с id: " + userId);
+        }
+        Optional<Category> category = categoryRepository.findById(eventNewDto.getCategory());
+        if (category.isEmpty()) {
+            throw new EntityNotFoundException("Нет категории с id: " + eventNewDto.getCategory());
+        }
         if (LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")).isAfter(LocalDateTime.now().plusHours(2))) {
             Long locationId = locationRepository.save(eventNewDto.getLocation()).getId();
             LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(eventNewDto.getLocation());
-            Event event = eventRepository.save(EventMapper.toEventFromEventNewDto(userId, locationId, eventNewDto));
-            Category category = categoryRepository.getReferenceById(event.getCategoryId());
+            Event event = eventRepository.save(EventMapper.toEventFromEventNewDto(user.get(), locationId, eventNewDto, category.get()));
+            //Category category = categoryRepository.getReferenceById(event.getCategory().getId());
             UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(userId));
-            return getEventWithoutViews(event, locationDto, category, userShortDto);
+            return getEventWithoutViews(event, locationDto, userShortDto);
         } else {
             throw new ConflictException("Неправильная дата");
         }
@@ -132,7 +142,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) {
+    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException {
         Event event = eventRepository.getReferenceById(eventId);
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
@@ -143,7 +153,7 @@ public class EventServiceImpl implements EventService {
             startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
         }
         if (startTime.isAfter(LocalDateTime.now().plusHours(2)) && !event.getState().equals(EventState.PUBLISHED)
-                && event.getInitiatorId().equals(userId)) {
+                && event.getInitiator().getId().equals(userId)) {
             checkAndUpdateEvent(eventUpdateDto, event);
             if (Optional.ofNullable(eventUpdateDto.getStateAction()).isPresent()) {
                 if (eventUpdateDto.getStateAction().equals(StateAction.SEND_TO_REVIEW)) {
@@ -159,7 +169,7 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    private void checkAndUpdateEvent(EventUpdateDto eventUpdateDto, Event event) {
+    private void checkAndUpdateEvent(EventUpdateDto eventUpdateDto, Event event) throws EntityNotFoundException {
         if (Optional.ofNullable(eventUpdateDto.getTitle()).isPresent()) {
             event.setTitle(eventUpdateDto.getTitle());
         }
@@ -170,7 +180,11 @@ public class EventServiceImpl implements EventService {
             event.setAnnotation(eventUpdateDto.getAnnotation());
         }
         if (Optional.ofNullable(eventUpdateDto.getCategory()).isPresent()) {
-            event.setCategoryId(eventUpdateDto.getCategory());
+            Optional<Category> category = categoryRepository.findById(eventUpdateDto.getCategory());
+            if (category.isEmpty()) {
+                throw new EntityNotFoundException("Нет категории с id: " + eventUpdateDto.getCategory());
+            }
+            event.setCategory(category.get());
         }
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isPresent()) {
             DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -222,7 +236,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws ConflictException {
+    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws ConflictException, EntityNotFoundException {
         Event event = eventRepository.getReferenceById(eventId);
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
@@ -251,16 +265,15 @@ public class EventServiceImpl implements EventService {
 
     private EventFullDto toEventFullDtoFromEvent(Event event, boolean updating) {
         LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(locationRepository.getReferenceById(event.getLocationId()));
-        Category category = categoryRepository.getReferenceById(event.getCategoryId());
-        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiatorId()));
+        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiator().getId()));
         if (updating) {
-            return getEventWithoutViews(event, locationDto, category, userShortDto);
+            return getEventWithoutViews(event, locationDto, userShortDto);
         } else {
-            return getEventWithViews(event, locationDto, category, userShortDto);
+            return getEventWithViews(event, locationDto, userShortDto);
         }
     }
 
-    private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto) {
+    private EventFullDto getEventWithViews(Event event, LocationDto locationDto, UserShortDto userShortDto) {
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer views = 0;
@@ -268,12 +281,12 @@ public class EventServiceImpl implements EventService {
             views = hitDtos.size();
         }
         Integer confirmedRequests = requestRepository.getAllByEventIdAndConfirmedStatus(event.getId());
-        return EventMapper.toEventFullDtoFromEvent(event, category, locationDto, userShortDto, views, confirmedRequests);
+        return EventMapper.toEventFullDtoFromEvent(event, locationDto, userShortDto, views, confirmedRequests);
     }
 
-    private EventFullDto getEventWithoutViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto) {
+    private EventFullDto getEventWithoutViews(Event event, LocationDto locationDto, UserShortDto userShortDto) {
         Integer views = 0;
         Integer confirmedRequests = requestRepository.getAllByEventIdAndConfirmedStatus(event.getId());
-        return EventMapper.toEventFullDtoFromEvent(event, category, locationDto, userShortDto, views, confirmedRequests);
+        return EventMapper.toEventFullDtoFromEvent(event, locationDto, userShortDto, views, confirmedRequests);
     }
 }

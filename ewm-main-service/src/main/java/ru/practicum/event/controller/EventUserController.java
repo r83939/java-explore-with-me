@@ -10,6 +10,7 @@ import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
 import ru.practicum.event.service.EventService;
 import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,7 +27,7 @@ public class EventUserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public EventFullDto addEvent(@PathVariable Long userId, @RequestBody @Valid EventNewDto eventNewDto) throws ConflictException {
+    public EventFullDto addEvent(@PathVariable Long userId, @RequestBody @Valid EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException {
         log.info("Call#EventUserController#addEvent# userId: {}, eventNewDto: {}", userId, eventNewDto);
         return eventService.create(userId, eventNewDto);
     }
@@ -54,7 +55,7 @@ public class EventUserController {
     public EventFullDto updateEventByUser(@PathVariable Long userId,
                                      @PathVariable Long eventId,
                                      @RequestBody EventUpdateDto eventUpdateDto,
-                                     HttpServletRequest request) throws JsonProcessingException {
+                                     HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException {
         log.info("Call#EventUserController#addEvent# userId: {},eventId: {}, eventNewDto: {}", userId,eventId, eventUpdateDto);
         return eventService.updateByUser(userId, eventId, eventUpdateDto, request);
     }

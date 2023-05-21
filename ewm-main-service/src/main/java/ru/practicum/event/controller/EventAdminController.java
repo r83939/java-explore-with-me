@@ -7,6 +7,7 @@ import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventUpdateDto;
 import ru.practicum.event.service.EventServiceImpl;
 import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
@@ -44,7 +45,7 @@ public class EventAdminController {
     @PatchMapping("/{eventId}")
     public EventFullDto updateEventByAdmin(@PathVariable Long eventId,
                                       @RequestBody EventUpdateDto eventUpdateDto,
-                                      HttpServletRequest request) throws ConflictException {
+                                      HttpServletRequest request) throws ConflictException, EntityNotFoundException {
         log.info("Call#EventAdminController#updateEventByAdmin# eventId: {}, eventUpdateDto: {}", eventId, eventUpdateDto);
         return eventService.updateByAdmin(eventId, eventUpdateDto, request);
     }

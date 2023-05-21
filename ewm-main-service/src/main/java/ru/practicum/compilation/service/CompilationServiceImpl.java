@@ -133,14 +133,13 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private void getEventShortDto(List<EventShortDto> eventShortDtoList, Event event) {
-        Category category = categoryRepository.getReferenceById(event.getCategoryId());
-        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiatorId()));
+        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiator().getId()));
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos =  statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer viewsCount = 0;
         if (!hitDtos.isEmpty()) {
             viewsCount = hitDtos.size();
         }
-        eventShortDtoList.add(EventMapper.toEventShortDtoFromEvent(event, category, userShortDto, viewsCount));
+        eventShortDtoList.add(EventMapper.toEventShortDtoFromEvent(event, userShortDto, viewsCount));
     }
 }

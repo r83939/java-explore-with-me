@@ -9,26 +9,27 @@ import ru.practicum.event.location.LocationDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.user.dto.UserShortDto;
+import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 public final class EventMapper {
 
-    public static Event toEventFromEventNewDto(Long userId, Long locationId, EventNewDto eventNewDto) {
+    public static Event toEventFromEventNewDto(User user, Long locationId, EventNewDto eventNewDto, Category category) {
         return new Event(
                 eventNewDto.getId(),
                 eventNewDto.getTitle(),
                 eventNewDto.getDescription(),
                 eventNewDto.getAnnotation(),
                 EventState.valueOf("PENDING"),
-                eventNewDto.getCategory(),
+                category,
                 LocalDateTime.now(),
                 LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")),
                 null,
                 0,
                 locationId,
-                userId,
+                user,
                 eventNewDto.isPaid(),
                 eventNewDto.getParticipantLimit(),
                 eventNewDto.isRequestModeration()
@@ -36,14 +37,14 @@ public final class EventMapper {
     }
 
     public static EventFullDto toEventFullDtoFromEvent(
-            Event event, Category category, LocationDto locationDto, UserShortDto userShortDto, Integer views, Integer confirmedRequests) {
+            Event event, LocationDto locationDto, UserShortDto userShortDto, Integer views, Integer confirmedRequests) {
         return new EventFullDto(
                 event.getId(),
                 event.getTitle(),
                 event.getDescription(),
                 event.getAnnotation(),
                 event.getState(),
-                category,
+                event.getCategory(),
                 event.getCreatedOn(),
                 event.getEventDate().toString().replaceAll("T", " "),
                 event.getPublishedOn(),
@@ -58,13 +59,13 @@ public final class EventMapper {
     }
 
     public static EventShortDto toEventShortDtoFromEvent(
-            Event event, Category category, UserShortDto userShortDto, Integer views) {
+            Event event, UserShortDto userShortDto, Integer views) {
         return new EventShortDto(
                 event.getId(),
                 event.getTitle(),
                 event.getDescription(),
                 event.getAnnotation(),
-                category,
+                event.getCategory(),
                 event.getEventDate().toString().replaceAll("T", " "),
                 userShortDto,
                 event.isPaid(),

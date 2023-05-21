@@ -3,6 +3,8 @@ package ru.practicum.event.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.category.model.Category;
+import ru.practicum.user.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -40,7 +42,10 @@ public class Event {
     @Enumerated(EnumType.STRING)
     EventState state;
 
-    Integer categoryId;
+    //Integer categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
     LocalDateTime createdOn;
@@ -55,7 +60,10 @@ public class Event {
 
     Long locationId;
 
-    Long initiatorId;
+    //Long initiatorId;
+    @ManyToOne
+    @JoinColumn(name = "initiator_id")
+    private User initiator;
 
     boolean paid;
 
