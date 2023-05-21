@@ -22,6 +22,7 @@ import ru.practicum.event.repository.EventRepository;
 import ru.practicum.statistic.StatService;
 import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
+import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
 
@@ -29,6 +30,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -108,17 +110,17 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private CompilationFullDto getCompilationFullDto(CompilationNewDto compilationNewDto, Compilation compilation, HttpServletRequest request) {
-        List<EventShortDto> events = new ArrayList<>();
+        List<EventShortDto> eventShortDtoList = new ArrayList<>();
         Compilation savedCompilation = compilationRepository.save(compilation);
         for (Long eventId : compilationNewDto.getEvents()) {
             Event event = eventRepository.getReferenceById(eventId);
-            getEventShortDto(events, event);
+            getEventShortDto(eventShortDtoList, event);
             compilationEventRepository.save(new CompilationEvent(
                     null,
                     savedCompilation.getId(),
                     eventId));
         }
-        return CompilationMapper.toCompilationFullDtoFromCompilation(savedCompilation, events);
+        return CompilationMapper.toCompilationFullDtoFromCompilation(savedCompilation, eventShortDtoList);
     }
 
     private List<EventShortDto> getEventShortDtoList(List<Long> eventsIds) {
@@ -131,7 +133,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private void getEventShortDto(List<EventShortDto> eventShortDtoList, Event event) {
-        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiator().getId()));
+        UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(event.getInitiator());
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos =  statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer viewsCount = 0;
