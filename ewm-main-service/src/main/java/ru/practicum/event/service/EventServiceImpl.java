@@ -76,7 +76,7 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.getByUserIdWithPagination(id, size, from);
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {
-            eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
+            eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
         }
         return eventFullDtoList;
     }
@@ -84,7 +84,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getByUserAndEventId(Long userId, Long eventId, Integer size, Integer from, HttpServletRequest request) {
         Event event = eventRepository.getByUserAndEventId(userId, eventId, size, from);
-        return toEventFullDtoFromEvent(event, false, request);
+        return toEventFullDtoFromEvent(event, false);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class EventServiceImpl implements EventService {
                         text, paid, startTime, endTime, categories, sort, size, from);
             }
             for (Event event : events) {
-                eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
+                eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
             }
         } else {
             if (categories.get(0) == 0) {
@@ -113,7 +113,7 @@ public class EventServiceImpl implements EventService {
                         text, paid, startTime, endTime, categories, sort.toLowerCase(), size, from);
             }
             for (Event event : events) {
-                eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
+                eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
             }
         }
         statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
@@ -123,10 +123,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getByEventId(Long id, HttpServletRequest request) {
         try {
-            eventRepository.getByIdIfPublished(id).getTitle();
             Event event = eventRepository.getByIdIfPublished(id);
             statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
-            return toEventFullDtoFromEvent(event, false, request);
+            return toEventFullDtoFromEvent(event, false);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event с запрошенным id не существует");
         }
@@ -154,7 +153,7 @@ public class EventServiceImpl implements EventService {
                     event.setState(EventState.CANCELED);
                 }
             }
-            return toEventFullDtoFromEvent(eventRepository.save(event), false, request);
+            return toEventFullDtoFromEvent(eventRepository.save(event), false);
         } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Событие должно быть в состоянии ожидания");
         }
@@ -216,7 +215,7 @@ public class EventServiceImpl implements EventService {
             }
         }
         for (Event event : events) {
-            eventFullDtoList.add(toEventFullDtoFromEvent(event, false, request));
+            eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
         }
         statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         return eventFullDtoList;
@@ -244,24 +243,24 @@ public class EventServiceImpl implements EventService {
                     event.setState(EventState.CANCELED);
                 }
             }
-            return toEventFullDtoFromEvent(eventRepository.save(event), true, request);
+            return toEventFullDtoFromEvent(eventRepository.save(event), true);
         } else {
             throw new ConflictException("Проверьте статус и время начала события.");
         }
     }
 
-    private EventFullDto toEventFullDtoFromEvent(Event event, boolean updating, HttpServletRequest request) {
+    private EventFullDto toEventFullDtoFromEvent(Event event, boolean updating) {
         LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(locationRepository.getReferenceById(event.getLocationId()));
         Category category = categoryRepository.getReferenceById(event.getCategoryId());
         UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiatorId()));
         if (updating) {
             return getEventWithoutViews(event, locationDto, category, userShortDto);
         } else {
-            return getEventWithViews(event, locationDto, category, userShortDto, request);
+            return getEventWithViews(event, locationDto, category, userShortDto);
         }
     }
 
-    private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto, HttpServletRequest request) {
+    private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto) {
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer views = 0;

@@ -12,7 +12,7 @@ public interface CompilationService {
 
     List<CompilationFullDto> getAllWithPagination(String pinned, Integer from, Integer size, HttpServletRequest request);
 
-    CompilationFullDto getCompilation(Long id,HttpServletRequest request) throws EntityNotFoundException;
+    CompilationFullDto getCompilation(Long i) throws EntityNotFoundException;
 
     CompilationFullDto updateCompilation(Long id, CompilationNewDto compilationNewDto, HttpServletRequest request);
 

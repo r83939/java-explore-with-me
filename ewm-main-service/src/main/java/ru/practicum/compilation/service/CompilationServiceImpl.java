@@ -64,7 +64,7 @@ public class CompilationServiceImpl implements CompilationService {
         List<CompilationFullDto> compilationFullDtoList = new ArrayList<>();
         for (Compilation compilation : compilationRepository.getAllWithPagination(pinned, size, from)) {
             List<Long> eventsIds = compilationEventRepository.findAllByCompilationId(compilation.getId());
-            List<EventShortDto> eventShortDtoList = getEventShortDtoList(eventsIds, request);
+            List<EventShortDto> eventShortDtoList = getEventShortDtoList(eventsIds);
             CompilationFullDto compilationFullDto = CompilationMapper.toCompilationFullDtoFromCompilation(
                     compilation, eventShortDtoList);
             compilationFullDtoList.add(compilationFullDto);
@@ -73,14 +73,14 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public CompilationFullDto getCompilation(Long compilationId,HttpServletRequest request) throws ru.practicum.exception.EntityNotFoundException {
+    public CompilationFullDto getCompilation(Long compilationId) throws ru.practicum.exception.EntityNotFoundException {
         log.info("Call#CompilationServiceImpl#get# compilationId: {},", compilationId);
         Optional<Compilation> compilation = compilationRepository.findById(compilationId);
         if (compilation.isEmpty()) {
             throw new ru.practicum.exception.EntityNotFoundException("Нет Compilation c id: " + compilationId);
         }
         List<Long> eventsIds = compilationEventRepository.findAllByCompilationId(compilationId);
-        List<EventShortDto> eventShortDtoList = getEventShortDtoList(eventsIds, request);
+        List<EventShortDto> eventShortDtoList = getEventShortDtoList(eventsIds);
         CompilationFullDto compilationFullDto = CompilationMapper.toCompilationFullDtoFromCompilation(
                 compilationRepository.getReferenceById(compilationId), eventShortDtoList);
         return compilationFullDto;
@@ -114,7 +114,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation savedCompilation = compilationRepository.save(compilation);
         for (Long eventId : compilationNewDto.getEvents()) {
             Event event = eventRepository.getReferenceById(eventId);
-            getEventShortDto(events, event, request);
+            getEventShortDto(events, event);
             compilationEventRepository.save(new CompilationEvent(
                     null,
                     savedCompilation.getId(),
@@ -123,19 +123,18 @@ public class CompilationServiceImpl implements CompilationService {
         return CompilationMapper.toCompilationFullDtoFromCompilation(savedCompilation, events);
     }
 
-    private List<EventShortDto> getEventShortDtoList(List<Long> eventsIds, HttpServletRequest request) {
+    private List<EventShortDto> getEventShortDtoList(List<Long> eventsIds) {
         List<EventShortDto> eventShortDtoList = new ArrayList<>();
         List<Event> events = eventRepository.getByEventsIds(eventsIds);
         for (Event event : events) {
-            getEventShortDto(eventShortDtoList, event, request);
+            getEventShortDto(eventShortDtoList, event);
         }
         return eventShortDtoList;
     }
 
-    private void getEventShortDto(List<EventShortDto> eventShortDtoList, Event event, HttpServletRequest request) {
+    private void getEventShortDto(List<EventShortDto> eventShortDtoList, Event event) {
         Category category = categoryRepository.getReferenceById(event.getCategoryId());
         UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiatorId()));
-        statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos =  statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer viewsCount = 0;
