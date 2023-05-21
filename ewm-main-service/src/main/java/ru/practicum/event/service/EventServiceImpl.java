@@ -87,12 +87,10 @@ public class EventServiceImpl implements EventService {
         return toEventFullDtoFromEvent(event, false, request);
     }
 
-
-
     @Override
     public List<EventFullDto> searchEventsPublic(String text, boolean paid, LocalDateTime startTime, LocalDateTime endTime,
                                                  boolean onlyAvailable, List<Integer> categories, String sort,
-                                                 Integer size, Integer from, String endpointPath, HttpServletRequest request)  {
+                                                 Integer size, Integer from, HttpServletRequest request)  {
         List<Event> events;
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         if (onlyAvailable) {
@@ -123,7 +121,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getByEventId(Long id, String endpointPath, HttpServletRequest request) {
+    public EventFullDto getByEventId(Long id, HttpServletRequest request) {
         try {
             eventRepository.getByIdIfPublished(id).getTitle();
             Event event = eventRepository.getByIdIfPublished(id);
@@ -264,7 +262,6 @@ public class EventServiceImpl implements EventService {
     }
 
     private EventFullDto getEventWithViews(Event event, LocationDto locationDto, Category category, UserShortDto userShortDto, HttpServletRequest request) {
-        //statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
         Integer views = 0;

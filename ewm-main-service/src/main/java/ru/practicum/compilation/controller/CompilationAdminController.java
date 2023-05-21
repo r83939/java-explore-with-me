@@ -21,23 +21,23 @@ public class CompilationAdminController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CompilationFullDto create(@RequestBody @Valid CompilationNewDto compilationNewDto,
+    public CompilationFullDto addCompilation(@RequestBody @Valid CompilationNewDto compilationNewDto,
                                      HttpServletRequest request) {
-        log.info("Received a request to create a new CompilationNewDto: {}", compilationNewDto);
-        return compilationService.create(compilationNewDto, request);
+        log.info("Call #CompilationAdminController#addCompilation# compilationNewDto: {}", compilationNewDto);
+        return compilationService.addCompilation(compilationNewDto, request);
     }
 
     @PatchMapping("/{id}")
-    public CompilationFullDto update(@PathVariable Long id, @RequestBody CompilationNewDto compilationNewDto,
+    public CompilationFullDto updateCompilation(@PathVariable Long id, @RequestBody CompilationNewDto compilationNewDto,
                                      HttpServletRequest request) {
-        log.info("Received a request to update a compilation with id: {}, CompilationNewDto: {}", id, compilationNewDto);
-        return compilationService.update(id, compilationNewDto, request);
+        log.info("Call #CompilationAdminController#addCompilation# CompilationId: {}", id);
+        return compilationService.updateCompilation(id, compilationNewDto, request);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        log.info("Received a request to delete a category with id: {}", id);
-        compilationService.delete(id);
+    public void deleteCompilation(@PathVariable Long id) {
+        log.info("Call #CompilationAdminController#deleteCompilation# CompilationId: {}", id);
+        compilationService.deleteCompilation(id);
     }
 }

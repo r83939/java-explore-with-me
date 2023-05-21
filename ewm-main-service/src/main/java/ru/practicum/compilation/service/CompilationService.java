@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface CompilationService {
-    CompilationFullDto create(CompilationNewDto compilationNewDto, HttpServletRequest request);
+    CompilationFullDto addCompilation(CompilationNewDto compilationNewDto, HttpServletRequest request);
 
     List<CompilationFullDto> getAllWithPagination(String pinned, Integer from, Integer size, HttpServletRequest request);
 
-    CompilationFullDto get(Long id,HttpServletRequest request) throws EntityNotFoundException;
+    CompilationFullDto getCompilation(Long id,HttpServletRequest request) throws EntityNotFoundException;
 
-    CompilationFullDto update(Long id, CompilationNewDto compilationNewDto, HttpServletRequest request);
+    CompilationFullDto updateCompilation(Long id, CompilationNewDto compilationNewDto, HttpServletRequest request);
 
-    void delete(Long id);
+    void deleteCompilation(Long id);
 }

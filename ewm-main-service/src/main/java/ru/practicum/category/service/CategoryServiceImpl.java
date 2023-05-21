@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventRepository eventRepository;
 
     @Override
-    public Category create(Category category) throws ConflictException {
+    public Category addCategory(Category category) throws ConflictException {
         log.info("Call#CategoryServiceImpl#create# : category: " + category.getName());
         if (categoryRepository.existsCategoryByName(category.getName())) {
             throw new ConflictException("Уже есть категория с именем: " + category.getName());
@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category get(Integer categoryId) throws EntityNotFoundException {
+    public Category getCategory(Integer categoryId) throws EntityNotFoundException {
         log.info("Call#CategoryServiceImpl#get# : category: " + categoryId);
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category update(Integer categoryId, Category updateCategory) throws EntityNotFoundException, ConflictException {
+    public Category updateCategory(Integer categoryId, Category updateCategory) throws EntityNotFoundException, ConflictException {
         log.info("Call#CategoryServiceImpl#update# : category: " + updateCategory.getName());
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void delete(Integer categoryId) throws EntityNotFoundException, ConflictException {
+    public void deleteCategory(Integer categoryId) throws EntityNotFoundException, ConflictException {
         log.info("Call#CategoryServiceImpl#delete# : CategoryId: " + categoryId);
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {

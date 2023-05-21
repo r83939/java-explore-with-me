@@ -24,7 +24,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-
   ewm-main-service:
     build: ewm-main-service/
     image: ewm-main

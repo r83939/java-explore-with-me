@@ -21,21 +21,21 @@ public class CategoryAdminController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Category create(@RequestBody @Valid Category category) throws ConflictException {
-        log.info("Received a request to create a new Category: {}", category);
-        return categoryService.create(category);
+    public Category addCategory(@RequestBody @Valid Category category) throws ConflictException {
+        log.info("Call #CategoryAdminController#addCategory# category: {}", category);
+        return categoryService.addCategory(category);
     }
 
     @PatchMapping("/{id}")
-    public Category update(@PathVariable Integer id, @RequestBody @Valid Category category) throws ConflictException, EntityNotFoundException {
-        log.info("Received a request to update a category with id: {}, Category: {}", id, category);
-        return categoryService.update(id, category);
+    public Category updateCategory(@PathVariable Integer id, @RequestBody @Valid Category category) throws ConflictException, EntityNotFoundException {
+        log.info("Call #CategoryAdminController#updateCategory# categoryId: {}", id);
+        return categoryService.updateCategory(id, category);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) throws EntityNotFoundException, ConflictException {
-        log.info("Received a request to delete a category with id: {}", id);
-        categoryService.delete(id);
+    public void deleteCategory(@PathVariable Integer id) throws EntityNotFoundException, ConflictException {
+        log.info("Call #CategoryAdminController#deleteCategory# categoryId: {}", id);
+        categoryService.deleteCategory(id);
     }
 }

@@ -8,13 +8,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.exception.*;
 
 import javax.validation.ConstraintViolationException;
-import java.security.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 
 @Slf4j
 @RestControllerAdvice

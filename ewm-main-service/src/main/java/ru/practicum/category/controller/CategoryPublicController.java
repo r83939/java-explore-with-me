@@ -19,16 +19,16 @@ public class CategoryPublicController {
     private final CategoryServiceImpl categoryService;
 
     @GetMapping
-    public List<Category> getAllWithPagination(
+    public List<Category> getAllCategoriesWithPagination(
             @RequestParam(defaultValue = "10") @Positive Integer size,
             @RequestParam(defaultValue = "0") @Positive Integer from) {
-        log.info("Received a request to get Categories size {} from {} ", size, from);
+        log.info("Call #CategoryPublicControlle#getAllCategoriesWithPagination# size {} from {} ", size, from);
         return categoryService.getAllCategories(size, from);
     }
 
     @GetMapping("/{catId}")
-    public Category get(@PathVariable Integer catId) throws EntityNotFoundException {
-        log.info("Received a request to get Category with id {} ", catId);
-        return categoryService.get(catId);
+    public Category getCategory(@PathVariable Integer catId) throws EntityNotFoundException {
+        log.info("Call #CategoryPublicControlle# categoryId {}", catId);
+        return categoryService.getCategory(catId);
     }
 }

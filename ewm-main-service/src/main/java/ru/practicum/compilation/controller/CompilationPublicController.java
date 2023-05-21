@@ -20,19 +20,19 @@ public class CompilationPublicController {
     private final CompilationServiceImpl compilationService;
 
     @GetMapping
-    public List<CompilationFullDto> getAllWithPagination(
+    public List<CompilationFullDto> getAllCompilationsWithPagination(
             @RequestParam(defaultValue = "false") String pinned,
             @RequestParam(defaultValue = "0") @Positive Integer from,
             @RequestParam(defaultValue = "10") @Positive Integer size,
             HttpServletRequest request) {
-        log.info("Received a request to get Compilations pinned {} size {} from {} ", pinned, size, from);
+        log.info("Call #CompilationPublicController#getAllCompilationsWithPagination# pinned {} size {} from {} ", pinned, size, from);
         return compilationService.getAllWithPagination(pinned, size, from, request);
     }
 
     @GetMapping("/{compId}")
-    public CompilationFullDto get(@PathVariable Long compId,
+    public CompilationFullDto getCompilation(@PathVariable Long compId,
                                   HttpServletRequest request) throws EntityNotFoundException {
-        log.info("Received a request to get Compilation with id {} ", compId);
-        return compilationService.get(compId, request);
+        log.info("Call #CompilationPublicController#getCompilation# CompilationId {}", compId);
+        return compilationService.getCompilation(compId, request);
     }
 }

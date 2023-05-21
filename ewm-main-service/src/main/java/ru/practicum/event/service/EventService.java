@@ -15,9 +15,9 @@ public interface EventService {
 
     List<EventFullDto> searchEventsPublic(String text, boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                           boolean onlyAvailable, List<Integer> categories, String sort,
-                                          Integer from, Integer size, String endpointPath, HttpServletRequest request) throws JsonProcessingException;
+                                          Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException;
 
-    EventFullDto getByEventId(Long id, String endpointPath, HttpServletRequest request);
+    EventFullDto getByEventId(Long id, HttpServletRequest request);
 
     List<EventFullDto> getByUserId(Long id, Integer size, Integer from, HttpServletRequest request) throws JsonProcessingException;
 

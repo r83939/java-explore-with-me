@@ -52,7 +52,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final StatService statService;
 
     @Override
-    public CompilationFullDto create(CompilationNewDto compilationNewDto, HttpServletRequest request) {
+    public CompilationFullDto addCompilation(CompilationNewDto compilationNewDto, HttpServletRequest request) {
         log.info("Call#CompilationServiceImpl#create# compilationNewDto: {}", compilationNewDto);
         Compilation compilation = CompilationMapper.toCompilationFromCompilationNewDto(compilationNewDto);
         return getCompilationFullDto(compilationNewDto, compilation, request);
@@ -73,7 +73,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public CompilationFullDto get(Long compilationId,HttpServletRequest request) throws ru.practicum.exception.EntityNotFoundException {
+    public CompilationFullDto getCompilation(Long compilationId,HttpServletRequest request) throws ru.practicum.exception.EntityNotFoundException {
         log.info("Call#CompilationServiceImpl#get# compilationId: {},", compilationId);
         Optional<Compilation> compilation = compilationRepository.findById(compilationId);
         if (compilation.isEmpty()) {
@@ -87,7 +87,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public CompilationFullDto update(Long compilationId, CompilationNewDto compilationNewDto, HttpServletRequest request) {
+    public CompilationFullDto updateCompilation(Long compilationId, CompilationNewDto compilationNewDto, HttpServletRequest request) {
         log.info("Call#CompilationServiceImpl#update# compilationId: {},", compilationId);
         Compilation compilation = compilationRepository.getReferenceById(compilationId);
         if (Optional.ofNullable(compilationNewDto.getTitle()).isPresent()) {
@@ -100,7 +100,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public void delete(Long compilationId) {
+    public void deleteCompilation(Long compilationId) {
         log.info("Call#CompilationServiceImpl#delete# compilationId: {},", compilationId);
         Optional<Compilation> compilation = compilationRepository.findById(compilationId);
         if (compilation.isEmpty()) {

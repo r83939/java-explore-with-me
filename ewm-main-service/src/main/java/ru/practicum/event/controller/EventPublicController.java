@@ -35,8 +35,6 @@ public class EventPublicController {
             HttpServletRequest request) {
         log.info("Call#EventPublicController#getEventByEventId# text: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
                 "onlyAvailable: {}, sort: {}", text, paid, rangeStart, rangeEnd, onlyAvailable, sort);
-        String endpointPath = request.getRequestURI();
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime startTime;
         LocalDateTime endTime;
         if (rangeStart.equals("empty") || rangeEnd.equals("empty")) {
@@ -47,14 +45,13 @@ public class EventPublicController {
             endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         }
         return eventService.searchEventsPublic(text, Boolean.parseBoolean(paid), startTime, endTime,
-                Boolean.getBoolean(onlyAvailable), categories, sort, size, from, endpointPath, request);
+                Boolean.getBoolean(onlyAvailable), categories, sort, size, from, request);
     }
 
     @GetMapping("/{id}")
     public EventFullDto getEventByEventId(@PathVariable Long id,
                                      HttpServletRequest request) {
         log.info("Call#EventPublicController#getEventByEventId# eventId: {}", id);
-        String endpointPath = request.getRequestURI();
-        return eventService.getByEventId(id, endpointPath, request);
+        return eventService.getByEventId(id, request);
     }
 }

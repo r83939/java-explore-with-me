@@ -22,14 +22,16 @@ public class EventAdminController {
 
     private final EventServiceImpl eventService;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String RANGE_START = "2000-01-01 00:01:01";
+    private static final String RANGE_END = "2099-01-01 23:59:59";
 
     @GetMapping
     public List<EventFullDto> searchEventsByAdmin(
             @RequestParam(defaultValue = "0") List<Long> users,
             @RequestParam(defaultValue = "WAITING, PUBLISHED, CANCELED") List<String> states,
             @RequestParam(defaultValue = "0") List<Integer> categories,
-            @RequestParam(defaultValue = "2000-01-01 00:01:01") String rangeStart,
-            @RequestParam(defaultValue = "2099-01-01 23:59:59") String rangeEnd,
+            @RequestParam(defaultValue = RANGE_START) String rangeStart,
+            @RequestParam(defaultValue = RANGE_END) String rangeEnd,
             @RequestParam(defaultValue = "10") @Positive Integer size,
             @RequestParam(defaultValue = "0") @Positive Integer from,
             HttpServletRequest request) {
