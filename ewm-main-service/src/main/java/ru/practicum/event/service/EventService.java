@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
-    EventFullDto create(Long id, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException;
+    EventFullDto addEvent(Long id, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException;
 
     List<EventFullDto> searchEventsPublic(String text, boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                           boolean onlyAvailable, List<Integer> categories, String sort,

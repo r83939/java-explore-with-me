@@ -47,6 +47,8 @@ public class EventServiceImpl implements EventService {
     private static final String RANGE_END = "2099-01-01 23:59:59";
     private static final String APP_NAME = "ewm-main-service";
     private static final String URI = "/events/";
+    private static final long hours_before_start = 2L;
+    private static final long admin_hours_before_start = 1L;
 
     private final EventRepository eventRepository;
 
@@ -61,7 +63,7 @@ public class EventServiceImpl implements EventService {
     private final StatService statService;
 
     @Override
-    public EventFullDto create(Long userId, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException {
+    public EventFullDto addEvent(Long userId, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new EntityNotFoundException("Нет пользователя с id: " + userId);
@@ -70,7 +72,7 @@ public class EventServiceImpl implements EventService {
         if (category.isEmpty()) {
             throw new EntityNotFoundException("Нет категории с id: " + eventNewDto.getCategory());
         }
-        if (LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")).isAfter(LocalDateTime.now().plusHours(2))) {
+        if (LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")).isAfter(LocalDateTime.now().plusHours(hours_before_start))) {
             Location location = locationRepository.save(eventNewDto.getLocation());
             LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(eventNewDto.getLocation());
             Event event = eventRepository.save(EventMapper.toEventFromEventNewDto(user.get(), location, eventNewDto, category.get()));
@@ -153,7 +155,7 @@ public class EventServiceImpl implements EventService {
             DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
             startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
         }
-        if (startTime.isAfter(LocalDateTime.now().plusHours(2)) && !event.getState().equals(EventState.PUBLISHED)
+        if (startTime.isAfter(LocalDateTime.now().plusHours(hours_before_start)) && !event.getState().equals(EventState.PUBLISHED)
                 && event.getInitiator().getId().equals(userId)) {
             checkAndUpdateEvent(eventUpdateDto, event);
             if (Optional.ofNullable(eventUpdateDto.getStateAction()).isPresent()) {
@@ -247,7 +249,7 @@ public class EventServiceImpl implements EventService {
             DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
             startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
         }
-        if (startTime.isAfter(LocalDateTime.now().plusHours(1)) && event.getState().equals(EventState.PENDING)) {
+        if (startTime.isAfter(LocalDateTime.now().plusHours(admin_hours_before_start)) && event.getState().equals(EventState.PENDING)) {
             checkAndUpdateEvent(eventUpdateDto, event);
             if (Optional.ofNullable(eventUpdateDto.getStateAction()).isPresent()) {
                 if (eventUpdateDto.getStateAction().equals(StateAction.PUBLISH_EVENT)) {

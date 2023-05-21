@@ -29,7 +29,7 @@ public class EventUserController {
     @PostMapping
     public EventFullDto addEvent(@PathVariable Long userId, @RequestBody @Valid EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException {
         log.info("Call#EventUserController#addEvent# userId: {}, eventNewDto: {}", userId, eventNewDto);
-        return eventService.create(userId, eventNewDto);
+        return eventService.addEvent(userId, eventNewDto);
     }
 
     @GetMapping
