@@ -299,6 +299,7 @@ public class EventServiceImpl implements EventService {
         }
 
     }
+
     private EventFullDto toEventFullDtoWithViews(Event event) {
         String uriEvent = URI + event.getId().toString();
         List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, List.of(uriEvent), false);
