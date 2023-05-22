@@ -55,8 +55,8 @@ public class EventUserController {
     public EventFullDto updateEventByUser(@PathVariable Long userId,
                                      @PathVariable Long eventId,
                                      @RequestBody EventUpdateDto eventUpdateDto,
-                                     HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException {
-        log.info("Call#EventUserController#addEvent# userId: {},eventId: {}, eventNewDto: {}", userId,eventId, eventUpdateDto);
+                                     HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException, ConflictException {
+        log.info("Call#EventUserController#updateEventByUser# userId: {},eventId: {}, eventNewDto: {}", userId,eventId, eventUpdateDto);
         return eventService.updateByUser(userId, eventId, eventUpdateDto, request);
     }
 }

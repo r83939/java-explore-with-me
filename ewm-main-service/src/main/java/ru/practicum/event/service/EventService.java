@@ -14,7 +14,7 @@ import java.util.List;
 public interface EventService {
     EventFullDto addEvent(Long id, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException;
 
-    List<EventFullDto> searchEventsPublic(String text, boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd,
+    List<EventFullDto> searchEventsPublic(String text, boolean paid, String rangeStart, String rangeEnd,
                                           boolean onlyAvailable, List<Integer> categories, String sort,
                                           Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException;
 
@@ -24,7 +24,7 @@ public interface EventService {
 
     EventFullDto getByUserAndEventId(Long userId, Long eventId, Integer size, Integer from, HttpServletRequest request) throws JsonProcessingException;
 
-    EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException;
+    EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException, ConflictException;
 
     List<EventFullDto> searchEventsByAdmin(List<Long> usersId, List<String> states, List<Integer> categories,
                                            LocalDateTime startTime, LocalDateTime endTime,

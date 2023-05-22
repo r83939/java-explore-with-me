@@ -19,7 +19,7 @@ import java.util.List;
 public class EventPublicController {
 
     private final EventServiceImpl eventService;
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 
     @GetMapping
     public List<EventFullDto> searchEventsPublic(
@@ -28,23 +28,17 @@ public class EventPublicController {
             @RequestParam(defaultValue = "empty") String rangeStart,
             @RequestParam(defaultValue = "empty") String rangeEnd,
             @RequestParam(defaultValue = "false") String onlyAvailable,
-            @RequestParam(defaultValue = "0") List<Integer> categories,
+            //@RequestParam(defaultValue = 0) List<Integer> categories,
+            @RequestParam(required = false) List<Integer> categories,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "10") @Positive Integer size,
             @RequestParam(defaultValue = "0") @Positive Integer from,
             HttpServletRequest request) {
+
         log.info("Call#EventPublicController#getEventByEventId# text: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
                 "onlyAvailable: {}, sort: {}", text, paid, rangeStart, rangeEnd, onlyAvailable, sort);
-        LocalDateTime startTime;
-        LocalDateTime endTime;
-        if (rangeStart.equals("empty") || rangeEnd.equals("empty")) {
-            startTime = LocalDateTime.now().minusYears(10);
-            endTime = LocalDateTime.now().plusYears(10);
-        } else {
-            startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
-            endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
-        }
-        return eventService.searchEventsPublic(text, Boolean.parseBoolean(paid), startTime, endTime,
+
+        return eventService.searchEventsPublic(text, Boolean.parseBoolean(paid), rangeStart, rangeEnd,
                 Boolean.getBoolean(onlyAvailable), categories, sort, size, from, request);
     }
 
