@@ -2,6 +2,7 @@ package ru.practicum.compilation.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.dto.CompilationFullDto;
 import ru.practicum.compilation.service.CompilationServiceImpl;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+@Validated
 @Slf4j
 @RestController
 @RequiredArgsConstructor

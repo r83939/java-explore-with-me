@@ -41,5 +41,5 @@ public class EventNewDto {
 
     Integer participantLimit;
 
-    boolean requestModeration;
+    Boolean requestModeration;
 }

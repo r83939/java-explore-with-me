@@ -17,17 +17,14 @@ public class EventUpdateDto {
 
     Long id;
 
-    @NotEmpty
     @Size(max = 120)
     @Size(min = 3)
     String title;
 
-    @NotEmpty
     @Size(max = 7000)
     @Size(min = 20)
     String description;
 
-    @NotEmpty
     @Size(max = 2000)
     @Size(min = 20)
     String annotation;

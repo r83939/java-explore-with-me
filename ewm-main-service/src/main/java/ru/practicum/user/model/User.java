@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -22,10 +23,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+
     @NotEmpty
+    @Size(max = 250)
+    @Size(min = 2)
     String name;
 
     @NotEmpty
     @Email
+    @Size(max = 254)
+    @Size(min = 6)
     String email;
 }

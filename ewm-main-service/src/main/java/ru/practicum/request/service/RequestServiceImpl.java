@@ -7,6 +7,7 @@ import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.dto.RequestUpdateDto;
 import ru.practicum.request.dto.RequestUpdateResultDto;
@@ -15,10 +16,14 @@ import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.model.RequestState;
 import ru.practicum.request.repository.RequestRepository;
+import ru.practicum.user.model.User;
+import ru.practicum.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Getter
@@ -29,8 +34,10 @@ public class RequestServiceImpl implements RequestService {
 
     private final EventRepository eventRepository;
 
-    @Override
-    public Request create(Long userId, Long eventId) throws ConflictException {
+    private final UserRepository userRepository;
+
+    //@Override
+    public Request create0(Long userId, Long eventId) throws ConflictException {
         boolean isExists = !getByUserAndEventId(userId - 1, eventId).isEmpty();
         boolean isYourEvent = eventRepository.getReferenceById(eventId).getInitiator().getId().equals(userId);
         boolean isEventPublished = eventRepository.getReferenceById(eventId).getState().equals(EventState.PUBLISHED);
@@ -66,6 +73,45 @@ public class RequestServiceImpl implements RequestService {
             System.out.println("CONFLICT");
             throw new ConflictException("Нет события с id: " + eventId);
         }
+    }
+
+    @Override
+    public Request create(Long userId, Long eventId) throws ConflictException, EntityNotFoundException {
+        Optional<User> user = userRepository.findById(userId) ;
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty()) {
+            throw new EntityNotFoundException("Event not found");
+        }
+        Optional<Request> request = requestRepository.findByEventIdAndRequesterId(eventId, userId);
+        if (request.isPresent()) {
+            throw new ConflictException("You already have request to event");
+        }
+
+        if (event.get().getState() != EventState.PUBLISHED) {
+            throw new ConflictException("Event is not published. Request rejected");
+        }
+        if (Objects.equals(event.get().getInitiator().getId(), userId)) {
+            throw new ConflictException("You can't send request to your own event");
+        }
+
+        int confirmedRequests = requestRepository.findByEventIdConfirmed(eventId);
+
+        if (event.get().getParticipantLimit() != 0 && event.get().getParticipantLimit() <= confirmedRequests) {
+            throw new ConflictException("Participant limit reached");
+        }
+        RequestState status = RequestState.PENDING;
+        if (!event.get().isRequestModeration() || event.get().getParticipantLimit() == 0) {
+            status = RequestState.CONFIRMED;
+        }
+        Request newRequest = new Request(null,
+                LocalDateTime.now(),
+                event.get().getId(),
+                user.get().getId(),
+                status);
+        return requestRepository.save(newRequest);
     }
 
     @Override

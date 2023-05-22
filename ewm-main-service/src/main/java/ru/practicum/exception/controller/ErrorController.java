@@ -56,7 +56,7 @@ public class ErrorController {
     }
 
     @ExceptionHandler(InvalidParameterException.class)
-    public ResponseEntity<ErrorMessage> handleException(ConstraintViolationException e) {
+    public ResponseEntity<ErrorMessage> handleException(InvalidParameterException e) {
         ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setMessage(e.getMessage());
         errorMessage.setReason("В запросе обнаружена ошибка");

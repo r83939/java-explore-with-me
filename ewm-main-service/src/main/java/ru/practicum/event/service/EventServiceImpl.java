@@ -23,6 +23,7 @@ import ru.practicum.event.model.StateAction;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
+import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.statistic.HitMapper;
 import ru.practicum.statistic.StatService;
@@ -65,7 +66,7 @@ public class EventServiceImpl implements EventService {
     private final StatService statService;
 
     @Override
-    public EventFullDto addEvent(Long userId, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException {
+    public EventFullDto addEvent(Long userId, EventNewDto eventNewDto) throws EntityNotFoundException, InvalidParameterException {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new EntityNotFoundException("Нет пользователя с id: " + userId);
@@ -74,7 +75,6 @@ public class EventServiceImpl implements EventService {
         if (category.isEmpty()) {
             throw new EntityNotFoundException("Нет категории с id: " + eventNewDto.getCategory());
         }
-        //if (LocalDateTime.parse(eventNewDto.getEventDate().replaceAll(" ", "T")).isAfter(LocalDateTime.now().plusHours(HOURS_BEFORE_START))) {
         if (LocalDateTime.parse(eventNewDto.getEventDate(), dateTimeFormatter).isAfter(LocalDateTime.now().plusHours(HOURS_BEFORE_START))) {
             Location location = locationRepository.save(eventNewDto.getLocation());
             LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(eventNewDto.getLocation());
@@ -83,7 +83,7 @@ public class EventServiceImpl implements EventService {
             UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(userId));
             return getEventWithoutViews(event, locationDto, userShortDto);
         } else {
-            throw new ConflictException("Неправильная дата");
+            throw new InvalidParameterException("Проверьте дату события.");
         }
     }
 
@@ -150,7 +150,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventFullDto> searchEventsPublic(String text, boolean paid, String rangeStart, String rangeEnd,
                                                  boolean onlyAvailable, List<Integer> categories, String sort,
-                                                 Integer size, Integer from, HttpServletRequest request)  {
+                                                 Integer size, Integer from, HttpServletRequest request) throws InvalidParameterException {
 
         LocalDateTime startTime;
         LocalDateTime endTime;
@@ -160,6 +160,9 @@ public class EventServiceImpl implements EventService {
         } else {
             startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
             endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
+            if (endTime.isBefore(startTime)) {
+                throw new InvalidParameterException("Время окончания события должно быть позже времени начала.");
+            }
         }
 
         List<Event> events;
@@ -169,7 +172,6 @@ public class EventServiceImpl implements EventService {
         }
         if (onlyAvailable) {
             if (categories == null) {
-           // if (categories.get(0) == 0) {
                 events = eventRepository.searchEventsPublicOnlyAvailableAllCategories(
                         text, paid, startTime, endTime, sort, size, from);
             } else {
@@ -208,16 +210,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException {
+    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException {
         Event event = eventRepository.getReferenceById(eventId);
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
-            //startTime = LocalDateTime.now().plusHours(10);
             startTime = event.getEventDate();
         } else {
-//            String rangeStart = eventUpdateDto.getEventDate();
-//            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-//            startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
             startTime = LocalDateTime.parse(eventUpdateDto.getEventDate(), dateTimeFormatter);
         }
         if (startTime.isAfter(LocalDateTime.now().plusHours(HOURS_BEFORE_START)) && !event.getState().equals(EventState.PUBLISHED)
@@ -233,7 +231,7 @@ public class EventServiceImpl implements EventService {
             }
             return toEventFullDtoFromEvent(eventRepository.save(event), false);
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Событие должно быть в состоянии ожидания");
+            throw new InvalidParameterException("Проверьте дату события.");
         }
     }
 
@@ -383,7 +381,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws ConflictException, EntityNotFoundException {
+    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException {
         Event event = eventRepository.getReferenceById(eventId);
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
@@ -405,7 +403,7 @@ public class EventServiceImpl implements EventService {
             }
             return toEventFullDtoFromEvent(eventRepository.save(event), true);
         } else {
-            throw new ConflictException("Проверьте статус и время начала события.");
+            throw new InvalidParameterException("Проверьте статус и время начала события.");
         }
     }
 

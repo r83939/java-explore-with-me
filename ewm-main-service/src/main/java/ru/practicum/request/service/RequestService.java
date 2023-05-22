@@ -1,6 +1,7 @@
 package ru.practicum.request.service;
 
 import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.request.dto.RequestUpdateDto;
 import ru.practicum.request.dto.RequestUpdateResultDto;
 import ru.practicum.request.model.Request;
@@ -8,7 +9,7 @@ import ru.practicum.request.model.Request;
 import java.util.List;
 
 public interface RequestService {
-    Request create(Long userId, Long eventId) throws ConflictException;
+    Request create(Long userId, Long eventId) throws ConflictException, EntityNotFoundException;
 
     List<Request> get(Long id);
 

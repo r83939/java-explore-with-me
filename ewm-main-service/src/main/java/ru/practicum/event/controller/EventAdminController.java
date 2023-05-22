@@ -2,19 +2,24 @@ package ru.practicum.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventUpdateDto;
 import ru.practicum.event.service.EventServiceImpl;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
+import ru.practicum.exception.InvalidParameterException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Validated
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +39,7 @@ public class EventAdminController {
             @RequestParam(defaultValue = RANGE_START) String rangeStart,
             @RequestParam(defaultValue = RANGE_END) String rangeEnd,
             @RequestParam(defaultValue = "10") @Positive Integer size,
-            @RequestParam(defaultValue = "0") @Positive Integer from,
+            @RequestParam(defaultValue = "1") @PositiveOrZero Integer from,
             HttpServletRequest request) {
         log.info("Call#EventAdminController#searchEventsByAdmin# size {} from {} ", size, from);
         LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
@@ -43,9 +48,9 @@ public class EventAdminController {
     }
 
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEventByAdmin(@PathVariable Long eventId,
-                                      @RequestBody EventUpdateDto eventUpdateDto,
-                                      HttpServletRequest request) throws ConflictException, EntityNotFoundException {
+    public EventFullDto updateEventByAdmin(@PathVariable @Positive Long eventId,
+                                           @Valid @RequestBody EventUpdateDto eventUpdateDto,
+                                      HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException {
         log.info("Call#EventAdminController#updateEventByAdmin# eventId: {}, eventUpdateDto: {}", eventId, eventUpdateDto);
         return eventService.updateByAdmin(eventId, eventUpdateDto, request);
     }

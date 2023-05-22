@@ -8,6 +8,7 @@ import ru.practicum.category.model.Category;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
+import ru.practicum.exception.InvalidParameterException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,11 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventRepository eventRepository;
 
     @Override
-    public Category addCategory(Category category) throws ConflictException {
+    public Category addCategory(Category category) throws ConflictException, InvalidParameterException {
         log.info("Call#CategoryServiceImpl#create# : category: " + category.getName());
+        if (category.getName().isBlank() || category.getName().isEmpty()) {
+            throw new InvalidParameterException("Название категории должно быть задано.");
+        }
         if (categoryRepository.existsCategoryByName(category.getName())) {
             throw new ConflictException("Уже есть категория с именем: " + category.getName());
         }

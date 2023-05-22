@@ -3,6 +3,7 @@ package ru.practicum.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.DuplicateEmailException;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+@Validated
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +42,7 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) throws DuplicateEmailException, EntityNotFoundException {
+    public User updateUser(@PathVariable Long id, @Valid @RequestBody User user) throws DuplicateEmailException, EntityNotFoundException {
         log.info("Call#AdminController#updateUser# userId {}: ", id);
         return userService.updateUser(id, user);
     }

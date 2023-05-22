@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.service.RequestServiceImpl;
 
@@ -21,7 +22,7 @@ public class RequestPrivateController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Request addRequest(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) throws ConflictException {
+    public Request addRequest(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) throws ConflictException, EntityNotFoundException {
         log.info("Call #RequestPrivateController#addRequest# userId {}, eventId: {}",userId, eventId);
         return requestService.create(userId, eventId);
     }

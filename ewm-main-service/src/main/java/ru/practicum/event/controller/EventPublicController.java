@@ -5,9 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.service.EventServiceImpl;
+import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.InvalidParameterException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -30,10 +33,10 @@ public class EventPublicController {
             @RequestParam(required = false) List<Integer> categories,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "10") @Positive Integer size,
-            @RequestParam(defaultValue = "0") @Positive Integer from,
-            HttpServletRequest request) {
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            HttpServletRequest request) throws InvalidParameterException {
 
-        log.info("Call#EventPublicController#getEventByEventId# text: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
+        log.info("Call#EventPublicController#searchEventsPublic# text: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
                 "onlyAvailable: {}, sort: {}", text, paid, rangeStart, rangeEnd, onlyAvailable, sort);
 
         return eventService.searchEventsPublic(text, Boolean.parseBoolean(paid), rangeStart, rangeEnd,
@@ -41,7 +44,7 @@ public class EventPublicController {
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getEventByEventId(@PathVariable Long id,
+    public EventFullDto getEventByEventId(@PathVariable @Positive Long id,
                                      HttpServletRequest request) {
         log.info("Call#EventPublicController#getEventByEventId# eventId: {}", id);
         return eventService.getByEventId(id, request);
