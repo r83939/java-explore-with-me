@@ -389,9 +389,6 @@ public class EventServiceImpl implements EventService {
             //startTime = LocalDateTime.now().plusHours(10);
             startTime = event.getEventDate();
         } else {
-//            String rangeStart = eventUpdateDto.getEventDate();
-//            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-//            startTime = LocalDateTime.parse(rangeStart.replaceAll(" ", "T"), formatter);
             startTime = LocalDateTime.parse(eventUpdateDto.getEventDate(), dateTimeFormatter);
         }
         if (startTime.isAfter(LocalDateTime.now().plusHours(ADMIN_HOURS_BEFORE_START)) && event.getState().equals(EventState.PENDING)) {
@@ -413,7 +410,6 @@ public class EventServiceImpl implements EventService {
 
     private EventFullDto toEventFullDtoFromEvent(Event event, boolean updating) {
         LocationDto locationDto = LocationMapper.toLocationDtoFromLocation(event.getLocation());
-        //UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(userRepository.getReferenceById(event.getInitiator().getId()));
         UserShortDto userShortDto = UserMapper.toUserShortDtoFromUser(event.getInitiator());
         if (updating) {
             return getEventWithoutViews(event, locationDto, userShortDto);
