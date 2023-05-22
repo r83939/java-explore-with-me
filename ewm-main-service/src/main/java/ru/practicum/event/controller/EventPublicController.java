@@ -8,8 +8,6 @@ import ru.practicum.event.service.EventServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
