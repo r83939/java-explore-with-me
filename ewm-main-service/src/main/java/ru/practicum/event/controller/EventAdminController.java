@@ -50,7 +50,7 @@ public class EventAdminController {
     @PatchMapping("/{eventId}")
     public EventFullDto updateEventByAdmin(@PathVariable @Positive Long eventId,
                                            @Valid @RequestBody EventUpdateDto eventUpdateDto,
-                                      HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException {
+                                      HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException, ConflictException {
         log.info("Call#EventAdminController#updateEventByAdmin# eventId: {}, eventUpdateDto: {}", eventId, eventUpdateDto);
         return eventService.updateByAdmin(eventId, eventUpdateDto, request);
     }

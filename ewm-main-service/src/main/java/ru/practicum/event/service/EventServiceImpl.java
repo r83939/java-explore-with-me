@@ -210,8 +210,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException {
+    public EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException, ConflictException {
         Event event = eventRepository.getReferenceById(eventId);
+        if (event.getState().equals(EventState.PUBLISHED)) {
+            throw new ConflictException("Нельзя изменить событие в статусе PUBLISHED");
+        }
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
             startTime = event.getEventDate();
@@ -381,27 +384,37 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException {
-        Event event = eventRepository.getReferenceById(eventId);
+    public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException, ConflictException {
+        //Event event = eventRepository.getReferenceById(eventId);
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.get().getState().equals(EventState.PUBLISHED) && eventUpdateDto.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
+            throw new ConflictException("Нельзя опубликовать уже опубликованное событие.");
+        }
+        if (event.get().getState().equals(EventState.CANCELED) && eventUpdateDto.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
+            throw new ConflictException("Нельзя опубликовать событие в состоянии CANCELED.");
+        }
+        if (event.get().getState().equals(EventState.PUBLISHED) && eventUpdateDto.getStateAction().equals(StateAction.REJECT_EVENT)) {
+            throw new ConflictException("Нельзя отменить событие в состоянии PUBLISHED.");
+        }
+
         LocalDateTime startTime;
         if (Optional.ofNullable(eventUpdateDto.getEventDate()).isEmpty()) {
-            //startTime = LocalDateTime.now().plusHours(10);
-            startTime = event.getEventDate();
+            startTime = event.get().getEventDate();
         } else {
             startTime = LocalDateTime.parse(eventUpdateDto.getEventDate(), dateTimeFormatter);
         }
-        if (startTime.isAfter(LocalDateTime.now().plusHours(ADMIN_HOURS_BEFORE_START)) && event.getState().equals(EventState.PENDING)) {
-            checkAndUpdateEvent(eventUpdateDto, event);
+        if (startTime.isAfter(LocalDateTime.now().plusHours(ADMIN_HOURS_BEFORE_START)) && event.get().getState().equals(EventState.PENDING)) {
+            checkAndUpdateEvent(eventUpdateDto, event.get());
             if (Optional.ofNullable(eventUpdateDto.getStateAction()).isPresent()) {
                 if (eventUpdateDto.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
-                    event.setState(EventState.PUBLISHED);
-                    event.setPublishedOn(LocalDateTime.now());
+                    event.get().setState(EventState.PUBLISHED);
+                    event.get().setPublishedOn(LocalDateTime.now());
                 }
                 if (eventUpdateDto.getStateAction().equals(StateAction.REJECT_EVENT)) {
-                    event.setState(EventState.CANCELED);
+                    event.get().setState(EventState.CANCELED);
                 }
             }
-            return toEventFullDtoFromEvent(eventRepository.save(event), true);
+            return toEventFullDtoFromEvent(eventRepository.save(event.get()), true);
         } else {
             throw new InvalidParameterException("Проверьте статус и время начала события.");
         }

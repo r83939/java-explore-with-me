@@ -12,6 +12,8 @@ import ru.practicum.user.model.User;
 import ru.practicum.user.service.UserServiceImpl;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Validated
@@ -30,19 +32,21 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsersByIds(List<Long> ids, Integer from, Integer size) {
+    public List<User> getUsersByIds(@RequestParam(required = false) List<Long> ids,
+                                    @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                    @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Call#UserController#getUserByIds# ids {}:  size {} from {} ", ids, size, from);
         return userService.getUserByIds(ids, size, from);
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) throws EntityNotFoundException {
+    public User getUserById(@Positive @PathVariable Long id) throws EntityNotFoundException {
         log.info("Call#UserController#getUserById# id: {}", id);
         return userService.getUser(id);
     }
 
     @PatchMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @Valid @RequestBody User user) throws DuplicateEmailException, EntityNotFoundException {
+    public User updateUser(@Positive @PathVariable  Long id, @Valid @RequestBody User user) throws DuplicateEmailException, EntityNotFoundException {
         log.info("Call#UserController#updateUser# userId {}: ", id);
         return userService.updateUser(id, user);
     }

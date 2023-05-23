@@ -32,7 +32,7 @@ public class CompilationPublicController {
     }
 
     @GetMapping("/{compId}")
-    public CompilationFullDto getCompilation(@PathVariable Long compId) throws EntityNotFoundException {
+    public CompilationFullDto getCompilation(@PathVariable @Positive Long compId) throws EntityNotFoundException {
         log.info("Call #CompilationPublicController#getCompilation# CompilationId {}", compId);
         return compilationService.getCompilation(compId);
     }

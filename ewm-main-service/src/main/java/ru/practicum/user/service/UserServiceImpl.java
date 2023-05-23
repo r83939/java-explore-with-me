@@ -3,6 +3,7 @@ package ru.practicum.user.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.domain.UserValidator;
 import ru.practicum.exception.ConflictException;
@@ -14,6 +15,7 @@ import ru.practicum.user.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,7 +39,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUserByIds(List<Long> ids, Integer from, Integer size) {
         log.info("Call#UserServiceImpl#getUserByIds# idsCount: {}, from: {}, size: {}", ids.size(), from, size);
-        return userRepository.getByIds(ids, from, size);
+        PageRequest page = PageRequest.of(from / size, size);
+        if (!ids.isEmpty()) {
+            return userRepository.findAllByIdIn(ids, page);
+        } else {
+            return (List<User>) userRepository.findAll(page);
+        }
     }
 
     @Override
