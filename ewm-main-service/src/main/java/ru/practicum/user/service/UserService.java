@@ -18,5 +18,5 @@ public interface UserService {
 
     User updateUser(Long id, User user) throws EntityNotFoundException, DuplicateEmailException;
 
-    void deleteUser(Long id) throws EntityNotFoundException, InvalidParameterException;
+    User deleteUser(Long id) throws EntityNotFoundException, InvalidParameterException;
 }

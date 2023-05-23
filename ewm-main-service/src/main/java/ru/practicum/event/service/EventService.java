@@ -19,6 +19,9 @@ public interface EventService {
                                           boolean onlyAvailable, List<Integer> categories, String sort,
                                           Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException, ConflictException, InvalidParameterException;
 
+    List<EventFullDto> searchEventsPublic1(String text, String paid, String rangeStart, String rangeEnd,
+                                          String onlyAvailable, List<Integer> categories, String sort,
+                                          Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException, ConflictException, InvalidParameterException;
     EventFullDto getByEventId(Long id, HttpServletRequest request);
 
     List<EventFullDto> getByUserId(Long id, Integer size, Integer from, HttpServletRequest request) throws JsonProcessingException;
@@ -30,6 +33,7 @@ public interface EventService {
     List<EventFullDto> searchEventsByAdmin(List<Long> usersId, List<String> states, List<Integer> categories,
                                            LocalDateTime startTime, LocalDateTime endTime,
                                            Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException;
+
 
     EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws JsonProcessingException, ConflictException, EntityNotFoundException, InvalidParameterException;
 }

@@ -12,9 +12,9 @@ public interface CategoryService {
 
     List<Category> getAllCategories(Integer from, Integer size);
 
-    Category getCategory(Integer id) throws EntityNotFoundException;
+    Category getCategory(Long id) throws EntityNotFoundException;
 
-    Category updateCategory(Integer id, Category category) throws EntityNotFoundException, ConflictException;
+    Category updateCategory(Long id, Category category) throws EntityNotFoundException, ConflictException;
 
-    void deleteCategory(Integer id) throws EntityNotFoundException, ConflictException;
+    void deleteCategory(Long id) throws EntityNotFoundException, ConflictException;
 }

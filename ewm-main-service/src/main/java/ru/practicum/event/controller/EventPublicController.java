@@ -43,6 +43,18 @@ public class EventPublicController {
                 Boolean.getBoolean(onlyAvailable), categories, sort, size, from, request);
     }
 
+    @GetMapping
+    public List<EventFullDto> findEvents(@RequestParam(required = false) List<Long> users,
+                                         @RequestParam(required = false) List<Long> categories,
+                                         @RequestParam(required = false) String rangeStart,
+                                         @RequestParam(required = false) String rangeEnd,
+                                         @RequestParam(required = false) String onlyAvailable,
+                                         @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                         @Positive @RequestParam(defaultValue = "10") Integer size,
+                                         HttpServletRequest request) {
+        return eventService.searchEventsPublic1(users, categories, rangeStart, rangeEnd, from, size, request);
+    }
+
     @GetMapping("/{id}")
     public EventFullDto getEventByEventId(@PathVariable @Positive Long id,
                                      HttpServletRequest request) {

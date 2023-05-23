@@ -31,7 +31,7 @@ public class CategoryAdminController {
     }
 
     @PatchMapping("/{id}")
-    public Category updateCategory(@Positive  @PathVariable Integer id,
+    public Category updateCategory(@Positive  @PathVariable Long id,
                                    @RequestBody @Valid Category category) throws ConflictException, EntityNotFoundException {
         log.info("Call #CategoryAdminController#updateCategory# categoryId: {}", id);
         return categoryService.updateCategory(id, category);
@@ -39,7 +39,7 @@ public class CategoryAdminController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void deleteCategory(@Positive @PathVariable Integer id) throws EntityNotFoundException, ConflictException {
+    public void deleteCategory(@Positive @PathVariable Long id) throws EntityNotFoundException, ConflictException {
         log.info("Call #CategoryAdminController#deleteCategory# categoryId: {}", id);
         categoryService.deleteCategory(id);
     }

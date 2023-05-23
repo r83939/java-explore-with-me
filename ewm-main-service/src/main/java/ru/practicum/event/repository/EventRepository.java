@@ -1,7 +1,9 @@
 package ru.practicum.event.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.practicum.event.model.Event;
 
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value = "SELECT * FROM events WHERE (UPPER(annotation) LIKE UPPER(CONCAT('%', ?1, '%')) " +
             "OR UPPER(description) LIKE UPPER(CONCAT('%', ?1, '%'))) " +
-            "AND paid = ?2 AND event_date >= ?3 AND  event_date <= ?4 AND category_id IN (?5) AND state = 'PUBLISHED' " +
+            "AND paid = ?2 AND event_date >= ?3 AND  event_date <= ?4 AND category_id IN (?5) " +
             "ORDER BY ?6 DESC LIMIT ?7 OFFSET ?8", nativeQuery = true)
     List<Event> searchEventsPublic(String text, boolean paid, LocalDateTime startTime, LocalDateTime endTime,
                                    List<Integer> categories, String sort, Integer size, Integer from);
@@ -57,7 +59,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                                      LocalDateTime startTime, LocalDateTime endTime, Integer size, Integer from);
 
     @Query(value = "SELECT * FROM events WHERE state IN (?1) AND event_date >= ?2 AND  event_date <= ?3 " +
-            "ORDER BY id DESC LIMIT ?4 OFFSET ?5", nativeQuery = true)
+            "ORDER BY id ASC LIMIT ?4 OFFSET ?5", nativeQuery = true)
     List<Event> searchEventsByAdminFromAllUsersAndCategories(List<String> states,
                                                              LocalDateTime startTime, LocalDateTime endTime, Integer size, Integer from);
 
@@ -70,6 +72,31 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "SELECT * FROM events WHERE initiator_id = ?1 ORDER BY id DESC LIMIT ?2 OFFSET ?3", nativeQuery = true)
     List<Event> getByUserIdWithPagination(Long id, Integer size, Integer from);
 
-    List<Event> findAllByCategoryId(Integer id);
+    List<Event> findAllByCategoryId(Long id);
+
+    @Query("select event from Event event " +
+            "where event.id IN (:ids)")
+    List<Event> findByIds(@Param("ids") List<Long> ids);
+
+    @Query("SELECT e " +
+            "FROM Event AS e " +
+            "WHERE " +
+            "(" +
+            ":text IS NULL " +
+            "OR LOWER(e.description) LIKE CONCAT('%', :text, '%') " +
+            "OR LOWER(e.annotation) LIKE CONCAT('%', :text, '%')" +
+            ")" +
+            "AND (:categories IS NULL OR e.category.id IN (:categories)) " +
+            "AND (:paid IS NULL OR e.paid = :paid) " +
+            "AND (CAST(:rangeStart AS date) IS NULL OR e.eventDate >= :rangeStart) " +
+            "AND (CAST(:rangeEnd AS date) IS NULL OR e.eventDate <= :rangeEnd) " +
+            "order by e.eventDate")
+    List<Event> findByParamsOrderByDate(
+            @Param("text") String text,
+            @Param("categories") List<Long> categories,
+            @Param("paid") Boolean paid,
+            @Param("rangeStart") LocalDateTime rangeStart,
+            @Param("rangeEnd") LocalDateTime rangeEnd,
+            Pageable pageable);
 
 }

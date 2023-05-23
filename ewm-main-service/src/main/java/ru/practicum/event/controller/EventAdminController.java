@@ -34,18 +34,19 @@ public class EventAdminController {
     @GetMapping
     public List<EventFullDto> searchEventsByAdmin(
             @RequestParam(defaultValue = "0") List<Long> users,
-            @RequestParam(defaultValue = "WAITING, PUBLISHED, CANCELED") List<String> states,
+            @RequestParam(defaultValue = "PENDING, PUBLISHED, CANCELED") List<String> states,
             @RequestParam(defaultValue = "0") List<Integer> categories,
             @RequestParam(defaultValue = RANGE_START) String rangeStart,
             @RequestParam(defaultValue = RANGE_END) String rangeEnd,
             @RequestParam(defaultValue = "10") @Positive Integer size,
-            @RequestParam(defaultValue = "1") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
             HttpServletRequest request) {
         log.info("Call#EventAdminController#searchEventsByAdmin# size {} from {} ", size, from);
         LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
         LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         return eventService.searchEventsByAdmin(users, states, categories, startTime, endTime, size, from, request);
     }
+
 
     @PatchMapping("/{eventId}")
     public EventFullDto updateEventByAdmin(@PathVariable @Positive Long eventId,

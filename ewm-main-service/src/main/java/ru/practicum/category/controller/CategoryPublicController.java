@@ -27,7 +27,7 @@ public class CategoryPublicController {
     }
 
     @GetMapping("/{catId}")
-    public Category getCategory(@PathVariable Integer catId) throws EntityNotFoundException {
+    public Category getCategory(@PathVariable Long catId) throws EntityNotFoundException {
         log.info("Call #CategoryPublicControlle# categoryId {}", catId);
         return categoryService.getCategory(catId);
     }

@@ -40,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategory(Integer categoryId) throws EntityNotFoundException {
+    public Category getCategory(Long categoryId) throws EntityNotFoundException {
         log.info("Call#CategoryServiceImpl#get# : category: " + categoryId);
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Integer categoryId, Category updateCategory) throws EntityNotFoundException, ConflictException {
+    public Category updateCategory(Long categoryId, Category updateCategory) throws EntityNotFoundException, ConflictException {
         log.info("Call#CategoryServiceImpl#update# : category: " + updateCategory.getName());
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Integer categoryId) throws EntityNotFoundException, ConflictException {
+    public void deleteCategory(Long categoryId) throws EntityNotFoundException, ConflictException {
         log.info("Call#CategoryServiceImpl#delete# : CategoryId: " + categoryId);
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {

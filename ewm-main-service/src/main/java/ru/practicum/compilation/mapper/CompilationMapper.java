@@ -1,30 +1,32 @@
 package ru.practicum.compilation.mapper;
 
-import lombok.NoArgsConstructor;
-import ru.practicum.compilation.dto.CompilationFullDto;
-import ru.practicum.compilation.dto.CompilationNewDto;
+
+import ru.practicum.compilation.dto.NewCompilationDto;
+import ru.practicum.compilation.dto.ResponseCompilationDto;
+
 import ru.practicum.compilation.model.Compilation;
-import ru.practicum.event.dto.EventShortDto;
+import ru.practicum.event.dto.ShortEventDto;
+import ru.practicum.event.mapper.EventMapper;
+import ru.practicum.event.model.Event;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@NoArgsConstructor
-public final class CompilationMapper {
-
-    public static CompilationFullDto toCompilationFullDtoFromCompilation(Compilation compilation, List<EventShortDto> events) {
-        return new CompilationFullDto(
-                compilation.getId(),
-                compilation.getTitle(),
-                compilation.getPinned(),
-                events
-        );
+public class CompilationMapper {
+    public static Compilation toCompilation(NewCompilationDto newCompilationDto, List<Event> events) {
+        return new Compilation(null,
+                events,
+                newCompilationDto.getPinned(),
+                newCompilationDto.getTitle());
     }
 
-    public static Compilation toCompilationFromCompilationNewDto(CompilationNewDto compilationNewDto) {
-        return new Compilation(
-                compilationNewDto.getId(),
-                compilationNewDto.getTitle(),
-                compilationNewDto.getPinned()
-        );
+    public static ResponseCompilationDto toResponseCompilationDto(Compilation compilation) {
+        List<ShortEventDto> shortEvents = compilation.getEvents().stream()
+                .map( e -> EventMapper.toShortEventDto(e))
+                .collect(Collectors.toList());
+        return new ResponseCompilationDto(compilation.getId(),
+                shortEvents,
+                compilation.getPinned(),
+                compilation.getTitle());
     }
 }

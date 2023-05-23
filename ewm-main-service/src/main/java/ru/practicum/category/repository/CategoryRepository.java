@@ -6,9 +6,9 @@ import ru.practicum.category.model.Category;
 
 import java.util.List;
 
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query(value = "SELECT * FROM categories ORDER BY id DESC LIMIT ?1 OFFSET ?2", nativeQuery = true)
+    @Query(value = "SELECT * FROM categories ORDER BY id ASC LIMIT ?1 OFFSET ?2", nativeQuery = true)
     List<Category> getAllWithPagination(Integer size, Integer from);
 
     boolean existsCategoryByName(String name);

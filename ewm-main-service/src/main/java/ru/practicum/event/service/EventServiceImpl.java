@@ -103,10 +103,9 @@ public class EventServiceImpl implements EventService {
         return toEventFullDtoFromEvent(event, false);
     }
 
-    //@Override
-    public List<EventFullDto> searchEventsPublic1(String text, boolean paid, String rangeStart, String rangeEnd,
-                                                 boolean onlyAvailable, List<Integer> categories, String sort,
-                                                 Integer size, Integer from, HttpServletRequest request)  {
+    @Override
+    public List<EventFullDto> searchEventsPublic1(List<Long> users, List<Long> categories, String rangeStart, String rangeEnd,
+                                                  Integer from, Integer size, HttpServletRequest request)  {
 
         LocalDateTime startTime;
         LocalDateTime endTime;
@@ -183,7 +182,6 @@ public class EventServiceImpl implements EventService {
             }
         } else {
             if (categories == null) {
-            //if (categories.get(0) == 0) {
                 events = eventRepository.searchEventsPublicAllCategories(
                         text, paid, startTime, endTime, sort.toLowerCase(), size, from);
             } else {

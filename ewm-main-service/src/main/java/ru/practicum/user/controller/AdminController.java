@@ -14,6 +14,7 @@ import ru.practicum.user.service.UserServiceImpl;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Validated
@@ -35,22 +36,22 @@ public class AdminController {
     @GetMapping
     public List<User> getUsersByIds(@RequestParam(defaultValue = "") List<Long> ids,
                                @RequestParam(defaultValue = "10") @Positive Integer size,
-                               @RequestParam(defaultValue = "0") @Positive Integer from) {
+                               @RequestParam(defaultValue = "0") @PositiveOrZero Integer from) {
         System.out.println("ids = " + ids);
         log.info("Call#AdminController#getUsersByIds# ids {}:  size {} from {} ", ids, size, from);
-        return userService.getUserByIds(ids, size, from);
+        return userService.getUserByIds(ids,  from, size);
     }
 
     @PatchMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @Valid @RequestBody User user) throws DuplicateEmailException, EntityNotFoundException {
+    public User updateUser(@Positive @PathVariable Long id, @Valid @RequestBody User user) throws DuplicateEmailException, EntityNotFoundException {
         log.info("Call#AdminController#updateUser# userId {}: ", id);
         return userService.updateUser(id, user);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) throws EntityNotFoundException, InvalidParameterException {
+    public User deleteUser(@Positive @PathVariable Long id) throws EntityNotFoundException, InvalidParameterException {
         log.info("Call#AdminController#deleteUser# userId {}: ", id);
-        userService.deleteUser(id);
+        return userService.deleteUser(id);
     }
 }

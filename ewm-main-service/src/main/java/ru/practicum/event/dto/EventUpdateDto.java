@@ -29,7 +29,7 @@ public class EventUpdateDto {
     @Size(min = 20)
     String annotation;
 
-    Integer category;
+    Long category;
 
     String eventDate;
 

@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.domain.UserValidator;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.DuplicateEmailException;
@@ -13,9 +16,12 @@ import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.user.repository.UserRepository;
 import ru.practicum.user.model.User;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -37,13 +43,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUserByIds(List<Long> ids, Integer from, Integer size) {
+    public List<User> getUserByIds(List<Long> ids,
+                                   Integer from,
+                                   Integer size) {
         log.info("Call#UserServiceImpl#getUserByIds# idsCount: {}, from: {}, size: {}", ids.size(), from, size);
         PageRequest page = PageRequest.of(from / size, size);
         if (!ids.isEmpty()) {
             return userRepository.findAllByIdIn(ids, page);
         } else {
-            return (List<User>) userRepository.findAll(page);
+            //return (List<User>) userRepository.findAll(page);
+            return userRepository.findAll(page).stream().collect(Collectors.toList());
         }
     }
 
@@ -76,8 +85,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     @Override
-    public void deleteUser(Long userId) throws EntityNotFoundException, InvalidParameterException {
+    public User deleteUser(Long userId) throws EntityNotFoundException, InvalidParameterException {
         log.info("Call#UserServiceImpl#deleteUser# UserId: {}", userId);
             if (userId <= 0) {
                 throw new InvalidParameterException("id - должно быть целым числом, вы передали " +  userId);
@@ -87,5 +97,6 @@ public class UserServiceImpl implements UserService {
                 throw new EntityNotFoundException("Нет пользователя с id: " + userId);
             }
             userRepository.deleteById(userId);
+            return deleteUser.get();
         }
 }
