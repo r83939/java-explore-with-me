@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
+import ru.practicum.event.model.Sort;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.InvalidParameterException;
@@ -15,13 +16,20 @@ import java.util.List;
 public interface EventService {
     EventFullDto addEvent(Long id, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException, InvalidParameterException;
 
-    List<EventFullDto> searchEventsPublic(String text, boolean paid, String rangeStart, String rangeEnd,
+    List<EventFullDto> searchEventsPublic0(String text, boolean paid, String rangeStart, String rangeEnd,
                                           boolean onlyAvailable, List<Integer> categories, String sort,
                                           Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException, ConflictException, InvalidParameterException;
 
-    List<EventFullDto> searchEventsPublic1(String text, String paid, String rangeStart, String rangeEnd,
-                                          String onlyAvailable, List<Integer> categories, String sort,
-                                          Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException, ConflictException, InvalidParameterException;
+    List<EventFullDto> searchEventsPublic(String text,
+                                           List<Long> categories,
+                                           Boolean paid,
+                                           String rangeStart,
+                                           String rangeEnd,
+                                           Boolean onlyAvailable,
+                                           Sort sort,
+                                           Integer from,
+                                           Integer size,
+                                           HttpServletRequest request) throws JsonProcessingException, ConflictException, InvalidParameterException;
     EventFullDto getByEventId(Long id, HttpServletRequest request);
 
     List<EventFullDto> getByUserId(Long id, Integer size, Integer from, HttpServletRequest request) throws JsonProcessingException;

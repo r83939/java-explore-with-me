@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ru.practicum.request.model.Request;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
@@ -21,6 +22,12 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM participation_request WHERE status = 'CONFIRMED' AND event_id = ?1", nativeQuery = true)
     Integer getAllByEventIdAndConfirmedStatus(Long eventId);
+
+    @Query(value = "SELECT r.event_id as eventId, count(*) AS confirmedRequests " +
+            "FROM participation_request r " +
+            "WHERE status = 'CONFIRMED' AND event_id IN (?1) " +
+            "GROUP BY r.event_id", nativeQuery = true)
+    Map<Long, Integer> getConfirmedRequestsByEventIds(List<Long> eventIds);
 
     @Query(value = "SELECT * FROM participation_request WHERE id IN (?1)", nativeQuery = true)
     List<Request> getByRequestsList(List<Long> requestIds);

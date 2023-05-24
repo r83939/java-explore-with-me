@@ -2,6 +2,7 @@ package ru.practicum.event.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +20,7 @@ import ru.practicum.event.location.LocationMapper;
 import ru.practicum.event.location.LocationRepository;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
+import ru.practicum.event.model.Sort;
 import ru.practicum.event.model.StateAction;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
@@ -36,9 +38,10 @@ import ru.practicum.user.repository.UserRepository;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Getter
@@ -104,50 +107,91 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> searchEventsPublic1(List<Long> users, List<Long> categories, String rangeStart, String rangeEnd,
-                                                  Integer from, Integer size, HttpServletRequest request)  {
-
+    public List<EventFullDto> searchEventsPublic(String text,
+                                                  List<Long> categories,
+                                                  Boolean paid,
+                                                  String rangeStart,
+                                                  String rangeEnd,
+                                                  Boolean onlyAvailable,
+                                                  Sort sort,
+                                                  Integer from,
+                                                  Integer size,
+                                                  HttpServletRequest request)  {
+        PageRequest pageable = PageRequest.of(from / size, size);
         LocalDateTime startTime;
         LocalDateTime endTime;
-        if (rangeStart.equals("empty") || rangeEnd.equals("empty")) {
-            startTime = LocalDateTime.now().minusYears(10);
-            endTime = LocalDateTime.now().plusYears(10);
-        } else {
+        if (rangeStart != null && rangeEnd != null) {
             startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
             endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
+        } else {
+            startTime = LocalDateTime.now().plusMinutes(MINUTE_LATER_NOW);
+            endTime = LocalDateTime.parse(RANGE_END, dateTimeFormatter);
+        }
+        if (rangeStart != null) {
+            startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
+        }
+        if (rangeEnd != null) {
+            endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
+        }
+        List<Event> events = new ArrayList<>();
+        if (sort == null || sort.equals(Sort.VIEWS)) {
+            events = eventRepository.findEventsByParamsOrderById(text, categories, paid, startTime, endTime, onlyAvailable, pageable);
+        }
+        if (sort.equals(Sort.EVENT_DATE)) {
+            events = eventRepository.findEventsByParamsOrderByDate(text, categories, paid, startTime, endTime, onlyAvailable, pageable);
         }
 
-        List<Event> events;
+        List<Long> eventIds = new ArrayList<>();
+        eventIds = events.stream()
+                .map(Event::getId)
+                .collect(toList());
+
+        Map<Long, Integer> confirmedRequests = requestRepository.getConfirmedRequestsByEventIds(eventIds);
+
+        List<String> uriEventList = events.stream()
+                .map(e -> URI + e.getId().toString())
+                .collect(toList());
+
+        List<ViewStatsDto> hitDtos = statService.getStatistics(RANGE_START, RANGE_END, uriEventList, false);
+        Map<Long, Integer> eventViews = new HashMap<>();
+        eventViews = getEventsMap(hitDtos);
+
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
-        if (onlyAvailable) {
-            if (categories.get(0) == 0) {
-                events = eventRepository.searchEventsPublicOnlyAvailableAllCategories(
-                        text, paid, startTime, endTime, sort, size, from);
-            } else {
-                events = eventRepository.searchEventsPublicOnlyAvailable(
-                        text, paid, startTime, endTime, categories, sort, size, from);
-            }
-            for (Event event : events) {
-                eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
-            }
-        } else {
-            if (categories.get(0) == 0) {
-                events = eventRepository.searchEventsPublicAllCategories(
-                        text, paid, startTime, endTime, sort.toLowerCase(), size, from);
-            } else {
-                events = eventRepository.searchEventsPublic(
-                        text, paid, startTime, endTime, categories, sort.toLowerCase(), size, from);
-            }
-            for (Event event : events) {
-                eventFullDtoList.add(toEventFullDtoFromEvent(event, false));
-            }
+        for (Event event : events) {
+            EventFullDto eventFullDto = new EventFullDto(
+                    event.getId(),
+                    event.getTitle(),
+                    event.getDescription(),
+                    event.getAnnotation(),
+                    event.getState(),
+                    event.getCategory(),
+                    event.getCreatedOn(),
+                    event.getEventDate().format(dateTimeFormatter),
+                    event.getPublishedOn(),
+                    confirmedRequests.get(event.getId()),
+                    LocationMapper.toLocationDtoFromLocation(event.getLocation()),
+                    UserMapper.toUserShortDtoFromUser(event.getInitiator()),
+                    event.isPaid(),
+                    event.getParticipantLimit(),
+                    event.isRequestModeration(),
+                    eventViews.get(event.getId())
+            );
         }
+
         statService.addEventStat(HitMapper.toEndpointHit(APP_NAME, request));
         return eventFullDtoList;
     }
 
+    private Map<Long, Integer> getEventsMap(List<ViewStatsDto> hitDtos) {
+        Map<Long, Integer> map = new HashMap<>();
+        for (ViewStatsDto viewStatsDto : hitDtos) {
+            map.put( Long.parseLong(viewStatsDto.getUri().replace("/events/", "")), viewStatsDto.getHits().intValue());
+        }
+        return map;
+    }
+
     @Override
-    public List<EventFullDto> searchEventsPublic(String text, boolean paid, String rangeStart, String rangeEnd,
+    public List<EventFullDto> searchEventsPublic0(String text, boolean paid, String rangeStart, String rangeEnd,
                                                  boolean onlyAvailable, List<Integer> categories, String sort,
                                                  Integer size, Integer from, HttpServletRequest request) throws InvalidParameterException {
 

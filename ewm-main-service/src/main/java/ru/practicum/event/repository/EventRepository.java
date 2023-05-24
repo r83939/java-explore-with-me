@@ -90,13 +90,40 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (:paid IS NULL OR e.paid = :paid) " +
             "AND (CAST(:rangeStart AS date) IS NULL OR e.eventDate >= :rangeStart) " +
             "AND (CAST(:rangeEnd AS date) IS NULL OR e.eventDate <= :rangeEnd) " +
-            "order by e.eventDate")
-    List<Event> findByParamsOrderByDate(
+            "AND (:onlyAvailable IS NULL OR e.confirmedRequests < e.participantLimit) " +
+            "ORDER BY e.eventDate")
+    List<Event> findEventsByParamsOrderByDate(
             @Param("text") String text,
             @Param("categories") List<Long> categories,
             @Param("paid") Boolean paid,
             @Param("rangeStart") LocalDateTime rangeStart,
             @Param("rangeEnd") LocalDateTime rangeEnd,
+            @Param("onlyAvailable") Boolean onlyAvailable,
             Pageable pageable);
+
+    @Query("SELECT e " +
+            "FROM Event AS e " +
+            "WHERE " +
+            "(" +
+            ":text IS NULL " +
+            "OR LOWER(e.description) LIKE CONCAT('%', :text, '%') " +
+            "OR LOWER(e.annotation) LIKE CONCAT('%', :text, '%')" +
+            ")" +
+            "AND (:categories IS NULL OR e.category.id IN (:categories)) " +
+            "AND (:paid IS NULL OR e.paid = :paid) " +
+            "AND (CAST(:rangeStart AS date) IS NULL OR e.eventDate >= :rangeStart) " +
+            "AND (CAST(:rangeEnd AS date) IS NULL OR e.eventDate <= :rangeEnd) " +
+            "AND (:onlyAvailable IS NULL OR e.confirmedRequests < e.participantLimit) " +
+            "ORDER BY e.id")
+    List<Event> findEventsByParamsOrderById(
+            @Param("text") String text,
+            @Param("categories") List<Long> categories,
+            @Param("paid") Boolean paid,
+            @Param("rangeStart") LocalDateTime rangeStart,
+            @Param("rangeEnd") LocalDateTime rangeEnd,
+            @Param("onlyAvailable") Boolean onlyAvailable,
+            Pageable pageable);
+
+
 
 }
