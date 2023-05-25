@@ -1,6 +1,7 @@
 package ru.practicum.statistic;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndpointHitDto;
@@ -19,7 +20,7 @@ public class StatService {
     }
 
 
-    public List<ViewStatsDto> getStatistics(
+    public ResponseEntity<String> getStatistics(
             String rangeStart,
             String rangeEnd,
             List<String> uris,

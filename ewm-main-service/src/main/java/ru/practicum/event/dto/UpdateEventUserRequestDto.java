@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.category.model.Category;
 import ru.practicum.event.location.LocationDto;
 import ru.practicum.event.model.EventState;
+import ru.practicum.event.model.StateAction;
 import ru.practicum.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
@@ -14,37 +15,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EventFullDto {
-
-    Long id;
-
-    String title;
-
-    String description;
+public class UpdateEventUserRequestDto {
 
     String annotation;
-
-    EventState state;
-
-    Category category;
-
-    LocalDateTime createdOn;
-
+    Integer category;
+    String description;
     String eventDate;
-
-    LocalDateTime publishedOn;
-
-    Integer confirmedRequests;
-
     LocationDto location;
-
-    UserShortDto initiator;
-
     boolean paid;
-
     Integer participantLimit;
-
     boolean requestModeration;
+    StateAction stateAction;
+    String title;
 
-    Long views;
 }

@@ -10,6 +10,7 @@ import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.InvalidParameterException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,12 +30,12 @@ public interface EventService {
                                            Sort sort,
                                            Integer from,
                                            Integer size,
-                                           HttpServletRequest request) throws JsonProcessingException, ConflictException, InvalidParameterException;
-    EventFullDto getByEventId(Long id, HttpServletRequest request);
+                                           HttpServletRequest request) throws IOException, ConflictException, InvalidParameterException;
+    EventFullDto getByEventId(Long id, HttpServletRequest request) throws EntityNotFoundException;
 
     List<EventFullDto> getByUserId(Long id, Integer size, Integer from, HttpServletRequest request) throws JsonProcessingException;
 
-    EventFullDto getByUserAndEventId(Long userId, Long eventId, Integer size, Integer from, HttpServletRequest request) throws JsonProcessingException;
+    EventFullDto getByUserAndEventId(Long userId, Long eventId, HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException;
 
     EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException, ConflictException, InvalidParameterException;
 

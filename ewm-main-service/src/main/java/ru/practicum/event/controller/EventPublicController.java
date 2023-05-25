@@ -8,11 +8,13 @@ import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.model.Sort;
 import ru.practicum.event.service.EventServiceImpl;
 import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.InvalidParameterException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -56,7 +58,7 @@ public class EventPublicController {
                                          @RequestParam(required = false) Sort sort,
                                          @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                          @Positive @RequestParam(defaultValue = "10") Integer size,
-                                         HttpServletRequest request) {
+                                         HttpServletRequest request) throws InvalidParameterException, IOException, ConflictException {
         log.info("Call#EventPublicController#searchEventsPublic# text: {}, categories: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
                 "onlyAvailable: {}, sort: {}, from: {}, size: {}", text, paid, rangeStart, rangeEnd, onlyAvailable, sort);
         return eventService.searchEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
@@ -64,7 +66,7 @@ public class EventPublicController {
 
     @GetMapping("/{id}")
     public EventFullDto getEventByEventId(@PathVariable @Positive Long id,
-                                     HttpServletRequest request) {
+                                     HttpServletRequest request) throws EntityNotFoundException {
         log.info("Call#EventPublicController#getEventByEventId# eventId: {}", id);
         return eventService.getByEventId(id, request);
     }

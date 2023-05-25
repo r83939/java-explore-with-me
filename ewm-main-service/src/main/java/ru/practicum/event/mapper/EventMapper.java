@@ -9,6 +9,7 @@ import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.ShortEventDto;
 import ru.practicum.event.location.Location;
 import ru.practicum.event.location.LocationDto;
+import ru.practicum.event.location.LocationMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.user.dto.UserShortDto;
@@ -89,6 +90,27 @@ public final class EventMapper {
                 event.isPaid(),
                 event.getTitle(),
                 0L
+        );
+    }
+
+    public static EventFullDto toEventFullDto(Event event, Long views) {
+        return new EventFullDto(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getAnnotation(),
+                event.getState(),
+                event.getCategory(),
+                event.getCreatedOn(),
+                event.getEventDate().toString(),
+                event.getPublishedOn(),
+                event.getConfirmedRequests(),
+                LocationMapper.toLocationDtoFromLocation(event.getLocation()),
+                UserMapper.toUserShortDtoFromUser(event.getInitiator()),
+                event.isPaid(),
+                event.getParticipantLimit(),
+                event.isRequestModeration(),
+                views
         );
     }
 }

@@ -29,6 +29,12 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "GROUP BY r.event_id", nativeQuery = true)
     Map<Long, Integer> getConfirmedRequestsByEventIds(List<Long> eventIds);
 
+    @Query(value = "SELECT r.event_id as eventId, count(*) AS confirmedRequests " +
+            "FROM participation_request r " +
+            "WHERE status = 'CONFIRMED' " +
+            "GROUP BY r.event_id", nativeQuery = true)
+    Integer getConfirmedRequestsByEventId(Long eventId);
+
     @Query(value = "SELECT * FROM participation_request WHERE id IN (?1)", nativeQuery = true)
     List<Request> getByRequestsList(List<Long> requestIds);
 

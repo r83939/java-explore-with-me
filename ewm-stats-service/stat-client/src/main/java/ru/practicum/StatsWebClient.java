@@ -38,7 +38,7 @@ public class StatsWebClient {
                 .block();
     }
 
-    public List<ViewStatsDto> getStatistics(
+    public ResponseEntity<String> getStatistics(
             String start,
             String end,
             List<String> uris,
@@ -55,8 +55,8 @@ public class StatsWebClient {
                         .build())
                 .exchangeToMono(response -> {
                     if (response.statusCode().is2xxSuccessful()) {
-                        return response.bodyToMono(List.class);
-                               // .map(body -> ResponseEntity.ok().body(body));
+                        return response.bodyToMono(String.class)
+                                .map(body -> ResponseEntity.ok().body(body));
                     } else {
                         return response.createException()
                                 .flatMap(Mono::error);

@@ -49,11 +49,9 @@ public class EventUserController {
     @GetMapping("/{eventId}")
     public EventFullDto getEventByUserAndEventId(@PathVariable Long userId,
                                             @PathVariable @Positive Long eventId,
-                                            @RequestParam(defaultValue = "10") @Positive Integer size,
-                                            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                            HttpServletRequest request) throws  JsonProcessingException {
-        log.info("Call#EventUserController#getEventByUserAndEventId# eventId: {}, userId: {}, size: {}, from: {}", eventId, userId, size, from);
-        return eventService.getByUserAndEventId(userId, eventId, size, from, request);
+                                            HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException {
+        log.info("Call#EventUserController#getEventByUserAndEventId# eventId: {}, userId: {}, size: {}, from: {}", eventId, userId);
+        return eventService.getByUserAndEventId(userId, eventId, request);
     }
 
     @PatchMapping("/{eventId}")
