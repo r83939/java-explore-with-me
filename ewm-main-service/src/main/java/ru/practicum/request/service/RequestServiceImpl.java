@@ -2,12 +2,14 @@ package ru.practicum.request.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
+import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.dto.RequestUpdateDto;
 import ru.practicum.request.dto.RequestUpdateResultDto;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Getter
 @RequiredArgsConstructor
@@ -36,71 +39,35 @@ public class RequestServiceImpl implements RequestService {
 
     private final UserRepository userRepository;
 
-    //@Override
-    public Request create0(Long userId, Long eventId) throws ConflictException {
-        boolean isExists = !getByUserAndEventId(userId - 1, eventId).isEmpty();
-        boolean isYourEvent = eventRepository.getReferenceById(eventId).getInitiator().getId().equals(userId);
-        boolean isEventPublished = eventRepository.getReferenceById(eventId).getState().equals(EventState.PUBLISHED);
-        boolean isParticipationLimitGot = eventRepository.getReferenceById(eventId).getParticipantLimit()
-                <= eventRepository.getReferenceById(eventId).getConfirmedRequests();
-        boolean isModerateOn = eventRepository.getReferenceById(eventId).isRequestModeration();
 
-        if (!isExists && !isYourEvent && isEventPublished) {
-            Request request;
-            if (!isModerateOn && !isParticipationLimitGot) {
-                request = new Request(
-                        null,
-                        LocalDateTime.now(),
-                        eventId,
-                        userId - 1,
-                        RequestState.valueOf("CONFIRMED")
-                );
-                Event event = eventRepository.getReferenceById(eventId);
-                event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-            } else if (isParticipationLimitGot) {
-                throw new ConflictException("Нет события с id: " + eventId);
-            } else {
-                request = new Request(
-                        null,
-                        LocalDateTime.now(),
-                        eventId,
-                        userId - 1,
-                        RequestState.valueOf("PENDING")
-                );
-            }
-            return requestRepository.save(request);
-        } else {
-            System.out.println("CONFLICT");
-            throw new ConflictException("Нет события с id: " + eventId);
-        }
-    }
 
     @Override
-    public Request create(Long userId, Long eventId) throws ConflictException, EntityNotFoundException {
+    public Request createRequest(Long userId, Long eventId) throws ConflictException, EntityNotFoundException {
+        log.info("Call#RequestServiceImpl#createRequest userId: {], eventId: {}" , userId, eventId);
         Optional<User> user = userRepository.findById(userId) ;
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
+            throw new EntityNotFoundException("Не найден пользователь с Id: " + userId);
         }
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
-            throw new EntityNotFoundException("Event not found");
+            throw new EntityNotFoundException("Не найдено событие с id: {}" + eventId);
         }
         Optional<Request> request = requestRepository.findByEventIdAndRequesterId(eventId, userId);
         if (request.isPresent()) {
-            throw new ConflictException("You already have request to event");
+            throw new ConflictException("Вы уже делали запрос на это событие");
         }
 
         if (event.get().getState() != EventState.PUBLISHED) {
-            throw new ConflictException("Event is not published. Request rejected");
+            throw new ConflictException("Событие на опубликовано. Запрос отклонен");
         }
         if (Objects.equals(event.get().getInitiator().getId(), userId)) {
-            throw new ConflictException("You can't send request to your own event");
+            throw new ConflictException("Вы не можете делать запрос на собственное событие");
         }
 
         int confirmedRequests = requestRepository.findByEventIdConfirmed(eventId);
 
         if (event.get().getParticipantLimit() != 0 && event.get().getParticipantLimit() <= confirmedRequests) {
-            throw new ConflictException("Participant limit reached");
+            throw new ConflictException("Достигнут лимит участников");
         }
         RequestState status = RequestState.PENDING;
         if (!event.get().isRequestModeration() || event.get().getParticipantLimit() == 0) {
@@ -115,24 +82,28 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> get(Long userId) {
+    public List<Request> getRequest(Long userId) {
+        log.info("Call#RequestServiceImpl#getRequest userId: {}" , userId);
         return requestRepository.getAllByUserId(userId - 1);
     }
 
     @Override
     public List<Request> getByUserAndEventId(Long userId, Long eventId) {
+        log.info("Call#RequestServiceImpl#getByUserAndEventId userId: {], eventId: {}" , userId, eventId);
         return requestRepository.getByUserAndEventId(userId, eventId);
     }
 
     @Override
     public Request cancelRequestByUser(Long userId, Long requestId) {
+        log.info("Call#RequestServiceImpl#cancelRequestByUser userId: {], requestId: {}" , userId, requestId);
         Request request = requestRepository.getReferenceById(requestId);
             request.setStatus(RequestState.CANCELED);
         return requestRepository.save(request);
     }
 
     @Override
-    public RequestUpdateResultDto updateRequestsStatus(Long userId, Long eventId, RequestUpdateDto requestUpdateDto) throws ConflictException {
+    public RequestUpdateResultDto updateRequestsStatus(Long userId, Long eventId, RequestUpdateDto requestUpdateDto) throws ConflictException, InvalidParameterException {
+        log.info("Call#RequestServiceImpl#updateRequestsStatus userId: {}, eventId: {}, RequestUpdateDto: {}" , userId, eventId, requestUpdateDto);
         boolean isParticipationLimitGot = eventRepository.getReferenceById(eventId).getParticipantLimit()
                 <= eventRepository.getReferenceById(eventId).getConfirmedRequests();
         List<Request> requests = requestRepository.getByRequestsList(requestUpdateDto.getRequestIds());
@@ -142,7 +113,7 @@ public class RequestServiceImpl implements RequestService {
             if (requestUpdateDto.getRequestIds().contains(request.getId())) {
                 if (requestUpdateDto.getStatus().equals(RequestUpdateState.CONFIRMED)) {
                     if (isParticipationLimitGot) {
-                        throw new ConflictException("Достигнут лимит участников");
+                        throw new InvalidParameterException("Достигнут лимит участников");
                     } else {
                         request.setStatus(RequestState.CONFIRMED);
                         Event event = eventRepository.getReferenceById(eventId);

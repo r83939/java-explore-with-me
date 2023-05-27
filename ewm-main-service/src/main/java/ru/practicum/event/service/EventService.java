@@ -17,10 +17,6 @@ import java.util.List;
 public interface EventService {
     EventFullDto addEvent(Long id, EventNewDto eventNewDto) throws ConflictException, EntityNotFoundException, InvalidParameterException;
 
-    List<EventFullDto> searchEventsPublic0(String text, boolean paid, String rangeStart, String rangeEnd,
-                                          boolean onlyAvailable, List<Integer> categories, String sort,
-                                          Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException, ConflictException, InvalidParameterException;
-
     List<EventFullDto> searchEventsPublic(String text,
                                            List<Long> categories,
                                            Boolean paid,

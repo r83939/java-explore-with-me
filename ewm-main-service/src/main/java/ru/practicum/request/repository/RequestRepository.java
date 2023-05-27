@@ -11,9 +11,6 @@ import java.util.Optional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
-
-    
-
     @Query(value = "SELECT * FROM participation_request WHERE requester_id = ?1 ORDER BY id", nativeQuery = true)
     List<Request> getAllByUserId(Long userId);
 
@@ -29,7 +26,13 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "GROUP BY r.event_id", nativeQuery = true)
     Map<Long, Integer> getConfirmedRequestsByEventIds(List<Long> eventIds);
 
-    @Query(value = "SELECT r.event_id as eventId, count(*) AS confirmedRequests " +
+//    @Query(value = "SELECT r.event_id as eventId, count(*) AS confirmedRequests " +
+//            "FROM participation_request r " +
+//            "WHERE status = 'CONFIRMED' " +
+//            "GROUP BY r.event_id", nativeQuery = true)
+//    Integer getConfirmedRequestsByEventId(Long eventId);
+
+    @Query(value = "SELECT count(*) " +
             "FROM participation_request r " +
             "WHERE status = 'CONFIRMED' " +
             "GROUP BY r.event_id", nativeQuery = true)

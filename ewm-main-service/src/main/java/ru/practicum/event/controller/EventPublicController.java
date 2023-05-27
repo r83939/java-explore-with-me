@@ -25,28 +25,6 @@ public class EventPublicController {
 
     private final EventServiceImpl eventService;
 
-
-//    @GetMapping
-//    public List<EventFullDto> searchEventsPublic0(
-//            @RequestParam(defaultValue = "") String text,
-//            @RequestParam(defaultValue = "false") String paid,
-//            @RequestParam(defaultValue = "empty") String rangeStart,
-//            @RequestParam(defaultValue = "empty") String rangeEnd,
-//            @RequestParam(defaultValue = "false") String onlyAvailable,
-//            //@RequestParam(defaultValue = 0) List<Integer> categories,
-//            @RequestParam(required = false) List<Integer> categories,
-//            @RequestParam(defaultValue = "id") String sort,
-//            @RequestParam(defaultValue = "10") @Positive Integer size,
-//            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-//            HttpServletRequest request) throws InvalidParameterException, ConflictException, JsonProcessingException {
-//
-//        log.info("Call#EventPublicController#searchEventsPublic# text: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
-//                "onlyAvailable: {}, sort: {}", text, paid, rangeStart, rangeEnd, onlyAvailable, sort);
-//
-//        return eventService.searchEventsPublic0(text, Boolean.parseBoolean(paid), rangeStart, rangeEnd,
-//                Boolean.getBoolean(onlyAvailable), categories, sort, size, from, request);
-//    }
-
     @GetMapping
     public List<EventFullDto> searchEventsPublic(
                                          @RequestParam(required = false) String text,

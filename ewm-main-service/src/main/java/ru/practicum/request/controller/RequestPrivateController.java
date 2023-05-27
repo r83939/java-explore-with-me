@@ -24,13 +24,13 @@ public class RequestPrivateController {
     @PostMapping
     public Request addRequest(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) throws ConflictException, EntityNotFoundException {
         log.info("Call #RequestPrivateController#addRequest# userId {}, eventId: {}",userId, eventId);
-        return requestService.create(userId, eventId);
+        return requestService.createRequest(userId, eventId);
     }
 
     @GetMapping
     public List<Request> getRequests(@PathVariable Long userId) {
         log.info("Call #RequestPrivateController#getRequest# userId {}",userId);
-        return requestService.get(userId);
+        return requestService.getRequest(userId);
     }
 
     @PatchMapping("/{requestId}/cancel")

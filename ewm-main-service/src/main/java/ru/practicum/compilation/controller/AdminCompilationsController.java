@@ -23,20 +23,20 @@ public class AdminCompilationsController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseCompilationDto addCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) throws InvalidParameterException {
         log.info("Call #AdminCompilationsControllerr#addCompilation# compilationNewDto: {}", newCompilationDto);
-        return compilationsService.create(newCompilationDto);
+        return compilationsService.createCompilation(newCompilationDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilation(@PathVariable Long id) {
         log.info("Call #AdminCompilationsController#deleteCompilation# CompilationId: {}", id);
-        compilationsService.delete(id);
+        compilationsService.deleteCompilation(id);
     }
 
     @PatchMapping("/{id}")
     public ResponseCompilationDto updateCompilation(@PathVariable Long id,
                                                     @Valid @RequestBody NewCompilationDto newCompilationDto) {
         log.info("Call #AdminCompilationsControlle#updateCompilation# CompilationId: {}", id);
-        return compilationsService.update(id, newCompilationDto);
+        return compilationsService.updateCompilation(id, newCompilationDto);
     }
 }

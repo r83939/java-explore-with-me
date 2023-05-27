@@ -42,7 +42,7 @@ public final class EventMapper {
     }
 
     public static EventFullDto toEventFullDtoFromEvent(
-            Event event, LocationDto locationDto, UserShortDto userShortDto, Integer views, Integer confirmedRequests) {
+            Event event, LocationDto locationDto, UserShortDto userShortDto, Long views, Integer confirmedRequests) {
         return new EventFullDto(
                 event.getId(),
                 event.getTitle(),
@@ -51,7 +51,7 @@ public final class EventMapper {
                 event.getState(),
                 event.getCategory(),
                 event.getCreatedOn(),
-                event.getEventDate().toString().replaceAll("T", " "),
+                event.getEventDate(),
                 event.getPublishedOn(),
                 confirmedRequests,
                 locationDto,
@@ -102,7 +102,7 @@ public final class EventMapper {
                 event.getState(),
                 event.getCategory(),
                 event.getCreatedOn(),
-                event.getEventDate().toString(),
+                event.getEventDate(),
                 event.getPublishedOn(),
                 event.getConfirmedRequests(),
                 LocationMapper.toLocationDtoFromLocation(event.getLocation()),

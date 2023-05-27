@@ -29,12 +29,12 @@ public class PublicCompilationsController {
                                                 @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Call #PublicCompilationsController#findAll# pinned {} size {} from {} ", pinned, size, from);
         PageRequest pageable = PageRequest.of(from / size, size);
-        return compilationsService.findAll(pinned, pageable);
+        return compilationsService.findAllCompilations(pinned, pageable);
     }
 
     @GetMapping("/{compId}")
     public ResponseCompilationDto findById(@PathVariable Long compId) {
         log.info("Call #PublicCompilationsControllerr#findById# CompilationId {}", compId);
-        return compilationsService.findById(compId);
+        return compilationsService.findCompilationsById(compId);
     }
 }

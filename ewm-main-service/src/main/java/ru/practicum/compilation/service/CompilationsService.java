@@ -22,12 +22,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CompilationsService {
+public class CompilationsService implements CompilationsServiceImpl {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
 
+    @Override
     @Transactional
-    public ResponseCompilationDto create(NewCompilationDto newCompilationDto) throws InvalidParameterException {
+    public ResponseCompilationDto createCompilation(NewCompilationDto newCompilationDto) throws InvalidParameterException {
         if (newCompilationDto.getTitle() == null) {
             throw new InvalidParameterException("Поле Title должно быть заполнено.");
         }
@@ -42,15 +43,17 @@ public class CompilationsService {
                 compilationRepository.save(CompilationMapper.toCompilation(newCompilationDto, events)));
     }
 
+    @Override
     @Transactional
-    public void delete(Long compId) {
+    public void deleteCompilation(Long compId) {
         compilationRepository.findById(compId).orElseThrow();
         compilationRepository.deleteById(compId);
         log.info("Compilation with id {} deleted", compId);
     }
 
+    @Override
     @Transactional
-    public ResponseCompilationDto update(Long compId, NewCompilationDto newCompilationDto) {
+    public ResponseCompilationDto updateCompilation(Long compId, NewCompilationDto newCompilationDto) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow();
         if (newCompilationDto.getEvents() != null) {
             compilation.setEvents(eventRepository.findByIds(newCompilationDto.getEvents()));
@@ -66,14 +69,16 @@ public class CompilationsService {
         return CompilationMapper.toResponseCompilationDto(compilation);
     }
 
-    public List<ResponseCompilationDto> findAll(Boolean pinned, Pageable pageable) {
+    @Override
+    public List<ResponseCompilationDto> findAllCompilations(Boolean pinned, Pageable pageable) {
         log.info("Compilations sent");
         return compilationRepository.findAllByPinned(pinned, pageable).stream()
                 .map(CompilationMapper::toResponseCompilationDto)
                 .collect(Collectors.toList());
     }
 
-    public ResponseCompilationDto findById(Long compId) {
+    @Override
+    public ResponseCompilationDto findCompilationsById(Long compId) {
         log.info("Compilation sent");
         Compilation compilation = compilationRepository.findById(compId).orElseThrow();
         return CompilationMapper.toResponseCompilationDto(compilation);

@@ -1,19 +1,21 @@
 package ru.practicum.statistic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.exception.StatsException;
 
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @Service
 public class StatClient {
     private final String serverUrl;
@@ -24,33 +26,45 @@ public class StatClient {
         this.restTemplate = restTemplate;
     }
 
-//    public void addStats(EndpointHitDto endpointHitDto) {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//        HttpEntity<EndpointHitDto> requestEntity = new HttpEntity<>(endpointHitDto, headers);
-//        restTemplate.exchange(serverUrl + "/hit", HttpMethod.POST, requestEntity, EndpointHitDto.class);
-//    }
+    public void addStats(EndpointHitDto endpointHitDto) {
+        log.info("Call#StatClient#addStatsStat# endpointHitDto: {}", endpointHitDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-    public List<ViewStatsDto> getStats(String start, String end, List<String> uris, Boolean unique) {
+        HttpEntity<EndpointHitDto> requestEntity = new HttpEntity<>(endpointHitDto, headers);
+        restTemplate.exchange(serverUrl + "/hit", HttpMethod.POST, requestEntity, EndpointHitDto.class);
+    }
 
+    public List<ViewStatsDto> getStats(String rangeStart, String rangeEnd, List<String> uris, Boolean unique) {
+        log.info("Call#StatClient#getStats# rangeStart={}, rangeEnd={}, uris={}, unique={}", rangeStart, rangeEnd, uris, unique);
         Map<String, Object> parameters = new HashMap<>();
-
-        parameters.put("start", start);
-        parameters.put("end", end);
+        parameters.put("start", rangeStart);
+        parameters.put("end", rangeEnd);
         parameters.put("uris", uris);
         parameters.put("unique", unique);
 
-        ResponseEntity<String> response = restTemplate.getForEntity(
+        //ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.getForEntity(
+        Object responseBody = restTemplate.getForEntity(
                 "http://stats-server:9090/stats?start={start}&end={end}&uris={uris}&unique={unique}",
-                String.class, parameters);
+                Object.class, parameters).getBody();;
+       // List<ViewStatsDto> viewStatsDtos = new ObjectMapper().convertValue(responseBody, new TypeReference<>() {});
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        List<ViewStatsDto> stats = new ArrayList<>();
+        if (responseBody != null) {
 
-        try {
-            return Arrays.asList(objectMapper.readValue(response.getBody(), ViewStatsDto[].class));
-        } catch (JsonProcessingException exception) {
-            throw new StatsException(String.format("Json processing error: %s", exception.getMessage()));
+            List<Map<String, Object>> body = (List<Map<String, Object>>) responseBody;
+            if (body != null && body.size() > 0) {
+                for (Map<String, Object> s : body) {
+                    ViewStatsDto viewStats = ViewStatsDto.builder()
+                            .app(s.get("app").toString())
+                            .uri(s.get("uri").toString())
+                            .hits(((Number) s.get("hits")).longValue())
+                            .build();
+                    stats.add(viewStats);
+                }
+            }
         }
+        return stats;
+
     }
 }
