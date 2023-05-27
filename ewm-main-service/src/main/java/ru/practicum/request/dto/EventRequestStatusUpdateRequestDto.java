@@ -11,8 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RequestUpdateDto {
-
+public class EventRequestStatusUpdateRequestDto {
     List<Long> requestIds;
 
     RequestUpdateState status;

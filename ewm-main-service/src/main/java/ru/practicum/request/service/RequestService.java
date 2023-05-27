@@ -18,5 +18,5 @@ public interface RequestService {
 
     Request cancelRequestByUser(Long userId, Long requestId);
 
-    RequestUpdateResultDto updateRequestsStatus(Long userId, Long eventId, RequestUpdateDto requestUpdateDto) throws ConflictException, InvalidParameterException;
+    RequestUpdateResultDto updateRequestsStatus(Long userId, Long eventId, RequestUpdateDto requestUpdateDto) throws ConflictException, InvalidParameterException, EntityNotFoundException;
 }

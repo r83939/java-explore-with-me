@@ -9,11 +9,10 @@ import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
-import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.request.dto.RequestDto;
 import ru.practicum.request.dto.RequestUpdateDto;
 import ru.practicum.request.dto.RequestUpdateResultDto;
-import ru.practicum.request.dto.RequestUpdateState;
+import ru.practicum.request.model.RequestUpdateState;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.model.RequestState;
@@ -43,7 +42,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request createRequest(Long userId, Long eventId) throws ConflictException, EntityNotFoundException {
-        log.info("Call#RequestServiceImpl#createRequest userId: {], eventId: {}" , userId, eventId);
+        log.info("Call#RequestServiceImpl#createRequest userId: {}, eventId: {}" , userId, eventId);
         Optional<User> user = userRepository.findById(userId) ;
         if (user.isEmpty()) {
             throw new EntityNotFoundException("Не найден пользователь с Id: " + userId);
@@ -84,53 +83,72 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<Request> getRequest(Long userId) {
         log.info("Call#RequestServiceImpl#getRequest userId: {}" , userId);
-        return requestRepository.getAllByUserId(userId - 1);
+        return requestRepository.getAllByUserId(userId);
     }
 
     @Override
     public List<Request> getByUserAndEventId(Long userId, Long eventId) {
-        log.info("Call#RequestServiceImpl#getByUserAndEventId userId: {], eventId: {}" , userId, eventId);
+        log.info("Call#RequestServiceImpl#getByUserAndEventId userId: {}, eventId: {}" , userId, eventId);
         return requestRepository.getByUserAndEventId(userId, eventId);
     }
 
     @Override
     public Request cancelRequestByUser(Long userId, Long requestId) {
-        log.info("Call#RequestServiceImpl#cancelRequestByUser userId: {], requestId: {}" , userId, requestId);
+        log.info("Call#RequestServiceImpl#cancelRequestByUser userId: {}, requestId: {}" , userId, requestId);
         Request request = requestRepository.getReferenceById(requestId);
             request.setStatus(RequestState.CANCELED);
         return requestRepository.save(request);
     }
 
     @Override
-    public RequestUpdateResultDto updateRequestsStatus(Long userId, Long eventId, RequestUpdateDto requestUpdateDto) throws ConflictException, InvalidParameterException {
+    public RequestUpdateResultDto updateRequestsStatus(Long userId, Long eventId, RequestUpdateDto requestUpdateDto) throws ConflictException, EntityNotFoundException {
         log.info("Call#RequestServiceImpl#updateRequestsStatus userId: {}, eventId: {}, RequestUpdateDto: {}" , userId, eventId, requestUpdateDto);
-        boolean isParticipationLimitGot = eventRepository.getReferenceById(eventId).getParticipantLimit()
-                <= eventRepository.getReferenceById(eventId).getConfirmedRequests();
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty()) {
+            throw new EntityNotFoundException("Нет события с id: " + eventId);
+        }
+        if (event.get().getConfirmedRequests() == null) {
+            event.get().setConfirmedRequests(0);
+        }
         List<Request> requests = requestRepository.getByRequestsList(requestUpdateDto.getRequestIds());
-        RequestUpdateResultDto requestResultList = new RequestUpdateResultDto(new ArrayList<RequestDto>(), new ArrayList<RequestDto>());
 
+        RequestUpdateResultDto requestResultList = new RequestUpdateResultDto(new ArrayList<RequestDto>(), new ArrayList<RequestDto>());
+        Integer confirmedRequestCount = event.get().getConfirmedRequests();
+        if (confirmedRequestCount == null) {
+            confirmedRequestCount = 0;
+        }
         for (Request request : requests) {
-            if (requestUpdateDto.getRequestIds().contains(request.getId())) {
-                if (requestUpdateDto.getStatus().equals(RequestUpdateState.CONFIRMED)) {
-                    if (isParticipationLimitGot) {
-                        throw new InvalidParameterException("Достигнут лимит участников");
-                    } else {
+            if (!request.getStatus().equals(RequestState.PENDING)) {
+                throw new ConflictException("Можно изменить заявку только в статусе PENDING");
+            }
+            if (requestUpdateDto.getStatus().equals(RequestUpdateState.CONFIRMED)) {
+                if (event.get().getParticipantLimit() != 0 || !event.get().isRequestModeration()) {
+                    if (event.get().getConfirmedRequests().equals(event.get().getParticipantLimit())) {
+                        throw new ConflictException("Достигнут лимит участников");
+                    }
+                    if(confirmedRequestCount < event.get().getParticipantLimit()) {
                         request.setStatus(RequestState.CONFIRMED);
-                        Event event = eventRepository.getReferenceById(eventId);
-                        event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+                        event.get().setConfirmedRequests(event.get().getConfirmedRequests() + 1);
                         requestRepository.save(request);
                         requestResultList.getConfirmedRequests().add(RequestMapper.toRequestDtoFromRequest(request));
+                        confirmedRequestCount ++;
+                    } else {
+                        request.setStatus(RequestState.REJECTED);
+                        requestRepository.save(request);
+                        requestResultList.getRejectedRequests().add(RequestMapper.toRequestDtoFromRequest(request));
                     }
-                } else if (requestUpdateDto.getStatus().equals(RequestUpdateState.REJECTED)
-                        && !request.getStatus().equals(RequestState.CONFIRMED)) {
-                    request.setStatus(RequestState.REJECTED);
-                    requestRepository.save(request);
-                    requestResultList.getRejectedRequests().add(RequestMapper.toRequestDtoFromRequest(request));
-                } else {
+                }
+            } else if (requestUpdateDto.getStatus().equals(RequestUpdateState.REJECTED)) {
+                if (request.getStatus().equals(RequestState.CONFIRMED)) {
                     throw new ConflictException("Нельзя отменить уже принятую заявку");
                 }
+                request.setStatus(RequestState.REJECTED);
+                requestRepository.save(request);
+                requestResultList.getRejectedRequests().add(RequestMapper.toRequestDtoFromRequest(request));
             }
         }
+        eventRepository.save(event.get());
         return requestResultList;
+
     }
 }

@@ -24,7 +24,7 @@ public class PublicCompilationsController {
 
 
     @GetMapping
-    public List<ResponseCompilationDto> findAll(@RequestParam(required = false) Boolean pinned,
+    public List<ResponseCompilationDto> findAll(@RequestParam(required = false) boolean pinned,
                                                 @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                                 @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Call #PublicCompilationsController#findAll# pinned {} size {} from {} ", pinned, size, from);

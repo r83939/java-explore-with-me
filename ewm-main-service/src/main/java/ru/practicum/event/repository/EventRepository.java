@@ -58,7 +58,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> searchEventsByAdminFromAllCategories(List<Long> usersId, List<String> states,
                                                      LocalDateTime startTime, LocalDateTime endTime, Integer size, Integer from);
 
-    @Query(value = "SELECT * FROM events WHERE state IN (?1) AND event_date >= ?2 AND  event_date <= ?3 " +
+    @Query(value = "SELECT * FROM events " +
+            "WHERE state IN (?1) " +
+            "AND event_date >= ?2 " +
+            "AND  event_date <= ?3 " +
             "ORDER BY id ASC LIMIT ?4 OFFSET ?5", nativeQuery = true)
     List<Event> searchEventsByAdminFromAllUsersAndCategories(List<String> states,
                                                              LocalDateTime startTime, LocalDateTime endTime, Integer size, Integer from);

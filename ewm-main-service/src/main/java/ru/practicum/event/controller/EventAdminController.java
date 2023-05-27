@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventUpdateDto;
+import ru.practicum.event.model.EventState;
 import ru.practicum.event.service.EventServiceImpl;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
@@ -33,18 +34,25 @@ public class EventAdminController {
 
     @GetMapping
     public List<EventFullDto> searchEventsByAdmin(
-            @RequestParam(defaultValue = "0") List<Long> users,
-            @RequestParam(defaultValue = "PENDING, PUBLISHED, CANCELED") List<String> states,
-            @RequestParam(defaultValue = "0") List<Integer> categories,
-            @RequestParam(defaultValue = RANGE_START) String rangeStart,
-            @RequestParam(defaultValue = RANGE_END) String rangeEnd,
-            @RequestParam(defaultValue = "10") @Positive Integer size,
-            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(required = false) List<Long> users,
+            @RequestParam(required = false) List<EventState> states,
+            @RequestParam(required = false) List<Long> categories,
+            @RequestParam(required = false) String rangeStart,
+            @RequestParam(required = false) String rangeEnd,
+            @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+            @Positive @RequestParam(defaultValue = "10") Integer size,
+//            @RequestParam(defaultValue = "0") List<Long> users,
+//            @RequestParam(defaultValue = "PENDING, PUBLISHED, CANCELED") List<String> states,
+//            @RequestParam(defaultValue = "0") List<Integer> categories,
+//            @RequestParam(defaultValue = RANGE_START) String rangeStart,
+//            @RequestParam(defaultValue = RANGE_END) String rangeEnd,
+//            @RequestParam(defaultValue = "10") @Positive Integer size,
+//            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
             HttpServletRequest request) {
         log.info("Call#EventAdminController#searchEventsByAdmin# size {} from {} ", size, from);
-        LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
-        LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
-        return eventService.searchEventsByAdmin(users, states, categories, startTime, endTime, size, from, request);
+        //LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
+        //LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
+        return eventService.searchEventsByAdmin(users, states, categories, rangeStart, rangeEnd, size, from, request);
     }
 
 

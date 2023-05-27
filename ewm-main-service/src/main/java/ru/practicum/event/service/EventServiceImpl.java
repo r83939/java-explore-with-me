@@ -331,7 +331,7 @@ public class EventServiceImpl implements EventService {
         }
         //if (startTime.isAfter(LocalDateTime.now().plusHours(HOURS_BEFORE_START)) && !event.get().getState().equals(EventState.PUBLISHED)) {
         if (startTime.isBefore(LocalDateTime.now().plusHours(HOURS_BEFORE_START))) {
-            throw new ConflictException("Дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента");
+            throw new InvalidParameterException("Дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента");
         }
 
         checkAndUpdateEvent(eventUpdateDto, event.get());
@@ -392,15 +392,17 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<EventFullDto> searchEventsByAdmin(List<Long> usersId, List<String> states, List<Integer> categories,
-                                                  LocalDateTime startTime, LocalDateTime endTime,
-                                                  Integer size, Integer from, HttpServletRequest request) {
-        log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}" , usersId, startTime, endTime);
+    public List<EventFullDto> searchEventsByAdmin(List<Long> usersId, List<EventState> states, List<Long> categories,
+                                                  String rangeStart, String rangeEnd, Integer size, Integer from, HttpServletRequest request) {
+        log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}" , usersId, rangeStart, rangeEnd);
+        if (states.isEmpty()) {
+
+        }
         List<Event> events;
-        if (usersId.get(0) == 0) {
-            if (categories.get(0) == 0) {
+        if (usersId.size() == 0) {
+            if (categories.size() == 0) {
                 events = eventRepository.searchEventsByAdminFromAllUsersAndCategories(
-                        states, startTime, endTime, size, from);
+                        states, rangeStart, rangeEnd, size, from);
             } else {
                 events = eventRepository.searchEventsByAdminFromAllUsers(
                         states, categories, startTime, endTime, size, from);
