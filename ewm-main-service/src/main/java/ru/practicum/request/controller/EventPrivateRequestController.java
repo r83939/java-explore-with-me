@@ -25,7 +25,7 @@ public class EventPrivateRequestController {
     @PatchMapping
     public RequestUpdateResultDto updateRequestsStatus(@PathVariable Long userId,
                                                        @PathVariable Long eventId,
-                                                       @RequestBody @Valid RequestUpdateDto requestUpdateDto) throws ConflictException, InvalidParameterException, EntityNotFoundException {
+                                                       @RequestBody @Valid RequestUpdateDto requestUpdateDto) throws ConflictException, EntityNotFoundException {
         log.info("Call #EventPrivateRequestController#updateRequestsStatus# userId {}, eventId: {}, requestUpdateDto: {}",userId, eventId, requestUpdateDto);
         return requestService.updateRequestsStatus(userId, eventId, requestUpdateDto);
     }

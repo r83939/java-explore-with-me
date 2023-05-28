@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
+import ru.practicum.event.model.EventState;
 import ru.practicum.event.model.Sort;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
@@ -35,9 +36,9 @@ public interface EventService {
 
     EventFullDto updateByUser(Long userId, Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws JsonProcessingException, EntityNotFoundException, ConflictException, InvalidParameterException;
 
-    List<EventFullDto> searchEventsByAdmin(List<Long> usersId, List<String> states, List<Integer> categories,
-                                           LocalDateTime startTime, LocalDateTime endTime,
-                                           Integer from, Integer size, HttpServletRequest request) throws JsonProcessingException;
+    List<EventFullDto> searchEventsByAdmin(List<Long> usersId, List<String> states, List<Long> categories,
+                                           LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer size, Integer from,
+                                           HttpServletRequest request) throws JsonProcessingException;
 
 
     EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws JsonProcessingException, ConflictException, EntityNotFoundException, InvalidParameterException;

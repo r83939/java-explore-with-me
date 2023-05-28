@@ -5,7 +5,6 @@ import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventNewDto;
-import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.ShortEventDto;
 import ru.practicum.event.location.Location;
 import ru.practicum.event.location.LocationDto;
@@ -17,6 +16,7 @@ import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @NoArgsConstructor
 public final class EventMapper {
@@ -41,8 +41,8 @@ public final class EventMapper {
         );
     }
 
-    public static EventFullDto toEventFullDtoFromEvent(
-            Event event, LocationDto locationDto, UserShortDto userShortDto, Long views, Integer confirmedRequests) {
+    public static EventFullDto toEventFullDtoWhenCreate(
+            Event event, LocationDto locationDto, UserShortDto userShortDto, Long views) {
         return new EventFullDto(
                 event.getId(),
                 event.getTitle(),
@@ -53,27 +53,12 @@ public final class EventMapper {
                 event.getCreatedOn(),
                 event.getEventDate(),
                 event.getPublishedOn(),
-                confirmedRequests,
+                event.getConfirmedRequests(),
                 locationDto,
                 userShortDto,
                 event.isPaid(),
                 event.getParticipantLimit(),
                 event.isRequestModeration(),
-                views
-        );
-    }
-
-    public static EventShortDto toEventShortDtoFromEvent(
-            Event event, UserShortDto userShortDto, Integer views) {
-        return new EventShortDto(
-                event.getId(),
-                event.getTitle(),
-                event.getDescription(),
-                event.getAnnotation(),
-                event.getCategory(),
-                event.getEventDate().toString().replaceAll("T", " "),
-                userShortDto,
-                event.isPaid(),
                 views
         );
     }
@@ -113,4 +98,28 @@ public final class EventMapper {
                 views
         );
     }
+
+    public static EventFullDto toEventFullDtoWhenSearch(Event event,
+                                                        Map<Long, Long> eventViewsMap,
+                                                        Map<Long, Long> confirmedRequestsMap) {
+        return new EventFullDto(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getAnnotation(),
+                event.getState(),
+                event.getCategory(),
+                event.getCreatedOn(),
+                event.getEventDate(),
+                event.getPublishedOn(),
+                confirmedRequestsMap.containsKey(event.getId()) ? confirmedRequestsMap.get(event.getId()).intValue() : 0,
+                LocationMapper.toLocationDtoFromLocation(event.getLocation()),
+                UserMapper.toUserShortDtoFromUser(event.getInitiator()),
+                event.isPaid(),
+                event.getParticipantLimit(),
+                event.isRequestModeration(),
+                eventViewsMap.get(event.getId())
+        );
+    }
+
 }

@@ -3,6 +3,7 @@ package ru.practicum.request.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import ru.practicum.request.model.ConfirmedRequest;
 import ru.practicum.request.model.Request;
 
 import java.util.List;
@@ -20,17 +21,12 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Query(value = "SELECT COUNT(*) FROM participation_request WHERE status = 'CONFIRMED' AND event_id = ?1", nativeQuery = true)
     Integer getAllByEventIdAndConfirmedStatus(Long eventId);
 
-    @Query(value = "SELECT r.event_id as eventId, count(*) AS confirmedRequests " +
-            "FROM participation_request r " +
-            "WHERE status = 'CONFIRMED' AND event_id IN (?1) " +
-            "GROUP BY r.event_id", nativeQuery = true)
-    Map<Long, Integer> getConfirmedRequestsByEventIds(List<Long> eventIds);
+    @Query("SELECT new  ru.practicum.request.model.ConfirmedRequest(r.id, count(*)) " +
+            "FROM Request r " +
+            "WHERE r.status = 'CONFIRMED' AND r.id IN (:eventIds) " +
+            "GROUP BY r.id")
+    List<ConfirmedRequest> getConfirmedRequestsByEventIds(@Param("eventIds") List<Long> eventIds);
 
-//    @Query(value = "SELECT r.event_id as eventId, count(*) AS confirmedRequests " +
-//            "FROM participation_request r " +
-//            "WHERE status = 'CONFIRMED' " +
-//            "GROUP BY r.event_id", nativeQuery = true)
-//    Integer getConfirmedRequestsByEventId(Long eventId);
 
     @Query(value = "SELECT count(*) " +
             "FROM participation_request r " +
