@@ -58,7 +58,7 @@ public class StatClient {
         Object responseBody = restTemplate.getForEntity(
                 //"http://stats-server:9090/stats?start={start}&end={end}&uris={uris}&unique={unique}",
                 uriBuilder.toString(),
-                Object.class, parameters).getBody();;
+                Object.class, parameters).getBody();
 
         List<ViewStatsDto> stats = new ArrayList<>();
         if (responseBody != null) {
