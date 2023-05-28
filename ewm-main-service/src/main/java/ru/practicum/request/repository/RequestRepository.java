@@ -7,7 +7,6 @@ import ru.practicum.request.model.ConfirmedRequest;
 import ru.practicum.request.model.Request;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
@@ -45,6 +44,4 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "WHERE event_id = ?1 AND  requester_id = ?2", nativeQuery = true)
     Optional<Request> findByEventIdAndRequesterId(Long eventId, Long userId);
 
-    @Query(value = "SELECT COUNT(*) FROM participation_request WHERE status = 'CONFIRMED' AND event_id = ?1", nativeQuery = true)
-    Integer getConfirmedRequestCount(Long eventId);
 }

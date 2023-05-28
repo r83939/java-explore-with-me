@@ -7,7 +7,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventUpdateDto;
-import ru.practicum.event.model.EventState;
 import ru.practicum.event.service.EventServiceImpl;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventUpdateDto;
-import ru.practicum.event.model.EventState;
 import ru.practicum.event.model.Sort;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;

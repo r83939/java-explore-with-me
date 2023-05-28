@@ -37,7 +37,7 @@ public final class EventMapper {
                 user,
                 eventNewDto.isPaid(),
                 eventNewDto.getParticipantLimit() == null ? 0 : eventNewDto.getParticipantLimit(),
-                eventNewDto.getRequestModeration() == null ? true : eventNewDto.getRequestModeration()
+                eventNewDto.getRequestModeration() == null || eventNewDto.getRequestModeration()
         );
     }
 

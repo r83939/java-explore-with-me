@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
-import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.request.dto.RequestUpdateDto;
 import ru.practicum.request.dto.RequestUpdateResultDto;
 import ru.practicum.request.model.Request;
