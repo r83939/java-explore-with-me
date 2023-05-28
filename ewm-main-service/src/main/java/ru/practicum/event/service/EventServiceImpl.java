@@ -268,7 +268,7 @@ public class EventServiceImpl implements EventService {
         if (event.isEmpty()) {
             throw new EntityNotFoundException("Нет события с id: " + eventId);
         }
-        if (event.get().getInitiator().getId().equals(userId)) {
+        if (!event.get().getInitiator().getId().equals(userId)) {
             throw new InvalidParameterException("Пользователь не может изменять не свои события");
         }
 
