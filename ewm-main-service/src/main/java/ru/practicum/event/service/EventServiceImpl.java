@@ -141,11 +141,11 @@ public class EventServiceImpl implements EventService {
         log.info("Call#EventServiceImpl#getByUserAndEventId userid: {}, eventId: {}", userId, eventId);
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("Нет пользователя с id: " + userId );
+            throw new EntityNotFoundException("Нет пользователя с id: " + userId);
         }
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
-            throw new EntityNotFoundException("Нет события с id: " + eventId );
+            throw new EntityNotFoundException("Нет события с id: " + eventId);
         }
         if (event.get().getInitiator().getId().equals(userId)) {
             return null;
@@ -187,11 +187,9 @@ public class EventServiceImpl implements EventService {
         List<Event> events = new ArrayList<>();
         if (sort == null || sort.equals(Sort.VIEWS)) {
             events = eventRepository.findEventsByParamsOrderById(text, categories, paid, startTime, endTime, onlyAvailable, pageable);
-        }
-        else if (sort != null && sort.equals(Sort.EVENT_DATE)) {
+        } else if (sort != null && sort.equals(Sort.EVENT_DATE)) {
             events = eventRepository.findEventsByParamsOrderByDate(text, categories, paid, startTime, endTime, onlyAvailable, pageable);
-        }
-        else {
+        } else {
             throw new InvalidParameterException("Неверный параметр sort:" + sort);
         }
 
@@ -233,12 +231,12 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> eventIdHitsMap = new HashMap<>(); // eventId : hits
         if (hitDtos.size() == 0) {
             for (Long eventId : eventIds) {
-                eventIdHitsMap.put( eventId, 0L);
+                eventIdHitsMap.put(eventId, 0L);
             }
             return eventIdHitsMap;
         }
         for (ViewStatsDto viewStatsDto : hitDtos) {
-            eventIdHitsMap.put( Long.parseLong(viewStatsDto.getUri().replace("/events/", "")), viewStatsDto.getHits());
+            eventIdHitsMap.put(Long.parseLong(viewStatsDto.getUri().replace("/events/", "")), viewStatsDto.getHits());
         }
         return eventIdHitsMap;
     }
@@ -246,9 +244,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getByEventId(Long eventId, HttpServletRequest request) throws EntityNotFoundException {
         log.info("Call#EventServiceImpl#getByEventId eventId: {}", eventId);
-        Optional<Event> event =eventRepository.findById(eventId);
+        Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty() || !event.get().getState().equals(EventState.PUBLISHED)) {
-            throw new EntityNotFoundException("Нет события с id: " + eventId );
+            throw new EntityNotFoundException("Нет события с id: " + eventId);
         }
 
         String eventUri = URI + event.get().getId();
@@ -301,7 +299,7 @@ public class EventServiceImpl implements EventService {
         String eventUri = URI + event.get().getId();
         List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), false);
         Long views =  viewStatsDtos.size() == 0 ?  0 :  viewStatsDtos.get(0).getHits();
-        return  EventMapper.toEventFullDto(eventRepository.save(event.get()), views );
+        return  EventMapper.toEventFullDto(eventRepository.save(event.get()), views);
     }
 
     private void checkAndUpdateEvent(EventUpdateDto eventUpdateDto, Event event) throws EntityNotFoundException {
@@ -342,7 +340,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventFullDto> searchEventsByAdmin(List<Long> usersIds, List<String> states, List<Long> categories,
                                                   LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer size, Integer from, HttpServletRequest request) {
-        log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}" , usersIds, rangeStart, rangeEnd);
+        log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}", usersIds, rangeStart, rangeEnd);
 
         List<Event> events;
         events = eventRepository.searchEventsByAdmin(usersIds, states, categories, rangeStart, rangeEnd, size, from);
@@ -381,7 +379,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws EntityNotFoundException, InvalidParameterException, ConflictException {
-        log.info("Call#EventServiceImpl#updateByAdmin eventId: {}, eventUpdateDto: {}" , eventId, eventUpdateDto);
+        log.info("Call#EventServiceImpl#updateByAdmin eventId: {}, eventUpdateDto: {}", eventId, eventUpdateDto);
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new EntityNotFoundException("Нет события с id: " + event);
@@ -421,7 +419,7 @@ public class EventServiceImpl implements EventService {
 
             Long views =  viewStatsDtos.size() == 0 ?  0 :  viewStatsDtos.get(0).getHits();
 
-            EventFullDto ed = EventMapper.toEventFullDto(eventRepository.save(event.get()),views );
+            EventFullDto ed = EventMapper.toEventFullDto(eventRepository.save(event.get()), views);
             return ed;
         } else {
             throw new InvalidParameterException("Проверьте статус и время начала события.");

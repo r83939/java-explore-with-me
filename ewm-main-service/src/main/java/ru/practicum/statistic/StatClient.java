@@ -1,8 +1,5 @@
 package ru.practicum.statistic;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -10,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
-import ru.practicum.exception.StatsException;
+
 
 
 import java.util.*;
@@ -43,11 +40,9 @@ public class StatClient {
         parameters.put("uris", uris);
         parameters.put("unique", unique);
 
-        //ResponseEntity<Object> response = (ResponseEntity<Object>) restTemplate.getForEntity(
         Object responseBody = restTemplate.getForEntity(
                 "http://stats-server:9090/stats?start={start}&end={end}&uris={uris}&unique={unique}",
                 Object.class, parameters).getBody();;
-       // List<ViewStatsDto> viewStatsDtos = new ObjectMapper().convertValue(responseBody, new TypeReference<>() {});
 
         List<ViewStatsDto> stats = new ArrayList<>();
         if (responseBody != null) {

@@ -42,7 +42,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request createRequest(Long userId, Long eventId) throws ConflictException, EntityNotFoundException {
-        log.info("Call#RequestServiceImpl#createRequest userId: {}, eventId: {}" , userId, eventId);
+        log.info("Call#RequestServiceImpl#createRequest userId: {}, eventId: {}", userId, eventId);
         Optional<User> user = userRepository.findById(userId) ;
         if (user.isEmpty()) {
             throw new EntityNotFoundException("Не найден пользователь с Id: " + userId);
@@ -82,19 +82,19 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> getRequest(Long userId) {
-        log.info("Call#RequestServiceImpl#getRequest userId: {}" , userId);
+        log.info("Call#RequestServiceImpl#getRequest userId: {}", userId);
         return requestRepository.getAllByUserId(userId);
     }
 
     @Override
     public List<Request> getByUserAndEventId(Long userId, Long eventId) {
-        log.info("Call#RequestServiceImpl#getByUserAndEventId userId: {}, eventId: {}" , userId, eventId);
+        log.info("Call#RequestServiceImpl#getByUserAndEventId userId: {}, eventId: {}", userId, eventId);
         return requestRepository.getByUserAndEventId(userId, eventId);
     }
 
     @Override
     public Request cancelRequestByUser(Long userId, Long requestId) {
-        log.info("Call#RequestServiceImpl#cancelRequestByUser userId: {}, requestId: {}" , userId, requestId);
+        log.info("Call#RequestServiceImpl#cancelRequestByUser userId: {}, requestId: {}", userId, requestId);
         Request request = requestRepository.getReferenceById(requestId);
             request.setStatus(RequestState.CANCELED);
         return requestRepository.save(request);
@@ -126,12 +126,12 @@ public class RequestServiceImpl implements RequestService {
                     if (event.get().getConfirmedRequests().equals(event.get().getParticipantLimit())) {
                         throw new ConflictException("Достигнут лимит участников");
                     }
-                    if(confirmedRequestCount < event.get().getParticipantLimit()) {
+                    if (confirmedRequestCount < event.get().getParticipantLimit()) {
                         request.setStatus(RequestState.CONFIRMED);
                         event.get().setConfirmedRequests(event.get().getConfirmedRequests() + 1);
                         requestRepository.save(request);
                         requestResultList.getConfirmedRequests().add(RequestMapper.toRequestDtoFromRequest(request));
-                        confirmedRequestCount ++;
+                        confirmedRequestCount++;
                     } else {
                         request.setStatus(RequestState.REJECTED);
                         requestRepository.save(request);

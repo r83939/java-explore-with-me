@@ -27,6 +27,7 @@ public interface EventService {
                                            Integer from,
                                            Integer size,
                                            HttpServletRequest request) throws IOException, ConflictException, InvalidParameterException;
+
     EventFullDto getByEventId(Long id, HttpServletRequest request) throws EntityNotFoundException;
 
     List<EventFullDto> getByUserId(Long id, Integer size, Integer from, HttpServletRequest request) throws JsonProcessingException;

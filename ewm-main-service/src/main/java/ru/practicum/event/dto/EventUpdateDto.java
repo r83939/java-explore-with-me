@@ -4,8 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.event.location.Location;
 import ru.practicum.event.model.StateAction;
-
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data

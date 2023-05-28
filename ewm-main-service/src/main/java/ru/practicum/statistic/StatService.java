@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.StatsWebClient;
-import ru.practicum.ViewStatsDto;
 
 import java.util.List;
 
@@ -18,7 +17,6 @@ public class StatService {
     public StatService(StatsWebClient statsWebClient) {
         this.statsWebClient = statsWebClient;
     }
-
 
     public ResponseEntity<String> getStatistics(
             String rangeStart,

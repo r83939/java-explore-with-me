@@ -6,6 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConfirmedRequest {
+
     Long eventId;
     Long countConfirmedRequest;
 }
