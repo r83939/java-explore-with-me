@@ -32,10 +32,11 @@ public class StatisticController {
                                        @RequestParam(required = false) List<String> uris,
                                        @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("StatisticController#getStats# start: {}, end: {}, uris: {}, unique: {}", start, end, uris, unique);
-        return statService.getStatistics(LocalDateTime.parse(start, FORMATTER),
+        List<ViewStatsDto> viewStatsDtos =  statService.getStatistics(LocalDateTime.parse(start, FORMATTER),
                 LocalDateTime.parse(end, FORMATTER),
                 uris,
                 unique);
+        return viewStatsDtos;
     }
 
     @PostMapping("/hit")

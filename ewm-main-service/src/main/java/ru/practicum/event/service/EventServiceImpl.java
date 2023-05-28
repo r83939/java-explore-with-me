@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ru.practicum.ViewStatsDto;
@@ -123,7 +124,7 @@ public class EventServiceImpl implements EventService {
                 .map(e -> URI + e.getId().toString())
                 .collect(toList());
 
-        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, false);
+        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, true);
 
         Map<Long, Long> eventViews = getEventHitsMap(viewStatsDtos, eventIds);
 
@@ -147,12 +148,12 @@ public class EventServiceImpl implements EventService {
         if (event.isEmpty()) {
             throw new EntityNotFoundException("Нет события с id: " + eventId);
         }
-        if (event.get().getInitiator().getId().equals(userId)) {
-            return null;
+        if (!event.get().getInitiator().getId().equals(userId)) {
+            throw new EntityNotFoundException("События с id: " + eventId + "созданного пользователем c id: " + userId);
         }
 
         String eventUri = URI + event.get().getId();
-        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), false);
+        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), true);
         Long views =  viewStatsDtos.size() == 0 ?  0 :  viewStatsDtos.get(0).getHits();
 
         event.get().setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(eventId));
@@ -212,7 +213,7 @@ public class EventServiceImpl implements EventService {
                 .map(e -> URI + e.getId().toString())
                 .collect(toList());
 
-        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, false);
+        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, true);
 
         Map<Long, Long> eventViews = getEventHitsMap(viewStatsDtos, eventIds);
 
@@ -244,13 +245,14 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getByEventId(Long eventId, HttpServletRequest request) throws EntityNotFoundException {
         log.info("Call#EventServiceImpl#getByEventId eventId: {}", eventId);
+
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty() || !event.get().getState().equals(EventState.PUBLISHED)) {
             throw new EntityNotFoundException("Нет события с id: " + eventId);
         }
 
         String eventUri = URI + event.get().getId();
-        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), false);
+        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), true);
         Long views =  viewStatsDtos.size() == 0 ?  0 :  viewStatsDtos.get(0).getHits();
 
         event.get().setConfirmedRequests(requestRepository.getConfirmedRequestsByEventId(eventId));
@@ -297,7 +299,7 @@ public class EventServiceImpl implements EventService {
         event.get().setConfirmedRequests(confirmedRequest);
 
         String eventUri = URI + event.get().getId();
-        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), false);
+        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), true);
         Long views =  viewStatsDtos.size() == 0 ?  0 :  viewStatsDtos.get(0).getHits();
         return  EventMapper.toEventFullDto(eventRepository.save(event.get()), views);
     }
@@ -338,12 +340,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> searchEventsByAdmin(List<Long> usersIds, List<String> states, List<Long> categories,
+    public List<EventFullDto> searchEventsByAdmin(List<Long> usersIds, List<EventState> states, List<Long> categories,
                                                   LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer size, Integer from, HttpServletRequest request) {
         log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}", usersIds, rangeStart, rangeEnd);
-
+        PageRequest pageable = PageRequest.of(from / size, size);
         List<Event> events;
-        events = eventRepository.searchEventsByAdmin(usersIds, states, categories, rangeStart, rangeEnd, size, from);
+        //events = eventRepository.searchEventsByAdmin(usersIds, states, categories, rangeStart, rangeEnd, size, from);
+        events = eventRepository.searchEventsByAdmin(usersIds, states, categories, rangeStart, rangeEnd, pageable);
 
         List<Long> eventIds;
         eventIds = events.stream()
@@ -364,7 +367,7 @@ public class EventServiceImpl implements EventService {
                 .map(e -> URI + e.getId().toString())
                 .collect(toList());
 
-        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, false);
+        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, true);
 
         Map<Long, Long> eventViews = getEventHitsMap(viewStatsDtos, eventIds);
 
@@ -415,7 +418,7 @@ public class EventServiceImpl implements EventService {
             event.get().setConfirmedRequests(confirmedRequest);
 
             String eventUri = URI + event.get().getId();
-            List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), false);
+            List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, List.of(eventUri), true);
 
             Long views =  viewStatsDtos.size() == 0 ?  0 :  viewStatsDtos.get(0).getHits();
 

@@ -34,14 +34,30 @@ public class StatClient {
 
     public List<ViewStatsDto> getStats(String rangeStart, String rangeEnd, List<String> uris, Boolean unique) {
         log.info("Call#StatClient#getStats# rangeStart={}, rangeEnd={}, uris={}, unique={}", rangeStart, rangeEnd, uris, unique);
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start", rangeStart);
-        parameters.put("end", rangeEnd);
-        parameters.put("uris", uris);
-        parameters.put("unique", unique);
+
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put("start", rangeStart);
+//        parameters.put("end", rangeEnd);
+//        parameters.put("uris", uris);
+//        parameters.put("unique", unique);
+        StringBuilder uriBuilder = new StringBuilder("http://stats-server:9090/stats?start={start}&end={end}");
+        Map<String, Object> parameters = Map.of(
+                "start", rangeStart,
+                "end", rangeEnd);
+
+        if (uris != null && !uris.isEmpty()) {
+            for (String uri : uris) {
+                uriBuilder.append("&uris=").append(uri);
+            }
+        }
+
+        if (unique != null) {
+            uriBuilder.append("&unique=").append(unique);
+        }
 
         Object responseBody = restTemplate.getForEntity(
-                "http://stats-server:9090/stats?start={start}&end={end}&uris={uris}&unique={unique}",
+                //"http://stats-server:9090/stats?start={start}&end={end}&uris={uris}&unique={unique}",
+                uriBuilder.toString(),
                 Object.class, parameters).getBody();;
 
         List<ViewStatsDto> stats = new ArrayList<>();

@@ -30,25 +30,29 @@ public class StatServiceImpl implements StatService {
             if (unique) {
                 log.info("Call#StatServiceImpl#getStatistics#  start: {}, end: {}, uris: {}, unique ip: {}", start, end, uris, unique);
                 Thread.currentThread().getStackTrace()[1].getMethodName();
-                return statRepo.getStatistics(start, end, unique).stream()
+                List<ViewStatsDto> viewStatsDtos = statRepo.getStatistics(start, end, unique).stream()
                         .map(s -> StatMapper.toViewStatsDto(s))
                         .collect(Collectors.toList());
+                return viewStatsDtos;
             }
             log.info("Call#StatServiceImpl#getStatistics# start: {}, end: {}", start, end);
-            return statRepo.getStatistics(start, end).stream()
+            List<ViewStatsDto> viewStatsDtos = statRepo.getStatistics(start, end).stream()
                     .map(s -> StatMapper.toViewStatsDto(s))
                     .collect(Collectors.toList());
+            return viewStatsDtos;
         } else {
             if (unique) {
                 log.info("Call#StatServiceImpl#getStatistics# start: {}, end: {}, uris: {}, unique ip: {}", start, end, uris, unique);
-                return statRepo.getStatistics(start, end, uris, unique).stream()
+                List<ViewStatsDto> viewStatsDtos = statRepo.getStatistics(start, end, uris, unique).stream()
                         .map(s -> StatMapper.toViewStatsDto(s))
                         .collect(Collectors.toList());
+                return viewStatsDtos;
             }
             log.info("Call#StatServiceImpl#getStatistics# start: {}, end: {}, uris: {}", start, end, uris);
-            return statRepo.getStatistics(start, end, uris).stream()
+            List<ViewStatsDto> viewStatsDtos =  statRepo.getStatistics(start, end, uris).stream()
                     .map(s -> StatMapper.toViewStatsDto(s))
                     .collect(Collectors.toList());
+            return viewStatsDtos;
         }
     }
 
