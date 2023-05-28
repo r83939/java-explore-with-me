@@ -3,7 +3,9 @@ package ru.practicum.request.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
@@ -63,9 +65,12 @@ public class RequestServiceImpl implements RequestService {
             throw new ConflictException("Вы не можете делать запрос на собственное событие");
         }
 
-        int confirmedRequests = requestRepository.findByEventIdConfirmed(eventId);
+        Integer confirmedRequestCount = requestRepository.getConfirmedRequestsByEventId(eventId);
+        if (confirmedRequestCount == null) {
+            confirmedRequestCount = 0;
+        }
 
-        if (event.get().getParticipantLimit() != 0 && event.get().getParticipantLimit() <= confirmedRequests) {
+        if (event.get().getParticipantLimit() != 0 && event.get().getParticipantLimit() <= confirmedRequestCount) {
             throw new ConflictException("Достигнут лимит участников");
         }
         RequestState status = RequestState.PENDING;
@@ -79,6 +84,8 @@ public class RequestServiceImpl implements RequestService {
                 status);
         return requestRepository.save(newRequest);
     }
+
+
 
     @Override
     public List<Request> getRequest(Long userId) {
