@@ -16,7 +16,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (:categories IS NULL OR e.category_id IN (:categories)) " +
             "AND (CAST(:rangeStart AS date) IS NULL OR e.event_date >= :rangeStart) " +
             "AND (CAST(:rangeEnd AS date) IS NULL OR e.event_date <= :rangeEnd) " +
-            "ORDER BY e.id ASC LIMIT :size OFFSET :from" , nativeQuery = true)
+            "ORDER BY e.id ASC LIMIT :size OFFSET :from", nativeQuery = true)
     List<Event> searchEventsByAdmin(@Param("usersIds") List<Long> usersIds,
                                      @Param("states") List<String> states,
                                      @Param("categories") List<Long> categories,

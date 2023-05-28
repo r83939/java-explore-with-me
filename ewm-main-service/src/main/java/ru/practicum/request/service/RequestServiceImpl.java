@@ -43,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request createRequest(Long userId, Long eventId) throws ConflictException, EntityNotFoundException {
         log.info("Call#RequestServiceImpl#createRequest userId: {}, eventId: {}", userId, eventId);
-        Optional<User> user = userRepository.findById(userId) ;
+        Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new EntityNotFoundException("Не найден пользователь с Id: " + userId);
         }
@@ -102,7 +102,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public RequestUpdateResultDto updateRequestsStatus(Long userId, Long eventId, RequestUpdateDto requestUpdateDto) throws ConflictException, EntityNotFoundException {
-        log.info("Call#RequestServiceImpl#updateRequestsStatus userId: {}, eventId: {}, RequestUpdateDto: {}" , userId, eventId, requestUpdateDto);
+        log.info("Call#RequestServiceImpl#updateRequestsStatus userId: {}, eventId: {}, RequestUpdateDto: {}", userId, eventId, requestUpdateDto);
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new EntityNotFoundException("Нет события с id: " + eventId);

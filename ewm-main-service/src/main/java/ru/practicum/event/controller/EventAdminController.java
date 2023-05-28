@@ -37,8 +37,8 @@ public class EventAdminController {
             @RequestParam(required = false) List<Long> users,
             @RequestParam(required = false) List<String> states,
             @RequestParam(required = false) List<Long> categories,
-            @RequestParam(required = false) @DateTimeFormat(pattern ="yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-            @RequestParam(required = false) @DateTimeFormat(pattern ="yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
             @Positive @RequestParam(defaultValue = "10") Integer size,
             HttpServletRequest request) {
