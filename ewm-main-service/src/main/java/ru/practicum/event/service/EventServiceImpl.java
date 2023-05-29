@@ -178,7 +178,7 @@ public class EventServiceImpl implements EventService {
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {
             eventFullDtoList.add(
-                    EventMapper.toEventFullDtoWhenSearch(event, getEventViewsMap(events, eventIds ), getConfirmedRequestsMap(eventIds))
+                    EventMapper.toEventFullDtoWhenSearch(event, getEventViewsMap(events, eventIds), getConfirmedRequestsMap(eventIds))
             );
         }
 
@@ -280,7 +280,7 @@ public class EventServiceImpl implements EventService {
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {
             eventFullDtoList.add(
-                    EventMapper.toEventFullDtoWhenSearch(event, getEventViewsMap(events, eventIds ), getConfirmedRequestsMap(eventIds))
+                    EventMapper.toEventFullDtoWhenSearch(event, getEventViewsMap(events, eventIds), getConfirmedRequestsMap(eventIds))
             );
         }
         return eventFullDtoList;
@@ -349,7 +349,7 @@ public class EventServiceImpl implements EventService {
         return confirmedRequestsMap;
     }
 
-    Map<Long, Long> getEventViewsMap(List<Event> events, List<Long> eventIds ) {
+    Map<Long, Long> getEventViewsMap(List<Event> events, List<Long> eventIds) {
         List<String> uriEventList = events.stream()
                 .map(e -> URI + e.getId().toString())
                 .collect(toList());
