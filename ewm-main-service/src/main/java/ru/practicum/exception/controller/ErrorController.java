@@ -63,19 +63,4 @@ public class ErrorController {
         errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
-
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<Object> handleRuntimeException(RuntimeException e) {
-//        String ticketId = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-//        log.trace(ticketId + ":__" + e.getMessage());
-//        ErrorMessage errorMessage = new ErrorMessage();
-//        errorMessage.setMessage("Для детализации проблемы обратитесь с техническую поддержку и укажите номер заявки: " + ticketId);
-//        errorMessage.setReason("Внутренняя ошибка сервера");
-//        errorMessage.setStatus("INTERNAL_SERVER_ERROR");
-//        Arrays.stream(e.getStackTrace())
-//               .map(StackTraceElement::toString)
-//                .forEach(errorMessage.getErrors()::add);
-//        errorMessage.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 }

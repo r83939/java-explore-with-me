@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.dto.ResponseCompilationDto;
-import ru.practicum.compilation.service.CompilationsService;
+import ru.practicum.compilation.service.CompilationsServiceImpl;
 
 
 import javax.validation.constraints.Positive;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/compilations")
 public class PublicCompilationsController {
-    private final CompilationsService compilationsService;
+    private final CompilationsServiceImpl compilationsService;
 
 
     @GetMapping

@@ -38,8 +38,6 @@ public class RequestServiceImpl implements RequestService {
 
     private final UserRepository userRepository;
 
-
-
     @Override
     public Request createRequest(Long userId, Long eventId) throws ConflictException, EntityNotFoundException {
         log.info("Call#RequestServiceImpl#createRequest userId: {}, eventId: {}", userId, eventId);
@@ -82,8 +80,6 @@ public class RequestServiceImpl implements RequestService {
                 status);
         return requestRepository.save(newRequest);
     }
-
-
 
     @Override
     public List<Request> getRequest(Long userId) {
@@ -154,6 +150,5 @@ public class RequestServiceImpl implements RequestService {
         }
         eventRepository.save(event.get());
         return requestResultList;
-
     }
 }

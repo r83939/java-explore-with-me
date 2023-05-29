@@ -35,7 +35,7 @@ public class StatClient {
     public List<ViewStatsDto> getStats(String rangeStart, String rangeEnd, List<String> uris, Boolean unique) {
         log.info("Call#StatClient#getStats# rangeStart={}, rangeEnd={}, uris={}, unique={}", rangeStart, rangeEnd, uris, unique);
 
-        StringBuilder uriBuilder = new StringBuilder("http://stats-server:9090/stats?start={start}&end={end}");
+        StringBuilder uriBuilder = new StringBuilder(serverUrl + "/stats?start={start}&end={end}");
         Map<String, Object> parameters = Map.of(
                 "start", rangeStart,
                 "end", rangeEnd);
@@ -51,7 +51,6 @@ public class StatClient {
         }
 
         Object responseBody = restTemplate.getForEntity(
-                //"http://stats-server:9090/stats?start={start}&end={end}&uris={uris}&unique={unique}",
                 uriBuilder.toString(),
                 Object.class, parameters).getBody();
 
@@ -71,6 +70,5 @@ public class StatClient {
             }
         }
         return stats;
-
     }
 }

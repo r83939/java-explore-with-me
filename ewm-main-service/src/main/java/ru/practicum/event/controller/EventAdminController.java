@@ -18,7 +18,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Validated
@@ -29,9 +28,6 @@ import java.util.List;
 public class EventAdminController {
 
     private final EventServiceImpl eventService;
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final String RANGE_START = "2000-01-01 00:01:01";
-    private static final String RANGE_END = "2099-01-01 23:59:59";
 
     @GetMapping
     public List<EventFullDto> searchEventsByAdmin(

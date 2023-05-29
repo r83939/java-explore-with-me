@@ -23,7 +23,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-
     @NotEmpty
     @Size(max = 250)
     @Size(min = 2)

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @Service
 @Getter
@@ -48,7 +47,6 @@ public class UserServiceImpl implements UserService {
         if (!ids.isEmpty()) {
             return userRepository.findAllByIdIn(ids, page);
         } else {
-            //return (List<User>) userRepository.findAll(page);
             return userRepository.findAll(page).stream().collect(Collectors.toList());
         }
     }

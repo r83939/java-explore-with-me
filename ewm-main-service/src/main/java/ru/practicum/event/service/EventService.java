@@ -41,8 +41,5 @@ public interface EventService {
                                            LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer size, Integer from,
                                            HttpServletRequest request) throws JsonProcessingException;
 
-
     EventFullDto updateByAdmin(Long eventId, EventUpdateDto eventUpdateDto, HttpServletRequest request) throws JsonProcessingException, ConflictException, EntityNotFoundException, InvalidParameterException;
-
-
 }

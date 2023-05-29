@@ -30,7 +30,6 @@ import ru.practicum.request.model.ConfirmedRequest;
 import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.statistic.HitMapper;
 import ru.practicum.statistic.StatClient;
-import ru.practicum.statistic.StatService;
 import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
@@ -69,7 +68,6 @@ public class EventServiceImpl implements EventService {
 
     private final RequestRepository requestRepository;
 
-    private final StatService statService;
     private final StatClient statClient;
 
 
@@ -348,7 +346,6 @@ public class EventServiceImpl implements EventService {
         log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}", usersIds, rangeStart, rangeEnd);
         PageRequest pageable = PageRequest.of(from / size, size);
         List<Event> events;
-        //events = eventRepository.searchEventsByAdmin(usersIds, states, categories, rangeStart, rangeEnd, size, from);
         events = eventRepository.searchEventsByAdmin(usersIds, states, categories, rangeStart, rangeEnd, pageable);
 
         List<Long> eventIds;

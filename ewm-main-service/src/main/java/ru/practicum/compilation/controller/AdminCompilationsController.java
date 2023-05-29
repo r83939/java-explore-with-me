@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.dto.NewCompilationDto;
 import ru.practicum.compilation.dto.ResponseCompilationDto;
-import ru.practicum.compilation.service.CompilationsService;
+import ru.practicum.compilation.service.CompilationsServiceImpl;
 import ru.practicum.exception.InvalidParameterException;
 
 
@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/admin/compilations")
 public class AdminCompilationsController {
-    private final CompilationsService compilationsService;
+    private final CompilationsServiceImpl compilationsService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

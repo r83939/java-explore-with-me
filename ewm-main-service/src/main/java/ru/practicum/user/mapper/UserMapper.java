@@ -5,9 +5,9 @@ import ru.practicum.user.model.User;
 
 public class UserMapper {
 
-    public UserMapper() {
-
-    }
+//    public UserMapper() {
+//
+//    }
 
     public static UserShortDto toUserShortDtoFromUser(User user) {
         return new UserShortDto(

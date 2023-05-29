@@ -12,8 +12,6 @@ import java.util.List;
 
 @Repository
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
-    //List<Compilation> findAllByPinned1(Boolean pinned, Pageable pageable);
-
 
     @Query("SELECT c " +
             "FROM Compilation AS c " +

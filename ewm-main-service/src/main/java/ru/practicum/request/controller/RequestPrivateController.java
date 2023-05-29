@@ -28,7 +28,6 @@ public class RequestPrivateController {
         return requestService.createRequest(userId, eventId);
     }
 
-
     @GetMapping
     public List<Request> getRequests(@PathVariable Long userId) {
         log.info("Call #RequestPrivateController#getRequest# userId {}",userId);
