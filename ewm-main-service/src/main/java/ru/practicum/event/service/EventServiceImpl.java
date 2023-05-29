@@ -102,10 +102,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventFullDto> getByUserId(Long userId, Integer size, Integer from, HttpServletRequest request) {
         log.info("Call#EventServiceImpl#getByUserId userid: {}, size: {}, from: {}", userId, size, from);
-        //List<Event> events = eventRepository.getByUserIdWithPagination(userId, size, from);
         PageRequest pageable = PageRequest.of(from / size, size);
         List<Event> events = eventRepository.findByInitiatorIdOrderByIdDesc(userId, pageable);
-        if(events.size() == 0) {
+        if (events.size() == 0) {
             return List.of();
         }
 
