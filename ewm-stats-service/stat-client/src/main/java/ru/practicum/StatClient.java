@@ -1,19 +1,20 @@
-package ru.practicum.statistic;
+package ru.practicum;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.EndpointHitDto;
-import ru.practicum.ViewStatsDto;
 
-
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
-//@Service
+@Service
 public class StatClient {
     private final String serverUrl;
     private final RestTemplate restTemplate;
