@@ -35,11 +35,6 @@ public class StatClient {
     public List<ViewStatsDto> getStats(String rangeStart, String rangeEnd, List<String> uris, Boolean unique) {
         log.info("Call#StatClient#getStats# rangeStart={}, rangeEnd={}, uris={}, unique={}", rangeStart, rangeEnd, uris, unique);
 
-//        Map<String, Object> parameters = new HashMap<>();
-//        parameters.put("start", rangeStart);
-//        parameters.put("end", rangeEnd);
-//        parameters.put("uris", uris);
-//        parameters.put("unique", unique);
         StringBuilder uriBuilder = new StringBuilder("http://stats-server:9090/stats?start={start}&end={end}");
         Map<String, Object> parameters = Map.of(
                 "start", rangeStart,

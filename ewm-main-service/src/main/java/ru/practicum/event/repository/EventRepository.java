@@ -1,5 +1,6 @@
 package ru.practicum.event.repository;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -86,6 +87,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "WHERE initiator_id = ?1 " +
             "ORDER BY id DESC LIMIT ?2 OFFSET ?3", nativeQuery = true)
     List<Event> getByUserIdWithPagination(Long id, Integer size, Integer from);
+
+    List<Event> findByInitiatorIdOrderByIdDesc(Long initiatorId, PageRequest pageable);
 
     List<Event> findAllByCategoryId(Long id);
 

@@ -71,10 +71,12 @@ public class CompilationsService implements CompilationsServiceImpl {
 
     @Override
     public List<ResponseCompilationDto> findAllCompilations(Boolean pinned, Pageable pageable) {
-        log.info("Compilations sent");
-        return compilationRepository.findAllByPinned(pinned, pageable).stream()
-                .map(CompilationMapper::toResponseCompilationDto)
-                .collect(Collectors.toList());
+
+        log.info("Call #CompilationsService#findAllCompilations# pinned: {}, pageable: {}", pinned, pageable);
+            return compilationRepository.findAllByPinned(pinned, pageable).stream()
+                    .map(CompilationMapper::toResponseCompilationDto)
+                    .collect(Collectors.toList());
+
     }
 
     @Override
