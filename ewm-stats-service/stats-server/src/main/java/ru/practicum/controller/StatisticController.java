@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.service.StatService;
 
 import javax.validation.Valid;
@@ -30,7 +31,7 @@ public class StatisticController {
     public List<ViewStatsDto> getStats(@RequestParam String start,
                                        @RequestParam String end,
                                        @RequestParam(required = false) List<String> uris,
-                                       @RequestParam(defaultValue = "false") Boolean unique) {
+                                       @RequestParam(defaultValue = "false") Boolean unique) throws InvalidParameterException {
         log.info("StatisticController#getStats# start: {}, end: {}, uris: {}, unique: {}", start, end, uris, unique);
         List<ViewStatsDto> viewStatsDtos =  statService.getStatistics(LocalDateTime.parse(start, FORMATTER),
                 LocalDateTime.parse(end, FORMATTER),

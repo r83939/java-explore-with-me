@@ -5,18 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.mapper.StatMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.repository.StatRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class StatServiceImpl implements StatService {
-
     private final StatRepository statRepo;
 
     @Autowired
@@ -25,7 +26,11 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public List<ViewStatsDto> getStatistics(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) throws InvalidParameterException {
+        if (start.isAfter(end)) {
+            throw new InvalidParameterException("Время начала не может быть позже времени окончания");
+        }
+
         if (uris == null || uris.isEmpty()) {
             if (unique) {
                 log.info("Call#StatServiceImpl#getStatistics#  start: {}, end: {}, uris: {}, unique ip: {}", start, end, uris, unique);
