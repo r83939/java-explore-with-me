@@ -104,24 +104,6 @@ public class EventServiceImpl implements EventService {
                 .map(Event::getId)
                 .collect(toList());
 
-//        List<ConfirmedRequest> confirmedRequests = requestRepository.getConfirmedRequestsByEventIds(eventIds);
-//        Map<Long, Long> confirmedRequestsMap = new HashMap<>();
-//        if (confirmedRequests.size() > 0) {
-//            confirmedRequestsMap = confirmedRequests.stream()
-//                    .collect(Collectors.toMap(
-//                            cr -> cr.getEventId(),
-//                            cr -> cr.getCountConfirmedRequest()
-//                    ));
-//        }
-
-//        List<String> uriEventList = events.stream()
-//                .map(e -> URI + e.getId().toString())
-//                .collect(toList());
-//
-//        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, true);
-//
-//        Map<Long, Long> eventViewsMap = getEventHitsMap(viewStatsDtos, eventIds);
-
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {
             eventFullDtoList.add(
@@ -192,24 +174,6 @@ public class EventServiceImpl implements EventService {
         eventIds = events.stream()
                 .map(Event::getId)
                 .collect(toList());
-
-//        List<ConfirmedRequest> confirmedRequests = requestRepository.getConfirmedRequestsByEventIds(eventIds);
-//        Map<Long, Long> confirmedRequestsMap = new HashMap<>();
-//        if (confirmedRequests.size() > 0) {
-//            confirmedRequestsMap = confirmedRequests.stream()
-//                    .collect(Collectors.toMap(
-//                            cr -> cr.getEventId(),
-//                            cr -> cr.getCountConfirmedRequest()
-//                    ));
-//        }
-//
-//        List<String> uriEventList = events.stream()
-//                .map(e -> URI + e.getId().toString())
-//                .collect(toList());
-//
-//        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, true);
-//
-//        Map<Long, Long> eventViews = getEventHitsMap(viewStatsDtos, eventIds);
 
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {
@@ -312,24 +276,6 @@ public class EventServiceImpl implements EventService {
         eventIds = events.stream()
                 .map(Event::getId)
                 .collect(toList());
-
-//        List<ConfirmedRequest> confirmedRequests = requestRepository.getConfirmedRequestsByEventIds(eventIds);
-//        Map<Long, Long> confirmedRequestsMap = new HashMap<>();
-//        if (confirmedRequests.size() > 0) {
-//            confirmedRequestsMap = confirmedRequests.stream()
-//                    .collect(Collectors.toMap(
-//                            cr -> cr.getEventId(),
-//                            cr -> cr.getCountConfirmedRequest()
-//                    ));
-//       }
-
-//        List<String> uriEventList = events.stream()
-//                .map(e -> URI + e.getId().toString())
-//                .collect(toList());
-//
-//        List<ViewStatsDto> viewStatsDtos = statClient.getStats(RANGE_START, RANGE_END, uriEventList, true);
-//
-//        Map<Long, Long> eventViews = getEventHitsMap(viewStatsDtos, eventIds);
 
         List<EventFullDto> eventFullDtoList = new ArrayList<>();
         for (Event event : events) {

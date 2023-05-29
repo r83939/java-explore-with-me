@@ -33,9 +33,7 @@ import java.util.Optional;
 public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository requestRepository;
-
     private final EventRepository eventRepository;
-
     private final UserRepository userRepository;
 
     @Override
