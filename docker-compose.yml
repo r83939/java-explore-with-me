@@ -23,3 +23,28 @@ services:
       - POSTGRES_DB=stats-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+  ewm-main-service:
+    build: ewm-main-service/
+    image: ewm-main
+    container_name: ewm_main
+    ports:
+      - "8080:8080"
+      - "5005:9999"
+    depends_on:
+      - ewm-db
+      - stats-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main-db
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9999
+
+  ewm-db:
+    image: postgres:14.6-alpine
+    command: ["postgres", "-c", "log_statement=all"]
+    container_name: ewm_main_db
+    ports:
+      - "6532:5432"
+    environment:
+      - POSTGRES_DB=main-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
