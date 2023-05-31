@@ -12,7 +12,7 @@ public interface UserService {
 
     User addUser(User user) throws InvalidParameterException, ConflictException;
 
-    List<User> getUserByIds(List<Long> ids, Integer size, Integer from);
+    List<User> getUserByIds(String ids, Integer size, Integer from);
 
     User getUser(Long id) throws EntityNotFoundException;
 

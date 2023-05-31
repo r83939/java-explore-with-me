@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsersByIds(@RequestParam(required = false) List<Long> ids,
+    public List<User> getUsersByIds(@RequestParam(required = false) String ids,
                                     @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                     @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Call#UserController#getUserByIds# ids {}:  size {} from {} ", ids, size, from);

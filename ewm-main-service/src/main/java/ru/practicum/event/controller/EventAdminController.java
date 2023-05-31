@@ -31,9 +31,9 @@ public class EventAdminController {
 
     @GetMapping
     public List<EventFullDto> searchEventsByAdmin(
-            @RequestParam(required = false) List<Long> users,
-            @RequestParam(required = false) List<EventState> states,
-            @RequestParam(required = false) List<Long> categories,
+            @RequestParam(required = false) String users,
+            @RequestParam(required = false) String states,
+            @RequestParam(required = false) String categories,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.model.Sort;
 import ru.practicum.event.service.EventServiceImpl;
-import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.InvalidParameterException;
 
@@ -27,7 +26,7 @@ public class EventPublicController {
     @GetMapping
     public List<EventFullDto> searchEventsPublic(
                                          @RequestParam(required = false) String text,
-                                         @RequestParam(required = false) List<Long> categories,
+                                         @RequestParam(required = false) String categories,
                                          @RequestParam(required = false) Boolean paid,
                                          @RequestParam(required = false) String rangeStart,
                                          @RequestParam(required = false) String rangeEnd,
@@ -35,7 +34,7 @@ public class EventPublicController {
                                          @RequestParam(required = false) Sort sort,
                                          @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                          @Positive @RequestParam(defaultValue = "10") Integer size,
-                                         HttpServletRequest request) throws InvalidParameterException, IOException, ConflictException {
+                                         HttpServletRequest request) throws InvalidParameterException {
         log.info("Call#EventPublicController#searchEventsPublic# text: {}, categories: {}, paid: {}, rangeStart: {}, rangeEnd: {}, " +
                 "onlyAvailable: {}, sort: {}, from: {}, size: {}", text, paid, rangeStart, rangeEnd, onlyAvailable, sort);
         return eventService.searchEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);

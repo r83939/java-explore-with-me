@@ -34,9 +34,9 @@ public class AdminController {
     }
 
     @GetMapping
-    public List<User> getUsersByIds(@RequestParam(defaultValue = "") List<Long> ids,
-                               @RequestParam(defaultValue = "10") @Positive Integer size,
-                               @RequestParam(defaultValue = "0") @PositiveOrZero Integer from) {
+    public List<User> getUsersByIds(@RequestParam(required = false) String ids,
+                                    @RequestParam(defaultValue = "10") @Positive Integer size,
+                                    @RequestParam(defaultValue = "0") @PositiveOrZero Integer from) {
         System.out.println("ids = " + ids);
         log.info("Call#AdminController#getUsersByIds# ids {}:  size {} from {} ", ids, size, from);
         return userService.getUserByIds(ids,  from, size);

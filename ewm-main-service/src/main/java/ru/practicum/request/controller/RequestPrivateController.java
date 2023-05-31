@@ -24,7 +24,6 @@ public class RequestPrivateController {
     @PostMapping
     public Request addRequest(@PathVariable @Positive Long userId, @RequestParam @Positive Long eventId) throws ConflictException, EntityNotFoundException {
         log.info("Call #RequestPrivateController#addRequest# userId {}, eventId: {}", userId, eventId);
-        //return requestService.createRequest(userId, eventId);
         return requestService.createRequest(userId, eventId);
     }
 

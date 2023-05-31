@@ -41,12 +41,10 @@ public class Event {
     @Enumerated(EnumType.STRING)
     EventState state;
 
-    //Integer categoryId;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", shape = JsonFormat.Shape.STRING)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime createdOn;
 
@@ -58,12 +56,10 @@ public class Event {
 
     Integer confirmedRequests;
 
-    //Long locationId;
     @ManyToOne
     @JoinColumn(name = "location_id")
     Location location;
 
-    //Long initiatorId;
     @ManyToOne
     @JoinColumn(name = "initiator_id")
     private User initiator;

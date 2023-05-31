@@ -34,6 +34,7 @@ import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
+import ru.practicum.util.Util;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -139,9 +140,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> searchEventsPublic(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable,
+    public List<EventFullDto> searchEventsPublic(String text, String categoriesString, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable,
                                                   Sort sort, Integer from, Integer size, HttpServletRequest request) throws InvalidParameterException {
-        log.info("Call#EventServiceImpl#searchEventsPublic sort: {}, categories: {}", sort, categories);
+        log.info("Call#EventServiceImpl#searchEventsPublic sort: {}, categories: {}", sort, categoriesString);
         PageRequest pageable = PageRequest.of(from / size, size);
         LocalDateTime startTime;
         LocalDateTime endTime;
@@ -162,6 +163,7 @@ public class EventServiceImpl implements EventService {
             endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         }
         List<Event> events = new ArrayList<>();
+        List<Long> categories = Util.getListLongFromString(categoriesString);
         if (sort == null || sort.equals(Sort.VIEWS)) {
             events = eventRepository.findEventsByParamsOrderById(text, categories, paid, startTime, endTime, onlyAvailable, pageable);
         } else if (sort != null && sort.equals(Sort.EVENT_DATE)) {
@@ -265,11 +267,16 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<EventFullDto> searchEventsByAdmin(List<Long> usersIds, List<EventState> states, List<Long> categories,
+    public List<EventFullDto> searchEventsByAdmin(String usersString, String statesString, String categoriesString,
                                                   LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer size, Integer from, HttpServletRequest request) {
-        log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}", usersIds, rangeStart, rangeEnd);
+        log.info("Call#EventServiceImpl#searchEventsByAdmin usersId: {}, startTime: {}, endTime: {}", usersString, rangeStart, rangeEnd);
         PageRequest pageable = PageRequest.of(from / size, size);
         List<Event> events;
+
+        List<Long> usersIds = Util.getListLongFromString(usersString);
+        List<Long> categories = Util.getListLongFromString(categoriesString);
+        List<EventState> states = Util.getListEventStateFromString(statesString);
+
         events = eventRepository.searchEventsByAdmin(usersIds, states, categories, rangeStart, rangeEnd, pageable);
 
         List<Long> eventIds;
@@ -335,7 +342,6 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-
     Map<Long, Long> getConfirmedRequestsMap(List<Long> eventIds) {
         List<ConfirmedRequest> confirmedRequests = requestRepository.getConfirmedRequestsByEventIds(eventIds);
         Map<Long, Long> confirmedRequestsMap = new HashMap<>();
@@ -392,4 +398,5 @@ public class EventServiceImpl implements EventService {
             event.setRequestModeration(Boolean.parseBoolean(eventUpdateDto.getRequestModeration()));
         }
     }
+
 }

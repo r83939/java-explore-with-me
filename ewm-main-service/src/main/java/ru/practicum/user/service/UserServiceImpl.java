@@ -14,6 +14,7 @@ import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.InvalidParameterException;
 import ru.practicum.user.repository.UserRepository;
 import ru.practicum.user.model.User;
+import ru.practicum.util.Util;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +40,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUserByIds(List<Long> ids,
+    public List<User> getUserByIds(String idsString,
                                    Integer from,
                                    Integer size) {
-        log.info("Call#UserServiceImpl#getUserByIds# idsCount: {}, from: {}, size: {}", ids.size(), from, size);
+        log.info("Call#UserServiceImpl#getUserByIds# userIds: {}, from: {}, size: {}", idsString, from, size);
         PageRequest page = PageRequest.of(from / size, size);
-        if (!ids.isEmpty()) {
-            return userRepository.findAllByIdIn(ids, page);
+        List<Long> usersIds = Util.getListLongFromString(idsString);
+
+        if (usersIds != null) {
+            return userRepository.findAllByIdIn(usersIds, page);
         } else {
             return userRepository.findAll(page).stream().collect(Collectors.toList());
         }
