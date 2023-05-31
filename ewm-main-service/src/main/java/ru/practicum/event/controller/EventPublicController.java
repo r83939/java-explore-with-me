@@ -12,7 +12,6 @@ import ru.practicum.exception.InvalidParameterException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
