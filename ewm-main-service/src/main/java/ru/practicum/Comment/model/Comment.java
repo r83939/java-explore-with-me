@@ -34,5 +34,9 @@ public class Comment {
     @JsonIgnore
     Event item;
     @Column(name = "created")
-    private LocalDateTime created;
+    LocalDateTime created;
+
+    @NotEmpty
+    @Column(name = "comment_state")
+    CommentState commentState;
 }

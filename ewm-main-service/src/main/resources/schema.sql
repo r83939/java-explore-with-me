@@ -71,4 +71,5 @@ CREATE TABLE IF NOT EXISTS comments (
     text varchar(2000) NOT NULL,
     user_id BIGINT NOT null references users(id) ON DELETE CASCADE,
     event_id BIGINT NOT null references events(id) ON DELETE CASCADE,
-    created TIMESTAMP);
+    created TIMESTAMP),
+    comment_state varchar(15);
