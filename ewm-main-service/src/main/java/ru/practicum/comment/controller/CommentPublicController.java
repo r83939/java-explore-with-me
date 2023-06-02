@@ -28,7 +28,7 @@ public class CommentPublicController {
                                                 @RequestParam(required = false) String sort,
                                                 @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                                 @Positive @RequestParam(defaultValue = "10") Integer size) throws InvalidParameterException {
-        log.info("Call#CommentUserController#getComment#  eventId: {}");
+        log.info("Call#CommentUserController#getComment#  eventId: {}", eventId);
         return commentService.getComments(eventId, text, rangeStart, rangeEnd, sort, from, size);
     }
 }

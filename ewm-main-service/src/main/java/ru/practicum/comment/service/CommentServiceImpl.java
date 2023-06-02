@@ -79,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponseDto deleteComment(Long userId, Long commentId) throws InvalidParameterException, ConflictException {
-        log.info("Call#CommentServiceImpl#addComment# userId: {}, commentId: {}", userId);
+        log.info("Call#CommentServiceImpl#addComment# userId: {}, commentId: {}", userId, commentId);
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new InvalidParameterException("Нет пользователя с id: " + userId);
