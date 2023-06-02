@@ -1,2264 +1,1354 @@
 {
-	"info": {
-		"_postman_id": "bd6cd9e0-fee1-4d0c-b61b-fba330d12166",
-		"name": "\"Explore with me\"  Feature Comments",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "27660931"
-	},
-	"item": [
+	"id": "b57959e5-9585-41a6-a726-74f001d23082",
+	"name": "\"Explore with me\"  Feature Comments",
+	"timestamp": "2023-06-02T21:48:43.591Z",
+	"collection_id": "27660931-bd6cd9e0-fee1-4d0c-b61b-fba330d12166",
+	"folder_id": 0,
+	"environment_id": "27660931-f9b9c637-e601-4d32-81ed-2c6d99bde994",
+	"totalPass": 72,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2023-06-02T21:48:40.076Z",
+	"totalFail": 0,
+	"results": [
 		{
-			"name": "User Part",
-			"item": [
-				{
-					"name": "Подготовительные данные",
-					"item": [
-						{
-							"name": "Добавление нового пользователя",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"userId\", jsonData.id);\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n \"name\": \"{{$randomFirstName}}\",\r\n \"email\": \"{{$randomEmail}}\"\r\n} ",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"users"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление новой категории",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"categoryId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"{{$randomNoun}} {{$randomProduct}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/categories",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"categories"
-									]
-								},
-								"description": "Обратите внимание: имя категории должно быть уникальным"
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление нового события",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"Date.prototype.addHours= function(h){\r",
-											"    this.setHours(this.getHours()+h);\r",
-											"    return this;\r",
-											"}\r",
-											"var eventDate = new Date().addHours(4);\r",
-											"pm.environment.set(\"eventDate\", eventDate.toISOString().replace(\"T\", \" \").split(\".\")[0]);\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"eventId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\"annotation\": \"Non consequatur tempore ipsa. Vel esse ab iste repellat voluptatum velit vero quas perspiciatis. Est dolorem enim. Odio distinctio deserunt. Nobis eos ut blanditiis optio tempora.\",\r\n\"category\": {{categoryId}},\r\n\"description\": \"Nobis ut enim et. Voluptatem rerum ipsa quas. Accusamus in et consequuntur quaerat aut et autem modi. Accusantium ipsum quia minima.n rUnde non molestiae sit distinctio. Ratione culpa nisi sed adipisci aspernatur dolore qui. Pariatur ut reiciendis molestias omnis natus ab deserunt. Ducimus dolores fugiat sunt.n rMagnam earum minus beatae. Quam iste ipsam quaerat voluptate. Sit temporibus aliquid aperiam deserunt.\",\r\n\"eventDate\": \"{{eventDate}}\",\r\n\"location\": {\"lat\":80.6561,\"lon\":49.7667},\r\n\"paid\": \"true\",\r\n\"participantLimit\": \"100\",\r\n\"requestModeration\": \"false\",\r\n\"title\": \"Eos dolorem numquam.\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users/{{userId}}/events",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users",
-										"{{userId}}",
-										"events"
-									]
-								},
-								"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
-							},
-							"response": []
-						}
-					]
+			"id": "3a28925b-9f0f-4a71-8866-1337204adaaa",
+			"name": "Добавление нового пользователя",
+			"url": "http://localhost:8080/admin/users",
+			"time": 24,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
 				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				24
+			],
+			"allTests": [
 				{
-					"name": "Попытка добавить комментарий к неопубликованному событию",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(409);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"var jsonData = pm.response.json();\r",
-									"pm.environment.set(\"commentId\", jsonData.id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"eventId\": {{eventId}},\r\n    \"text\":\"Новый комментарий\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Публикация события",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"\r",
-									"\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"var jsonData = pm.response.json();\r",
-									"pm.environment.set(\"eventId\", jsonData.id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/events/{{eventId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"events",
-								"{{eventId}}"
-							]
-						},
-						"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
-					},
-					"response": []
-				},
-				{
-					"name": "Добавление комментария",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"var jsonData = pm.response.json();\r",
-									"pm.environment.set(\"commentId\", jsonData.id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"eventId\": {{eventId}},\r\n    \"text\":\"Новый комментарий\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Обновление комментария по userId и commentId",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\"text\":\"Содержание комментария обновлено\"}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments",
-								"{{commentId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Попытка обновить несуществующий комментарий",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\"text\":\"Содержание комментария обновлено\"}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments/1000",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments",
-								"1000"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Получение комментария по userId  и commentId",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments",
-								"{{commentId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Удаление комментария по userId  и commentId",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments",
-								"{{commentId}}"
-							]
-						}
-					},
-					"response": []
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
 				}
 			]
 		},
 		{
-			"name": "Admin Part",
-			"item": [
-				{
-					"name": "Подготовительные данные",
-					"item": [
-						{
-							"name": "Добавление нового пользователя",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"userId\", jsonData.id);\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n \"name\": \"{{$randomFirstName}}\",\r\n \"email\": \"{{$randomEmail}}\"\r\n} ",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"users"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление нового админа",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"adminId\", jsonData.id);\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n \"name\": \"{{$randomFirstName}}\",\r\n \"email\": \"{{$randomEmail}}\"\r\n} ",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"users"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление новой категории",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"categoryId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"{{$randomNoun}}_{{$randomProduct}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/categories",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"categories"
-									]
-								},
-								"description": "Обратите внимание: имя категории должно быть уникальным"
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление нового события",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"Date.prototype.addHours= function(h){\r",
-											"    this.setHours(this.getHours()+h);\r",
-											"    return this;\r",
-											"}\r",
-											"var eventDate = new Date().addHours(4);\r",
-											"pm.environment.set(\"eventDate\", eventDate.toISOString().replace(\"T\", \" \").split(\".\")[0]);\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"eventId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\"annotation\": \"Non consequatur tempore ipsa. Vel esse ab iste repellat voluptatum velit vero quas perspiciatis. Est dolorem enim. Odio distinctio deserunt. Nobis eos ut blanditiis optio tempora.\",\r\n\"category\": {{categoryId}},\r\n\"description\": \"Nobis ut enim et. Voluptatem rerum ipsa quas. Accusamus in et consequuntur quaerat aut et autem modi. Accusantium ipsum quia minima.n rUnde non molestiae sit distinctio. Ratione culpa nisi sed adipisci aspernatur dolore qui. Pariatur ut reiciendis molestias omnis natus ab deserunt. Ducimus dolores fugiat sunt.n rMagnam earum minus beatae. Quam iste ipsam quaerat voluptate. Sit temporibus aliquid aperiam deserunt.\",\r\n\"eventDate\": \"{{eventDate}}\",\r\n\"location\": {\"lat\":80.6561,\"lon\":49.7667},\r\n\"paid\": \"true\",\r\n\"participantLimit\": \"100\",\r\n\"requestModeration\": \"false\",\r\n\"title\": \"Eos dolorem numquam.\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users/{{userId}}/events",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users",
-										"{{userId}}",
-										"events"
-									]
-								},
-								"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
-							},
-							"response": []
-						},
-						{
-							"name": "Публикация события",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"eventId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/events/{{eventId}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"events",
-										"{{eventId}}"
-									]
-								},
-								"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление комментария _1",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"commentId_1\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"eventId\": {{eventId}},\r\n    \"text\":\"Новый комментарий\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users/{{userId}}/comments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users",
-										"{{userId}}",
-										"comments"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление комментария _2",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"commentId_2\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"eventId\": {{eventId}},\r\n    \"text\":\"Новый комментарий\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users/{{userId}}/comments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users",
-										"{{userId}}",
-										"comments"
-									]
-								}
-							},
-							"response": []
-						}
-					]
+			"id": "1e884164-05da-4442-a873-4c6044beab1b",
+			"name": "Добавление новой категории",
+			"url": "http://localhost:8080/admin/categories",
+			"time": 10,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
 				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
 				{
-					"name": "Бан комментария_1",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"var jsonData = pm.response.json();\r",
-									"pm.environment.set(\"bannedCommentId\", jsonData.id);\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"stateAction\": \"BANNED\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/{{adminId}}/comments/{{commentId_1}}/ban",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"{{adminId}}",
-								"comments",
-								"{{commentId_1}}",
-								"ban"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Попытка публикации забаненного комментария",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(409);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"stateAction\": \"PUBLISHED\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/{{adminId}}/comments/{{bannedCommentId}}/publish",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"{{adminId}}",
-								"comments",
-								"{{bannedCommentId}}",
-								"publish"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Получение комментария по userId  и commentId",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId_1}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments",
-								"{{commentId_1}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Публикация комментария_2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"var jsonData = pm.response.json();\r",
-									"pm.environment.set(\"publishedCommentId\", jsonData.id);\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"stateAction\": \"PUBLISHED\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/{{adminId}}/comments/{{commentId_2}}/publish",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"{{adminId}}",
-								"comments",
-								"{{commentId_2}}",
-								"publish"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Попытка забанить уже опубликованный комментрарий",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(409);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"stateAction\": \"BANNED\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/{{adminId}}/comments/{{publishedCommentId}}/ban",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"{{adminId}}",
-								"comments",
-								"{{publishedCommentId}}",
-								"ban"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Получение комментария по userId  и commentId",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/{{userId}}/comments/{{commentId_2}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"comments",
-								"{{commentId_2}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Получение  админом всех комментариев пользователя",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/{{adminId}}/comments/user/{{userId}}?eventId={{eventId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"{{adminId}}",
-								"comments",
-								"user",
-								"{{userId}}"
-							],
-							"query": [
-								{
-									"key": "eventId",
-									"value": "{{eventId}}"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Попытка получения Админом всех комментариев пользователя с неправильным поиском по времени",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/admin/{{adminId}}/comments/user/{{userId}}?eventId={{eventId}}&rangeStart=2023-06-10 10:00:00&rangeEnd=2023-05-11 10:00:00",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"{{adminId}}",
-								"comments",
-								"user",
-								"{{userId}}"
-							],
-							"query": [
-								{
-									"key": "eventId",
-									"value": "{{eventId}}"
-								},
-								{
-									"key": "rangeStart",
-									"value": "2023-06-10 10:00:00"
-								},
-								{
-									"key": "rangeEnd",
-									"value": "2023-05-11 10:00:00"
-								}
-							]
-						}
-					},
-					"response": []
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
 				}
 			]
 		},
 		{
-			"name": "Public Part",
-			"item": [
-				{
-					"name": "Подготовительные данные",
-					"item": [
-						{
-							"name": "Добавление нового пользователя",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"userId\", jsonData.id);\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n \"name\": \"{{$randomFirstName}}\",\r\n \"email\": \"{{$randomEmail}}\"\r\n} ",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"users"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление нового админа",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"adminId\", jsonData.id);\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n \"name\": \"{{$randomFirstName}}\",\r\n \"email\": \"{{$randomEmail}}\"\r\n} ",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"users"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление новой категории",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"categoryId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"{{$randomProduct}} {{$randomNoun}} \"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/categories",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"categories"
-									]
-								},
-								"description": "Обратите внимание: имя категории должно быть уникальным"
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление нового события",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"Date.prototype.addHours= function(h){\r",
-											"    this.setHours(this.getHours()+h);\r",
-											"    return this;\r",
-											"}\r",
-											"var eventDate = new Date().addHours(4);\r",
-											"pm.environment.set(\"eventDate\", eventDate.toISOString().replace(\"T\", \" \").split(\".\")[0]);\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"eventId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\"annotation\": \"Non consequatur tempore ipsa. Vel esse ab iste repellat voluptatum velit vero quas perspiciatis. Est dolorem enim. Odio distinctio deserunt. Nobis eos ut blanditiis optio tempora.\",\r\n\"category\": {{categoryId}},\r\n\"description\": \"Nobis ut enim et. Voluptatem rerum ipsa quas. Accusamus in et consequuntur quaerat aut et autem modi. Accusantium ipsum quia minima.n rUnde non molestiae sit distinctio. Ratione culpa nisi sed adipisci aspernatur dolore qui. Pariatur ut reiciendis molestias omnis natus ab deserunt. Ducimus dolores fugiat sunt.n rMagnam earum minus beatae. Quam iste ipsam quaerat voluptate. Sit temporibus aliquid aperiam deserunt.\",\r\n\"eventDate\": \"{{eventDate}}\",\r\n\"location\": {\"lat\":80.6561,\"lon\":49.7667},\r\n\"paid\": \"true\",\r\n\"participantLimit\": \"100\",\r\n\"requestModeration\": \"false\",\r\n\"title\": \"Eos dolorem numquam.\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users/{{userId}}/events",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users",
-										"{{userId}}",
-										"events"
-									]
-								},
-								"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
-							},
-							"response": []
-						},
-						{
-							"name": "Публикация события",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"eventId\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/events/{{eventId}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"events",
-										"{{eventId}}"
-									]
-								},
-								"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление комментария",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"commentId_1\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"eventId\": {{eventId}},\r\n    \"text\": \"New Comment 1\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users/{{userId}}/comments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users",
-										"{{userId}}",
-										"comments"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление комментария",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"var jsonData = pm.response.json();\r",
-											"pm.environment.set(\"commentId_2\", jsonData.id);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"eventId\": {{eventId}},\r\n    \"text\":\"New Comment 2\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/users/{{userId}}/comments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"users",
-										"{{userId}}",
-										"comments"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Бан комментария_1",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"\r",
-											"\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/{{adminId}}/comments/{{commentId_1}}/ban",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"{{adminId}}",
-										"comments",
-										"{{commentId_1}}",
-										"ban"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Публикация комментария_2",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"\r",
-											"\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/{{adminId}}/comments/{{commentId_2}}/publish",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"{{adminId}}",
-										"comments",
-										"{{commentId_2}}",
-										"publish"
-									]
-								}
-							},
-							"response": []
-						}
-					]
+			"id": "c61c05df-f138-46e7-9e21-957b2740b668",
+			"name": "Добавление нового события",
+			"url": "http://localhost:8080/users/33/events",
+			"time": 19,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
 				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				19
+			],
+			"allTests": [
 				{
-					"name": "Получение комментариев конкретного события Public",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/events/{{eventId}}/comments?text=comme",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"events",
-								"{{eventId}}",
-								"comments"
-							],
-							"query": [
-								{
-									"key": "text",
-									"value": "comme"
-								}
-							]
-						}
-					},
-					"response": []
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "75e80af5-2bdf-47ca-80df-445a3e766512",
+			"name": "Попытка добавить комментарий к неопубликованному событию",
+			"url": "http://localhost:8080/users/33/comments",
+			"time": 11,
+			"responseCode": {
+				"code": 409,
+				"name": "Conflict"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 409 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 409 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
 				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
 				{
-					"name": "Попытка получить комментариев с неправильной сортировкой  Public",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Ответ должен содержать данные в формате json\", function () {\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/events/{{eventId}}/comments?text=comme&sort=badsort",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"events",
-								"{{eventId}}",
-								"comments"
-							],
-							"query": [
-								{
-									"key": "text",
-									"value": "comme"
-								},
-								{
-									"key": "sort",
-									"value": "badsort"
-								}
-							]
-						}
-					},
-					"response": []
+					"Ответ должен содержать код статуса 409 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "518670e8-1df3-4799-9ce7-96f0b1aff735",
+			"name": "Публикация события",
+			"url": "http://localhost:8080/admin/events/20",
+			"time": 32,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				32
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "ddbea451-8f3c-4483-af2b-03f203a32daf",
+			"name": "Добавление комментария",
+			"url": "http://localhost:8080/users/33/comments",
+			"time": 12,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "700f184e-2e15-48cf-b9ca-0a2a55a0bff9",
+			"name": "Обновление комментария по userId и commentId",
+			"url": "http://localhost:8080/users/33/comments/31",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "1e8c9eec-6b36-4585-a24a-f9cd8890dff7",
+			"name": "Попытка обновить несуществующий комментарий",
+			"url": "http://localhost:8080/users/33/comments/1000",
+			"time": 7,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 400 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 400 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 400 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "f5afcf77-7b03-48b0-b1c9-a103dd73a010",
+			"name": "Получение комментария по userId  и commentId",
+			"url": "http://localhost:8080/users/33/comments/31",
+			"time": 10,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "e20de3e1-52ab-45be-9b29-4fb3b09b1494",
+			"name": "Удаление комментария по userId  и commentId",
+			"url": "http://localhost:8080/users/33/comments/31",
+			"time": 16,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				16
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "19c23752-77fd-4734-b08f-5bf21580a3e0",
+			"name": "Добавление нового пользователя",
+			"url": "http://localhost:8080/admin/users",
+			"time": 9,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "ea81540b-9aca-4495-85dc-b255d706be11",
+			"name": "Добавление нового админа",
+			"url": "http://localhost:8080/admin/users",
+			"time": 9,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "5aa93439-5137-4bb6-bbbf-db6d6b418390",
+			"name": "Добавление новой категории",
+			"url": "http://localhost:8080/admin/categories",
+			"time": 9,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "7230b341-482d-40c0-9a87-41efe885905e",
+			"name": "Добавление нового события",
+			"url": "http://localhost:8080/users/34/events",
+			"time": 23,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				23
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "8c60e998-c3b9-450b-a728-10cd2c1c8f53",
+			"name": "Публикация события",
+			"url": "http://localhost:8080/admin/events/21",
+			"time": 28,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				28
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "38e7d5fb-0c19-4a45-b550-14b5b18ef8c0",
+			"name": "Добавление комментария _1",
+			"url": "http://localhost:8080/users/34/comments",
+			"time": 12,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "f30eeb07-5557-4810-b833-733815e53199",
+			"name": "Добавление комментария _2",
+			"url": "http://localhost:8080/users/34/comments",
+			"time": 13,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "4a724ff6-4faa-4d42-8fad-2518e1cea206",
+			"name": "Бан комментария_1",
+			"url": "http://localhost:8080/admin/35/comments/32/ban",
+			"time": 10,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "160eb063-1374-403a-a13c-21813897f29b",
+			"name": "Попытка публикации забаненного комментария",
+			"url": "http://localhost:8080/admin/35/comments/32/publish",
+			"time": 7,
+			"responseCode": {
+				"code": 409,
+				"name": "Conflict"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 409 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 409 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 409 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "c760793b-1ef0-45a1-aa2d-b6fa82c5b718",
+			"name": "Получение комментария по userId  и commentId",
+			"url": "http://localhost:8080/users/34/comments/32",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "c4e75b96-95f2-4c8f-b923-3dab2a3a0547",
+			"name": "Публикация комментария_2",
+			"url": "http://localhost:8080/admin/35/comments/33/publish",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "7679c951-e4c4-462c-bc7f-5025da348efe",
+			"name": "Попытка забанить уже опубликованный комментрарий",
+			"url": "http://localhost:8080/admin/35/comments/33/ban",
+			"time": 9,
+			"responseCode": {
+				"code": 409,
+				"name": "Conflict"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 409 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 409 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 409 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "88472596-3a8e-4e05-b777-922ee5235b15",
+			"name": "Получение комментария по userId  и commentId",
+			"url": "http://localhost:8080/users/34/comments/33",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "a38bd377-4a77-4940-841d-cd4346b8e52e",
+			"name": "Получение  админом всех комментариев пользователя",
+			"url": "http://localhost:8080/admin/35/comments/user/34?eventId=21",
+			"time": 14,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				14
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "55403da8-61a0-4b12-a7fb-121cc1cf2efc",
+			"name": "Попытка получения Админом всех комментариев пользователя с неправильным поиском по времени",
+			"url": "http://localhost:8080/admin/35/comments/user/34?eventId=21&rangeStart=2023-06-10 10:00:00&rangeEnd=2023-05-11 10:00:00",
+			"time": 5,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 400 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 400 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 400 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "ebee6e78-3bcf-4b99-afd7-93c76928eaf7",
+			"name": "Добавление нового пользователя",
+			"url": "http://localhost:8080/admin/users",
+			"time": 11,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "e9755d6f-cb28-4a9d-bfd4-0abd6a5323d0",
+			"name": "Добавление нового админа",
+			"url": "http://localhost:8080/admin/users",
+			"time": 17,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				17
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "8cc2d29e-6f1d-4a20-8f6d-6dcd3f0f202f",
+			"name": "Добавление новой категории",
+			"url": "http://localhost:8080/admin/categories",
+			"time": 9,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "1a75d0c9-1d12-4e79-a621-bc99ac51e050",
+			"name": "Добавление нового события",
+			"url": "http://localhost:8080/users/36/events",
+			"time": 16,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				16
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "09804c05-891c-4e96-b51f-cfa3676d9973",
+			"name": "Публикация события",
+			"url": "http://localhost:8080/admin/events/22",
+			"time": 28,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				28
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "3e3952a3-e51a-45b7-acc8-95205c9f03cc",
+			"name": "Добавление комментария",
+			"url": "http://localhost:8080/users/36/comments",
+			"time": 14,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				14
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "b1991fd7-2b07-4477-89f8-2746d50796cc",
+			"name": "Добавление комментария",
+			"url": "http://localhost:8080/users/36/comments",
+			"time": 17,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 201 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				17
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 201 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "409e5c8d-c9d4-439d-bf4c-f49cc380e7ea",
+			"name": "Бан комментария_1",
+			"url": "http://localhost:8080/admin/37/comments/34/ban",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "7db068da-4882-447b-94e3-cd907db5d63e",
+			"name": "Публикация комментария_2",
+			"url": "http://localhost:8080/admin/37/comments/35/publish",
+			"time": 10,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "f37fc424-ea6f-46f7-a237-4d8f3ea83a27",
+			"name": "Получение комментариев конкретного события Public",
+			"url": "http://localhost:8080/events/22/comments?text=comme",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 200 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 200 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
+				}
+			]
+		},
+		{
+			"id": "9d36f6a6-7381-450d-88a6-9c983072ec1c",
+			"name": "Попытка получить комментариев с неправильной сортировкой  Public",
+			"url": "http://localhost:8080/events/22/comments?text=comme&sort=badsort",
+			"time": 4,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Ответ должен содержать код статуса 400 и данные в формате json": true,
+				"Ответ должен содержать данные в формате json": true
+			},
+			"testPassFailCounts": {
+				"Ответ должен содержать код статуса 400 и данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Ответ должен содержать данные в формате json": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Ответ должен содержать код статуса 400 и данные в формате json": true,
+					"Ответ должен содержать данные в формате json": true
 				}
 			]
 		}
 	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
+	"count": 1,
+	"totalTime": 467,
+	"collection": {
+		"requests": [
+			{
+				"id": "3a28925b-9f0f-4a71-8866-1337204adaaa",
+				"method": "POST"
+			},
+			{
+				"id": "1e884164-05da-4442-a873-4c6044beab1b",
+				"method": "POST"
+			},
+			{
+				"id": "c61c05df-f138-46e7-9e21-957b2740b668",
+				"method": "POST"
+			},
+			{
+				"id": "75e80af5-2bdf-47ca-80df-445a3e766512",
+				"method": "POST"
+			},
+			{
+				"id": "518670e8-1df3-4799-9ce7-96f0b1aff735",
+				"method": "PATCH"
+			},
+			{
+				"id": "ddbea451-8f3c-4483-af2b-03f203a32daf",
+				"method": "POST"
+			},
+			{
+				"id": "700f184e-2e15-48cf-b9ca-0a2a55a0bff9",
+				"method": "PATCH"
+			},
+			{
+				"id": "1e8c9eec-6b36-4585-a24a-f9cd8890dff7",
+				"method": "PATCH"
+			},
+			{
+				"id": "f5afcf77-7b03-48b0-b1c9-a103dd73a010",
+				"method": "GET"
+			},
+			{
+				"id": "e20de3e1-52ab-45be-9b29-4fb3b09b1494",
+				"method": "DELETE"
+			},
+			{
+				"id": "19c23752-77fd-4734-b08f-5bf21580a3e0",
+				"method": "POST"
+			},
+			{
+				"id": "ea81540b-9aca-4495-85dc-b255d706be11",
+				"method": "POST"
+			},
+			{
+				"id": "5aa93439-5137-4bb6-bbbf-db6d6b418390",
+				"method": "POST"
+			},
+			{
+				"id": "7230b341-482d-40c0-9a87-41efe885905e",
+				"method": "POST"
+			},
+			{
+				"id": "8c60e998-c3b9-450b-a728-10cd2c1c8f53",
+				"method": "PATCH"
+			},
+			{
+				"id": "38e7d5fb-0c19-4a45-b550-14b5b18ef8c0",
+				"method": "POST"
+			},
+			{
+				"id": "f30eeb07-5557-4810-b833-733815e53199",
+				"method": "POST"
+			},
+			{
+				"id": "4a724ff6-4faa-4d42-8fad-2518e1cea206",
+				"method": "PATCH"
+			},
+			{
+				"id": "160eb063-1374-403a-a13c-21813897f29b",
+				"method": "PATCH"
+			},
+			{
+				"id": "c760793b-1ef0-45a1-aa2d-b6fa82c5b718",
+				"method": "GET"
+			},
+			{
+				"id": "c4e75b96-95f2-4c8f-b923-3dab2a3a0547",
+				"method": "PATCH"
+			},
+			{
+				"id": "7679c951-e4c4-462c-bc7f-5025da348efe",
+				"method": "PATCH"
+			},
+			{
+				"id": "88472596-3a8e-4e05-b777-922ee5235b15",
+				"method": "GET"
+			},
+			{
+				"id": "a38bd377-4a77-4940-841d-cd4346b8e52e",
+				"method": "GET"
+			},
+			{
+				"id": "55403da8-61a0-4b12-a7fb-121cc1cf2efc",
+				"method": "GET"
+			},
+			{
+				"id": "ebee6e78-3bcf-4b99-afd7-93c76928eaf7",
+				"method": "POST"
+			},
+			{
+				"id": "e9755d6f-cb28-4a9d-bfd4-0abd6a5323d0",
+				"method": "POST"
+			},
+			{
+				"id": "8cc2d29e-6f1d-4a20-8f6d-6dcd3f0f202f",
+				"method": "POST"
+			},
+			{
+				"id": "1a75d0c9-1d12-4e79-a621-bc99ac51e050",
+				"method": "POST"
+			},
+			{
+				"id": "09804c05-891c-4e96-b51f-cfa3676d9973",
+				"method": "PATCH"
+			},
+			{
+				"id": "3e3952a3-e51a-45b7-acc8-95205c9f03cc",
+				"method": "POST"
+			},
+			{
+				"id": "b1991fd7-2b07-4477-89f8-2746d50796cc",
+				"method": "POST"
+			},
+			{
+				"id": "409e5c8d-c9d4-439d-bf4c-f49cc380e7ea",
+				"method": "PATCH"
+			},
+			{
+				"id": "7db068da-4882-447b-94e3-cd907db5d63e",
+				"method": "PATCH"
+			},
+			{
+				"id": "f37fc424-ea6f-46f7-a237-4d8f3ea83a27",
+				"method": "GET"
+			},
+			{
+				"id": "9d36f6a6-7381-450d-88a6-9c983072ec1c",
+				"method": "GET"
 			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	]
+		]
+	}
 }
