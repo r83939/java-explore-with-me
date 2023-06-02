@@ -86,7 +86,7 @@ public class CommentServiceImpl implements CommentService {
         }
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isEmpty()) {
-            throw new InvalidParameterException("Нет комментария с id: " +commentId);
+            throw new InvalidParameterException("Нет комментария с id: " + commentId);
         }
         if (!comment.get().getCommentState().equals(CommentState.WAITING)) {
             throw new ConflictException("Удалить комменарий можно только в состоянии WAITING");
