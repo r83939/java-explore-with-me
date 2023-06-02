@@ -1,4 +1,4 @@
-package ru.practicum.Comment.dto;
+package ru.practicum.comment.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +13,6 @@ import javax.validation.constraints.NotEmpty;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentRequestDto {
 
-    @NotEmpty
     Long eventId;
 
     @NotEmpty

@@ -1,8 +1,7 @@
-package ru.practicum.Comment.service;
+package ru.practicum.comment.service;
 
-import org.springframework.data.domain.Pageable;
-import ru.practicum.Comment.dto.CommentRequestDto;
-import ru.practicum.Comment.dto.CommentResponseDto;
+import ru.practicum.comment.dto.CommentRequestDto;
+import ru.practicum.comment.dto.CommentResponseDto;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.InvalidParameterException;
@@ -14,13 +13,13 @@ public interface CommentService {
 
     CommentResponseDto updateComment(Long userId, Long commentId, CommentRequestDto commentRequestDto) throws InvalidParameterException;
 
-    CommentResponseDto deleteComment(Long userId, Long commentId) throws InvalidParameterException;
+    CommentResponseDto deleteComment(Long userId, Long commentId) throws InvalidParameterException, ConflictException;
 
     CommentResponseDto getComment(Long userId, Long commentId) throws InvalidParameterException;
 
     List<CommentResponseDto> getComments(Long eventId, String text, String rangeStart, String rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException;
 
-    CommentResponseDto banComment(Long commentId) throws EntityNotFoundException, ConflictException;
+    CommentResponseDto banComment(Long userId, Long commentId) throws EntityNotFoundException, ConflictException;
 
-    CommentResponseDto publishComment(Long commentId) throws EntityNotFoundException, ConflictException;
+    CommentResponseDto publishComment(Long userId, Long commentId) throws EntityNotFoundException, ConflictException;
 }

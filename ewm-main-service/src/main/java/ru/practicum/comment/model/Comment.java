@@ -1,4 +1,4 @@
-package ru.practicum.Comment.model;
+package ru.practicum.comment.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,21 +22,25 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
     @NotEmpty
     @Column(name = "text")
     String text;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     User user;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "event_id")
     @JsonIgnore
-    Event item;
+    Event event;
+
     @Column(name = "created")
     LocalDateTime created;
 
-    @NotEmpty
     @Column(name = "comment_state")
+    @Enumerated(EnumType.STRING)
     CommentState commentState;
 }

@@ -1,4 +1,4 @@
-package ru.practicum.Comment.model;
+package ru.practicum.comment.model;
 
 public enum CommentState {
     PUBLISHED,

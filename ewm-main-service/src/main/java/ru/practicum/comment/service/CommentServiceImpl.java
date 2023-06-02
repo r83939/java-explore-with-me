@@ -1,16 +1,16 @@
-package ru.practicum.Comment.service;
+package ru.practicum.comment.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.Comment.dto.CommentRequestDto;
-import ru.practicum.Comment.dto.CommentResponseDto;
-import ru.practicum.Comment.mapper.CommentMapper;
-import ru.practicum.Comment.model.Comment;
-import ru.practicum.Comment.model.CommentState;
-import ru.practicum.Comment.repository.CommentRepository;
+import ru.practicum.comment.dto.CommentRequestDto;
+import ru.practicum.comment.dto.CommentResponseDto;
+import ru.practicum.comment.mapper.CommentMapper;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.model.CommentState;
+import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.repository.EventRepository;
@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
         log.info("Call#CommentServiceImpl#addComment# userId: {}, commentRequestDto: {}", userId, commentRequestDto);
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
-            throw new InvalidParameterException("Нет пользователя с id: " + commentRequestDto.getEventId());
+            throw new InvalidParameterException("Нет пользователя с id: " + userId);
         }
         Optional<Event> event = eventRepository.findById(commentRequestDto.getEventId());
         if (event.isEmpty()) {
@@ -55,11 +55,11 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = new Comment();
         comment.setText(commentRequestDto.getText());
         comment.setUser(user.get());
-        comment.setItem(event.get());
+        comment.setEvent(event.get());
         comment.setCreated(LocalDateTime.now());
         comment.setCommentState(CommentState.WAITING);
 
-        return CommentMapper.toCommentResponceDto(commentRepository.save(comment));
+        return CommentMapper.toCommentResponseDto(commentRepository.save(comment));
     }
 
     @Override
@@ -74,11 +74,11 @@ public class CommentServiceImpl implements CommentService {
             throw new InvalidParameterException("Нет комментария с id: " +commentId);
         }
         comment.get().setText(commentRequestDto.getText());
-        return CommentMapper.toCommentResponceDto(commentRepository.save(comment.get()));
+        return CommentMapper.toCommentResponseDto(commentRepository.save(comment.get()));
     }
 
     @Override
-    public CommentResponseDto deleteComment(Long userId, Long commentId) throws InvalidParameterException {
+    public CommentResponseDto deleteComment(Long userId, Long commentId) throws InvalidParameterException, ConflictException {
         log.info("Call#CommentServiceImpl#addComment# userId: {}, commentId: {}", userId);
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
@@ -88,7 +88,11 @@ public class CommentServiceImpl implements CommentService {
         if (comment.isEmpty()) {
             throw new InvalidParameterException("Нет комментария с id: " +commentId);
         }
-        return CommentMapper.toCommentResponceDto(commentRepository.deleteCommentById(commentId));
+        if (!comment.get().getCommentState().equals(CommentState.WAITING)) {
+            throw new ConflictException("Удалить комменарий можно только в состоянии WAITING");
+        }
+        commentRepository.deleteById(commentId);
+        return CommentMapper.toCommentResponseDto(comment.get());
     }
 
     @Override
@@ -98,26 +102,26 @@ public class CommentServiceImpl implements CommentService {
         if (user.isEmpty()) {
             throw new InvalidParameterException("Нет пользователя с id: " + userId);
         }
-        return CommentMapper.toCommentResponceDto(commentRepository.getById(commentId));
+        return CommentMapper.toCommentResponseDto(commentRepository.getById(commentId));
     }
 
     @Override
     public List<CommentResponseDto> getComments(Long eventId, String text, String rangeStart, String rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException {
         log.info("Call#CommentServiceImpl#getComments# userId: {}, text: {}", eventId, text);
 
-        if (sort != null && !"ASC".equals(sort.toUpperCase()) && !"DESC".equals(sort.toUpperCase())) {
+        if (sort != null && !"ASC".equalsIgnoreCase(sort) && !"DESC".equalsIgnoreCase(sort)) {
             throw new InvalidParameterException("Параметр sort может принимать или ASC или DESC");
         }
         PageRequest pageable = PageRequest.of(from / size, size);
         LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
         LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         return commentRepository.getComments(eventId, text, startTime, endTime, sort, CommentState.PUBLISHED, pageable).stream()
-                        .map(c -> CommentMapper.toCommentResponceDto(c)).collect(Collectors.toList());
+                        .map(c -> CommentMapper.toCommentResponseDto(c)).collect(Collectors.toList());
     }
 
     @Override
-    public CommentResponseDto banComment(Long commentId) throws EntityNotFoundException, ConflictException {
-        log.info("Call#CommentServiceImpl#getComments# userId: {}, text: {}", commentId);
+    public CommentResponseDto banComment(Long userId, Long commentId) throws EntityNotFoundException, ConflictException {
+        log.info("Call#CommentServiceImpl#getComments# userId: {}, commentId: {}", userId, commentId);
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isEmpty()) {
             throw new EntityNotFoundException("Нет комментария с id: " + commentId);
@@ -126,12 +130,12 @@ public class CommentServiceImpl implements CommentService {
             throw new ConflictException("Забанить комментарий можно только в состоянии WAITING");
         }
         commentRepository.updateCommentState(commentId, CommentState.BANNED);
-        return CommentMapper.toCommentResponceDto(commentRepository.getById(commentId));
+        return CommentMapper.toCommentResponseDto(commentRepository.getById(commentId));
     }
 
     @Override
-    public CommentResponseDto publishComment(Long commentId) throws EntityNotFoundException, ConflictException {
-        log.info("Call#CommentServiceImpl#publishComment# userId: {}, text: {}", commentId);
+    public CommentResponseDto publishComment(Long userId, Long commentId) throws EntityNotFoundException, ConflictException {
+        log.info("Call#CommentServiceImpl#publishComment# userId: {}, commentId: {}", userId, commentId);
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isEmpty()) {
             throw new EntityNotFoundException("Нет комментария с id: " + commentId);
@@ -140,6 +144,6 @@ public class CommentServiceImpl implements CommentService {
             throw new ConflictException("Опубликовать комментарий можно только в состоянии WAITING");
         }
         commentRepository.updateCommentState(commentId, CommentState.PUBLISHED);
-        return CommentMapper.toCommentResponceDto(commentRepository.getById(commentId));
+        return CommentMapper.toCommentResponseDto(commentRepository.getById(commentId));
     }
 }

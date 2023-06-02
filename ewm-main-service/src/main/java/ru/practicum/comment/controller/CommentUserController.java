@@ -1,12 +1,12 @@
-package ru.practicum.Comment.controller;
+package ru.practicum.comment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.Comment.dto.CommentRequestDto;
-import ru.practicum.Comment.dto.CommentResponseDto;
-import ru.practicum.Comment.service.CommentService;
+import ru.practicum.comment.dto.CommentRequestDto;
+import ru.practicum.comment.dto.CommentResponseDto;
+import ru.practicum.comment.service.CommentService;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.InvalidParameterException;
 
@@ -38,7 +38,7 @@ public class CommentUserController {
 
     @DeleteMapping("/{commentId}")
     public CommentResponseDto deleteComment(@PathVariable @Positive Long userId,
-                                            @PathVariable @Positive Long commentId) throws InvalidParameterException {
+                                            @PathVariable @Positive Long commentId) throws InvalidParameterException, ConflictException {
         log.info("Call#CommentUserController#deleteComment# userId: {},  commentId: {}", userId, commentId);
         return commentService.deleteComment(userId, commentId);
     }

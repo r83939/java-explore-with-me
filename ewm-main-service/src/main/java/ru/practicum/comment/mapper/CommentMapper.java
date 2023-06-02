@@ -1,20 +1,19 @@
-package ru.practicum.Comment.mapper;
+package ru.practicum.comment.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.Comment.dto.CommentRequestDto;
-import ru.practicum.Comment.dto.CommentResponseDto;
-import ru.practicum.Comment.model.Comment;
+import ru.practicum.comment.dto.CommentResponseDto;
+import ru.practicum.comment.model.Comment;
 
 
 @Component
 public class CommentMapper {
-    public static CommentResponseDto toCommentResponceDto(Comment comment) {
+    public static CommentResponseDto toCommentResponseDto(Comment comment) {
         return new CommentResponseDto(
                 comment.getId(),
+                comment.getEvent().getId(),
                 comment.getText(),
                 comment.getUser().getName(),
                 comment.getCreated()
         );
     }
-
 }
