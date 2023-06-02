@@ -22,4 +22,6 @@ public interface CommentService {
     CommentResponseDto banComment(Long userId, Long commentId) throws EntityNotFoundException, ConflictException;
 
     CommentResponseDto publishComment(Long userId, Long commentId) throws EntityNotFoundException, ConflictException;
+
+    List<CommentResponseDto> getCommentsByAdmin(Long userId, Long eventId, String text, String rangeStart, String rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException;
 }

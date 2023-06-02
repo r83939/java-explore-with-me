@@ -10,32 +10,48 @@ import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.InvalidParameterException;
 
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/admin/{userId}/comments")
+@RequestMapping(path = "/admin/{adminId}/comments")
 public class CommentAdminController {
     private final CommentService commentService;
 
     @PatchMapping("/{commentId}/ban")
-    public CommentResponseDto banComment(@PathVariable @Positive Long userId,
+    public CommentResponseDto banComment(@PathVariable @Positive Long adminId,
                                          @PathVariable @Positive Long commentId) throws ConflictException, EntityNotFoundException {
         log.info("Call#CommentAdminController#banComment# commentId: {}", commentId);
-        return commentService.banComment(userId, commentId);
+        return commentService.banComment(adminId, commentId);
     }
 
     @PatchMapping("/{commentId}/publish")
-    public CommentResponseDto publishComment(@PathVariable @Positive Long userId,
+    public CommentResponseDto publishComment(@PathVariable @Positive Long adminId,
                                              @PathVariable @Positive Long commentId) throws ConflictException, EntityNotFoundException {
         log.info("Call#CommentAdminController#banComment# commentId: {}", commentId);
-        return commentService.publishComment(userId, commentId);
+        return commentService.publishComment(adminId, commentId);
     }
 
     @GetMapping("/{commentId}")
-    public CommentResponseDto getComment(@PathVariable @Positive Long userId,
+    public CommentResponseDto getComment(@PathVariable @Positive Long adminId,
                                          @PathVariable @Positive Long commentId) throws InvalidParameterException {
-        log.info("Call#CommentUserController#getComment# userId: {},  commentId: {}", userId, commentId);
-        return commentService.getComment(userId, commentId);
+        log.info("Call#CommentUserController#getComment# userId: {},  commentId: {}", adminId, commentId);
+        return commentService.getComment(adminId, commentId);
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<CommentResponseDto> getComments(@PathVariable @Positive Long adminId,
+                                                @PathVariable @Positive Long userId,
+                                                @RequestParam(required = false) Long eventId,
+                                                @RequestParam(required = false) String text,
+                                                @RequestParam(required = false) String rangeStart,
+                                                @RequestParam(required = false) String rangeEnd,
+                                                @RequestParam(required = false) String sort,
+                                                @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                @Positive @RequestParam(defaultValue = "10") Integer size) throws InvalidParameterException {
+        log.info("Call#CommentUserController#getComment# adminId: {}, userId: {}", adminId, userId);
+        return commentService.getCommentsByAdmin(userId, eventId, text, rangeStart, rangeEnd, sort, from, size);
     }
 }

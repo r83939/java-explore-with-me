@@ -146,4 +146,19 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.updateCommentState(commentId, CommentState.PUBLISHED);
         return CommentMapper.toCommentResponseDto(commentRepository.getById(commentId));
     }
+
+    @Override
+    public List<CommentResponseDto> getCommentsByAdmin(Long userId, Long eventId, String text,
+                                                 String rangeStart, String rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException {
+        log.info("Call#CommentServiceImpl#getCommentsByAdmin# userId: {}, eventId: {}, text: {}, rangeStart: {}, " +
+                "rangeEnd: {}, sort: {}, from: {}, size: {}", userId, eventId, text, rangeStart, rangeEnd, sort, from, size);
+        if (sort != null && !"ASC".equalsIgnoreCase(sort) && !"DESC".equalsIgnoreCase(sort)) {
+            throw new InvalidParameterException("Параметр sort может принимать или ASC или DESC");
+        }
+        PageRequest pageable = PageRequest.of(from / size, size);
+        LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
+        LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
+        return commentRepository.getCommentsByAdmin(userId, eventId, text, startTime, endTime, sort, CommentState.PUBLISHED, pageable).stream()
+                .map(c -> CommentMapper.toCommentResponseDto(c)).collect(Collectors.toList());
+    }
 }
