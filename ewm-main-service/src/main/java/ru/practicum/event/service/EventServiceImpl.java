@@ -264,8 +264,6 @@ public class EventServiceImpl implements EventService {
         return  EventMapper.toEventFullDto(eventRepository.save(event.get()), views);
     }
 
-
-
     @Override
     public List<EventFullDto> searchEventsByAdmin(String usersString, String statesString, String categoriesString,
                                                   LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer size, Integer from, HttpServletRequest request) {

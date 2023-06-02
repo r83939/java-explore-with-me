@@ -3,6 +3,7 @@ package ru.practicum.comment.repository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,8 +17,6 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-
-    Comment deleteById(long id);
 
     @Query("SELECT c " +
             "FROM Comment AS c " +
@@ -36,11 +35,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                                          @Param("commentState") CommentState commentState,
                                          Pageable pageable);
 
-    @Query("UPDATE Comment c " +
-            "SET c.commentState = :commentState " +
-            "WHERE c.id = :commentId")
-    void updateCommentState(@Param("commentId") Long commentId,
-                            @Param("commentState") CommentState commentState);
 
     @Query("SELECT c " +
             "FROM Comment AS c " +

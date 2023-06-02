@@ -2,6 +2,7 @@ package ru.practicum.comment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.comment.dto.CommentResponseDto;
 import ru.practicum.comment.service.CommentService;
@@ -11,6 +12,7 @@ import ru.practicum.exception.InvalidParameterException;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -46,8 +48,8 @@ public class CommentAdminController {
                                                 @PathVariable @Positive Long userId,
                                                 @RequestParam(required = false) Long eventId,
                                                 @RequestParam(required = false) String text,
-                                                @RequestParam(required = false) String rangeStart,
-                                                @RequestParam(required = false) String rangeEnd,
+                                                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
+                                                @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
                                                 @RequestParam(required = false) String sort,
                                                 @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                                 @Positive @RequestParam(defaultValue = "10") Integer size) throws InvalidParameterException {

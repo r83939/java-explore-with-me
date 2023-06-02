@@ -71,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
         }
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isEmpty()) {
-            throw new InvalidParameterException("Нет комментария с id: " +commentId);
+            throw new InvalidParameterException("Нет комментария с id: " + commentId);
         }
         comment.get().setText(commentRequestDto.getText());
         return CommentMapper.toCommentResponseDto(commentRepository.save(comment.get()));
@@ -106,16 +106,21 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDto> getComments(Long eventId, String text, String rangeStart, String rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException {
+    public List<CommentResponseDto> getComments(Long eventId, String text, LocalDateTime rangeStart, LocalDateTime rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException {
         log.info("Call#CommentServiceImpl#getComments# userId: {}, text: {}", eventId, text);
 
         if (sort != null && !"ASC".equalsIgnoreCase(sort) && !"DESC".equalsIgnoreCase(sort)) {
             throw new InvalidParameterException("Параметр sort может принимать или ASC или DESC");
         }
         PageRequest pageable = PageRequest.of(from / size, size);
-        LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
-        LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
-        return commentRepository.getComments(eventId, text, startTime, endTime, sort, CommentState.PUBLISHED, pageable).stream()
+
+        if (rangeStart != null && rangeEnd != null) {
+            if (rangeEnd.isBefore(rangeStart)) {
+                throw new InvalidParameterException("Время начала интервала не должно быть позже времени окончания интервала");
+            }
+        }
+
+        return commentRepository.getComments(eventId, text, rangeStart, rangeEnd, sort, CommentState.PUBLISHED, pageable).stream()
                         .map(c -> CommentMapper.toCommentResponseDto(c)).collect(Collectors.toList());
     }
 
@@ -129,8 +134,9 @@ public class CommentServiceImpl implements CommentService {
         if (comment.get().getCommentState().equals(CommentState.BANNED) || comment.get().getCommentState().equals(CommentState.PUBLISHED)) {
             throw new ConflictException("Забанить комментарий можно только в состоянии WAITING");
         }
-        commentRepository.updateCommentState(commentId, CommentState.BANNED);
-        return CommentMapper.toCommentResponseDto(commentRepository.getById(commentId));
+
+        comment.get().setCommentState(CommentState.BANNED);
+        return CommentMapper.toCommentResponseDto(commentRepository.save(comment.get()));
     }
 
     @Override
@@ -143,22 +149,28 @@ public class CommentServiceImpl implements CommentService {
         if (comment.get().getCommentState().equals(CommentState.BANNED) || comment.get().getCommentState().equals(CommentState.PUBLISHED)) {
             throw new ConflictException("Опубликовать комментарий можно только в состоянии WAITING");
         }
-        commentRepository.updateCommentState(commentId, CommentState.PUBLISHED);
-        return CommentMapper.toCommentResponseDto(commentRepository.getById(commentId));
+
+        comment.get().setCommentState(CommentState.PUBLISHED);
+        return CommentMapper.toCommentResponseDto(commentRepository.save(comment.get()));
     }
 
     @Override
     public List<CommentResponseDto> getCommentsByAdmin(Long userId, Long eventId, String text,
-                                                 String rangeStart, String rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException {
+                                                 LocalDateTime rangeStart, LocalDateTime rangeEnd, String sort, Integer from, Integer size) throws InvalidParameterException {
         log.info("Call#CommentServiceImpl#getCommentsByAdmin# userId: {}, eventId: {}, text: {}, rangeStart: {}, " +
                 "rangeEnd: {}, sort: {}, from: {}, size: {}", userId, eventId, text, rangeStart, rangeEnd, sort, from, size);
         if (sort != null && !"ASC".equalsIgnoreCase(sort) && !"DESC".equalsIgnoreCase(sort)) {
             throw new InvalidParameterException("Параметр sort может принимать или ASC или DESC");
         }
         PageRequest pageable = PageRequest.of(from / size, size);
-        LocalDateTime startTime = LocalDateTime.parse(rangeStart, dateTimeFormatter);
-        LocalDateTime endTime = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
-        return commentRepository.getCommentsByAdmin(userId, eventId, text, startTime, endTime, sort, CommentState.PUBLISHED, pageable).stream()
+
+        if (rangeStart != null && rangeEnd != null) {
+            if (rangeEnd.isBefore(rangeStart)) {
+                throw new InvalidParameterException("Время начала интервала не должно быть позже времени окончания интервала");
+            }
+        }
+
+        return commentRepository.getCommentsByAdmin(userId, eventId, text, rangeStart, rangeEnd, sort, CommentState.PUBLISHED, pageable).stream()
                 .map(c -> CommentMapper.toCommentResponseDto(c)).collect(Collectors.toList());
     }
 }
