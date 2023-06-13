@@ -1,2 +1,2 @@
 # java-explore-with-me
-![alt text](java-explore-with-me.png)
+https://github.com/r83939/java-explore-with-me/pull/3

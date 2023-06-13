@@ -2,6 +2,7 @@ package ru.practicum.event.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.category.model.Category;
 import ru.practicum.event.location.Location;
 import ru.practicum.user.model.User;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "events")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Event {
 
     @Id
@@ -43,7 +45,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    Category category;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime createdOn;
@@ -62,7 +64,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "initiator_id")
-    private User initiator;
+    User initiator;
 
     boolean paid;
 
